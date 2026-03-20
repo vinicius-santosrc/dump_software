@@ -1,0 +1,321 @@
+{
+  "format": 1,
+  "restore": {
+    "/Users/vinicius/Documents/GitHub/dump_software/backend/src/Dump.API/Dump.API.csproj": {}
+  },
+  "projects": {
+    "/Users/vinicius/Documents/GitHub/dump_software/backend/src/Dump.API/Dump.API.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/vinicius/Documents/GitHub/dump_software/backend/src/Dump.API/Dump.API.csproj",
+        "projectName": "Dump.API",
+        "projectPath": "/Users/vinicius/Documents/GitHub/dump_software/backend/src/Dump.API/Dump.API.csproj",
+        "packagesPath": "/Users/vinicius/.nuget/packages/",
+        "outputPath": "/Users/vinicius/Documents/GitHub/dump_software/backend/src/Dump.API/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/vinicius/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0": {
+            "targetAlias": "net9.0",
+            "projectReferences": {
+              "/Users/vinicius/Documents/GitHub/dump_software/backend/src/Dump.Application/Dump.Application.csproj": {
+                "projectPath": "/Users/vinicius/Documents/GitHub/dump_software/backend/src/Dump.Application/Dump.Application.csproj"
+              },
+              "/Users/vinicius/Documents/GitHub/dump_software/backend/src/Dump.Domain/Dump.Domain.csproj": {
+                "projectPath": "/Users/vinicius/Documents/GitHub/dump_software/backend/src/Dump.Domain/Dump.Domain.csproj"
+              },
+              "/Users/vinicius/Documents/GitHub/dump_software/backend/src/Dump.Infrastructure/Dump.Infrastructure.csproj": {
+                "projectPath": "/Users/vinicius/Documents/GitHub/dump_software/backend/src/Dump.Infrastructure/Dump.Infrastructure.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.200"
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
+          "dependencies": {
+            "DotNetEnv": {
+              "target": "Package",
+              "version": "[2.3.0, )"
+            },
+            "Microsoft.AspNetCore.Authentication.JwtBearer": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            },
+            "Microsoft.AspNetCore.OpenApi": {
+              "target": "Package",
+              "version": "[9.0.4, )"
+            },
+            "Microsoft.IdentityModel.Tokens": {
+              "target": "Package",
+              "version": "[8.16.0, )"
+            },
+            "Swashbuckle.AspNetCore": {
+              "target": "Package",
+              "version": "[6.8.0, )"
+            },
+            "System.IdentityModel.Tokens.Jwt": {
+              "target": "Package",
+              "version": "[8.16.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/9.0.203/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/Users/vinicius/Documents/GitHub/dump_software/backend/src/Dump.Application/Dump.Application.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/vinicius/Documents/GitHub/dump_software/backend/src/Dump.Application/Dump.Application.csproj",
+        "projectName": "Dump.Application",
+        "projectPath": "/Users/vinicius/Documents/GitHub/dump_software/backend/src/Dump.Application/Dump.Application.csproj",
+        "packagesPath": "/Users/vinicius/.nuget/packages/",
+        "outputPath": "/Users/vinicius/Documents/GitHub/dump_software/backend/src/Dump.Application/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/vinicius/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0": {
+            "targetAlias": "net9.0",
+            "projectReferences": {
+              "/Users/vinicius/Documents/GitHub/dump_software/backend/src/Dump.Domain/Dump.Domain.csproj": {
+                "projectPath": "/Users/vinicius/Documents/GitHub/dump_software/backend/src/Dump.Domain/Dump.Domain.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.200"
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
+          "dependencies": {
+            "BCrypt.Net-Next": {
+              "target": "Package",
+              "version": "[4.1.0, )"
+            },
+            "Microsoft.Extensions.Configuration.Abstractions": {
+              "target": "Package",
+              "version": "[10.0.5, )"
+            },
+            "Microsoft.IdentityModel.Tokens": {
+              "target": "Package",
+              "version": "[8.16.0, )"
+            },
+            "System.IdentityModel.Tokens.Jwt": {
+              "target": "Package",
+              "version": "[8.16.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/9.0.203/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/Users/vinicius/Documents/GitHub/dump_software/backend/src/Dump.Domain/Dump.Domain.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/vinicius/Documents/GitHub/dump_software/backend/src/Dump.Domain/Dump.Domain.csproj",
+        "projectName": "Dump.Domain",
+        "projectPath": "/Users/vinicius/Documents/GitHub/dump_software/backend/src/Dump.Domain/Dump.Domain.csproj",
+        "packagesPath": "/Users/vinicius/.nuget/packages/",
+        "outputPath": "/Users/vinicius/Documents/GitHub/dump_software/backend/src/Dump.Domain/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/vinicius/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0": {
+            "targetAlias": "net9.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.200"
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
+          "dependencies": {
+            "MongoDB.Bson": {
+              "target": "Package",
+              "version": "[3.7.1, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/9.0.203/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/Users/vinicius/Documents/GitHub/dump_software/backend/src/Dump.Infrastructure/Dump.Infrastructure.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/vinicius/Documents/GitHub/dump_software/backend/src/Dump.Infrastructure/Dump.Infrastructure.csproj",
+        "projectName": "Dump.Infrastructure",
+        "projectPath": "/Users/vinicius/Documents/GitHub/dump_software/backend/src/Dump.Infrastructure/Dump.Infrastructure.csproj",
+        "packagesPath": "/Users/vinicius/.nuget/packages/",
+        "outputPath": "/Users/vinicius/Documents/GitHub/dump_software/backend/src/Dump.Infrastructure/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/vinicius/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0": {
+            "targetAlias": "net9.0",
+            "projectReferences": {
+              "/Users/vinicius/Documents/GitHub/dump_software/backend/src/Dump.Application/Dump.Application.csproj": {
+                "projectPath": "/Users/vinicius/Documents/GitHub/dump_software/backend/src/Dump.Application/Dump.Application.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.200"
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
+          "dependencies": {
+            "MongoDB.Driver": {
+              "target": "Package",
+              "version": "[3.7.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/9.0.203/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

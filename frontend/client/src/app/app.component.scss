@@ -1,0 +1,31 @@
+.m-splash-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffff;
+  z-index: 9999;
+}
+
+.m-splash-screen.fade-out {
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.splash-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  text-align: center;
+}
+
+.splash-logo {
+  width: 170px;
+  height: 170px;
+}

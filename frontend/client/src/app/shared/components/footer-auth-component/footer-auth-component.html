@@ -1,0 +1,17 @@
+<footer class="footer-auth">
+    <div class="separator"></div>
+    <section class="footer-top fast-links">
+        @for (button of actionButtons; track button) {
+        <button>{{ button.label | translate }}</button>
+        }
+    </section>
+    <section class="footer-bottom">
+        <!-- footer-auth-component.html -->
+        <select [value]="getSelectedLanguage()" (change)="changeLanguage($event)">
+            <option value="pt">Português (Brasil)</option>
+            <option value="en">English (US)</option>
+            <option value="es">Español (España)</option>
+        </select>
+        <span>&copy; 2024 Dump Software. All rights reserved.</span>
+    </section>
+</footer>

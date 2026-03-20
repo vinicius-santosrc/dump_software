@@ -1,0 +1,17 @@
+/Users/vinicius/Documents/GitHub/dump_software/backend/src/Dump.Infrastructure/obj/Debug/net9.0/Dump.Infrastructure.csproj.AssemblyReference.cache
+/Users/vinicius/Documents/GitHub/dump_software/backend/src/Dump.Infrastructure/obj/Debug/net9.0/Dump.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+/Users/vinicius/Documents/GitHub/dump_software/backend/src/Dump.Infrastructure/obj/Debug/net9.0/Dump.Infrastructure.AssemblyInfoInputs.cache
+/Users/vinicius/Documents/GitHub/dump_software/backend/src/Dump.Infrastructure/obj/Debug/net9.0/Dump.Infrastructure.AssemblyInfo.cs
+/Users/vinicius/Documents/GitHub/dump_software/backend/src/Dump.Infrastructure/obj/Debug/net9.0/Dump.Infrastructure.csproj.CoreCompileInputs.cache
+/Users/vinicius/Documents/GitHub/dump_software/backend/src/Dump.Infrastructure/bin/Debug/net9.0/Dump.Infrastructure.deps.json
+/Users/vinicius/Documents/GitHub/dump_software/backend/src/Dump.Infrastructure/bin/Debug/net9.0/Dump.Infrastructure.dll
+/Users/vinicius/Documents/GitHub/dump_software/backend/src/Dump.Infrastructure/bin/Debug/net9.0/Dump.Infrastructure.pdb
+/Users/vinicius/Documents/GitHub/dump_software/backend/src/Dump.Infrastructure/bin/Debug/net9.0/Dump.Application.dll
+/Users/vinicius/Documents/GitHub/dump_software/backend/src/Dump.Infrastructure/bin/Debug/net9.0/Dump.Domain.dll
+/Users/vinicius/Documents/GitHub/dump_software/backend/src/Dump.Infrastructure/bin/Debug/net9.0/Dump.Application.pdb
+/Users/vinicius/Documents/GitHub/dump_software/backend/src/Dump.Infrastructure/bin/Debug/net9.0/Dump.Domain.pdb
+/Users/vinicius/Documents/GitHub/dump_software/backend/src/Dump.Infrastructure/obj/Debug/net9.0/Dump.Inf.5F1A973A.Up2Date
+/Users/vinicius/Documents/GitHub/dump_software/backend/src/Dump.Infrastructure/obj/Debug/net9.0/Dump.Infrastructure.dll
+/Users/vinicius/Documents/GitHub/dump_software/backend/src/Dump.Infrastructure/obj/Debug/net9.0/refint/Dump.Infrastructure.dll
+/Users/vinicius/Documents/GitHub/dump_software/backend/src/Dump.Infrastructure/obj/Debug/net9.0/Dump.Infrastructure.pdb
+/Users/vinicius/Documents/GitHub/dump_software/backend/src/Dump.Infrastructure/obj/Debug/net9.0/ref/Dump.Infrastructure.dll

@@ -1,0 +1,99 @@
+@use '../../../../styles/variables.scss' as variable;
+
+.sign-in-section {
+    display: flex;
+    align-items: center;
+
+    .sign-in-left-side-image {
+        height: 100vh;
+        width: 50vw;
+        object-fit: cover;
+    }
+
+    .sign-in-right-side {
+        margin: auto;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 99vh;
+    }
+
+    .sign-in-form-inputs {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        margin: 16px 0px;
+    }
+
+    .btn-container {
+        #sign-in-button {
+            width: 100%;
+            padding: 12px;
+            border-radius: 12px;
+            background-color: variable.$principal-blue;
+            color: #ffffff;
+            border: none;
+            cursor: pointer;
+        }
+
+        #sign-in-button:disabled {
+            width: 100%;
+            padding: 12px;
+            border-radius: 12px;
+            background-color: variable.$disabled-blue;
+            color: #ffffff;
+            border: none;
+            cursor: pointer;
+        }
+        .btn-container-secondary {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 12px;
+
+            button {
+                background: transparent;
+                border: none;
+                color: variable.$principal-gray;
+                cursor: pointer;
+            }
+        }
+    }
+
+    .sign-in-right-side-join-google {
+        margin: 20px 0px;
+
+        button {
+            width: 100%;
+            padding: 12px;
+            border-radius: 12px;
+            background-color: #ffffff;
+            border: 1px solid variable.$light-gray;
+            cursor: pointer;
+        }
+    }
+
+    .separator {
+        width: 100%;
+        height: 1px;
+        background-color: variable.$light-gray;
+        margin: 20px 0px;
+    }
+
+    .sign-in-form-container {
+        text-align: left;
+
+        .title-section {
+            margin-bottom: 20px;
+        }
+    }
+
+    .hightlight-message {
+        background: linear-gradient(90deg, #1881E2 0%, #BC50FF 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+
+    }
+}

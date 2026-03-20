@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "Hash": "IvUo+6nlZMRkzjoA3z2RGTGPHbmTvoU1pqAyJqfVu9Y=",
+  "Source": "Dump.API",
+  "BasePath": "_content/Dump.API",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}

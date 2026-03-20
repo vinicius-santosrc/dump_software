@@ -1,0 +1,85 @@
+@use '../../../../styles/variables.scss' as variable;
+@use "../../../../styles.scss";
+.basic-input-component {
+  width: 100%;
+}
+
+.input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.basic-input-field {
+  width: 100%;
+  height: 48px;
+  padding: 18px 44px 10px 16px;
+  border-radius: 14px;
+  border: 1px solid variable.$light-gray;
+  font-size: 14px;
+  outline: none;
+  background: #ffffff;
+}
+
+.form-basic-input {
+  width: 100%
+}
+
+.basic-input-field:focus {
+  border-color: #8a8a8a;
+}
+
+.basic-input-label {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 14px;
+  color: variable.$principal-gray;
+  pointer-events: none;
+  transition: all 0.2s ease;
+  background: transparent;
+}
+
+.input-wrapper.focused .basic-input-label {
+  top: 10px;
+  transform: translateY(0);
+  font-size: 11px;
+  color: #5a5a5a;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.eye-icon {
+  width: 18px;
+  height: 18px;
+  display: inline-block;
+  border-radius: 50%;
+  border: 1px solid variable.$principal-gray;
+}
+
+.error {
+  border: 1px solid variable.$error-red;
+  border-radius: 14px;
+
+  .basic-input-label {
+    color: variable.$error-red;
+  }
+
+}
+.error-container .error-message {
+  p {
+    margin-top: 4px;
+    margin-left: 18px;
+    font-size: 12px;
+    color: variable.$error-red;
+  }
+}

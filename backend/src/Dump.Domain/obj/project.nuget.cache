@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "P9dkfhmP1Uk=",
+  "success": true,
+  "projectFilePath": "/Users/vinicius/Documents/GitHub/dump_software/backend/src/Dump.Domain/Dump.Domain.csproj",
+  "expectedPackageFiles": [
+    "/Users/vinicius/.nuget/packages/mongodb.bson/3.7.1/mongodb.bson.3.7.1.nupkg.sha512",
+    "/Users/vinicius/.nuget/packages/system.memory/4.5.5/system.memory.4.5.5.nupkg.sha512",
+    "/Users/vinicius/.nuget/packages/system.runtime.compilerservices.unsafe/5.0.0/system.runtime.compilerservices.unsafe.5.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}

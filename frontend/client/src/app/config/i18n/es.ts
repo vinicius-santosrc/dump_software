@@ -1,0 +1,50 @@
+// ES
+// tslint:disable: max-line-length
+export const locale = {
+    lang: "es",
+    data: {
+        AUTH: {
+            HIGHLIGHT_MESSAGE: "Comparte y sigue momentos con quienes ",
+            HIGHLIGHT_MESSAGE_2: "realmente importan.",
+            GOOGLE_SIGN_IN: "Iniciar sesión con Google",
+            JOIN_DUMP: "Entrar en Dump",
+            FORGOT_PASSWORD: "Recuperar cuenta",
+            INPUTS: {
+                EMAIL: "Número de teléfono, nombre de usuario o correo electrónico",
+                EMAIL_SIGN_UP: "Número de teléfono o correo electrónico",
+                PASSWORD: "Contraseña",
+                FULL_NAME: "Nombre completo",
+                DATE_OF_BIRTH: "Fecha de nacimiento"
+            },
+            BUTTONS: {
+                SIGN_IN: "Iniciar sesión",
+                FORGOT_PASSWORD: "¿Olvidaste tu contraseña?",
+                SIGN_UP: "Crear nueva cuenta",
+                SIGN_IN_ALREADY_HAVE_ACCOUNT: "¿Ya tienes una cuenta? Inicia sesión",
+                CONTINUE: "Continuar"
+            }
+        },
+        LANGUAGES: {
+            PT_BR: "Portugués (Brasil)",
+            EN_US: "Inglés (Estados Unidos)",
+            ES: "Español"
+        },
+        FOOTER: {
+            BUTTONS: {
+                ABOUT: "Acerca de",
+                BLOG: "Blog",
+                API: "API",
+                HELP: "Ayuda",
+                PRIVACY: "Privacidad",
+                TERMS: "Términos",
+                LOCALIZATIONS: "Localizaciones",
+            }
+        },
+        VALIDATIONS: {
+            REQUIRED: "Este campo es obligatorio.",
+            INVALID_EMAIL: "Por favor, introduce un correo electrónico válido.",
+            MIN_LENGTH: "Este campo debe contener al menos {{minLength}} caracteres.",
+            MAX_LENGTH: "Este campo debe contener como máximo {{maxLength}} caracteres."
+        }
+    }
+};

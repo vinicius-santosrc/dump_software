@@ -1,0 +1,44 @@
+@use '../../../../styles/variables.scss' as variable;
+
+footer {
+    margin-bottom: 48px;
+}
+.fast-links {
+    display: flex;
+    gap: 6px;
+    margin: auto;
+    justify-content: center;
+    margin: 14px 0px;
+
+    button {
+        background-color: transparent;
+        color: variable.$principal-gray;
+        border: none;
+        cursor: pointer;
+        font-size: 14px;
+    }
+
+}
+
+.separator {
+    width: 100%;
+    height: 1px;
+    background-color: variable.$light-gray;
+    margin: 12px 0px;
+}
+
+.footer-bottom {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    select {
+        border: none;
+        cursor: pointer;
+        outline: none;
+        color: variable.$principal-gray;
+    }
+    span {
+        font-size: 14px;
+        color: variable.$principal-gray;
+    }
+}

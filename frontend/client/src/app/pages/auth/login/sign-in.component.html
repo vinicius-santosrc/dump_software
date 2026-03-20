@@ -1,0 +1,57 @@
+<section class="sign-in-section">
+    <div class="sign-in-left-side">
+        <div class="sign-in-left-side-image-container">
+            <img [src]="sideImage" alt="Sign In Image" class="sign-in-left-side-image">
+        </div>
+    </div>
+    <div class="sign-in-right-side">
+        <div></div>
+        <div class="sign-in-right-side-container">
+            <div class="sign-in-right-side-logo">
+                <img [src]="logo" alt="Logo" />
+            </div>
+            <div class="sign-in-right-side-message">
+                <span>{{ 'AUTH.HIGHLIGHT_MESSAGE' | translate }} <span class="hightlight-message">{{
+                        'AUTH.HIGHLIGHT_MESSAGE_2' | translate }}</span></span>
+            </div>
+            <div class="sign-in-right-side-join-google">
+                @if(pageType !== "forgotpassword") {
+                <button>
+                    <img [src]="googleIcon" alt="Google Icon" />
+                    {{ 'AUTH.GOOGLE_SIGN_IN' | translate }}
+                </button>
+                }
+            </div>
+            <div class="separator"></div>
+            <div class="sign-in-form-container">
+                <span class="title-section">{{ pageType !== 'forgotpassword' ? ('AUTH.JOIN_DUMP' | translate) : ('AUTH.FORGOT_PASSWORD' | translate) }}</span>
+                <div class="sign-in-form-inputs">
+                    @for(field of fields; track field) {
+                    <app-basic-input [(ngModel)]="inputs[field.name]" [label]="field.label" [type]="field.type"
+                        [required]="field.required" [maxLength]="field.maxLength" [minLength]="field.minLength">
+                    </app-basic-input>
+                    }
+                </div>
+            </div>
+            <div class="btn-container">
+                <button [disabled]="isButtonDisabled()" (click)="handlePressSign()" id="sign-in-button">{{ pageType ===
+                    'signin' ? ('AUTH.BUTTONS.SIGN_IN' | translate) : (
+                        pageType == "forgotpassword" ? 
+                        ('AUTH.BUTTONS.CONTINUE' | translate)
+                        :
+                        ('AUTH.BUTTONS.SIGN_UP' | translate)
+                    ) }}</button>
+                <div class="btn-container-secondary">
+                    @if(pageType === 'signin') {
+                    <button (click)="redirectPage(true)">{{ 'AUTH.BUTTONS.FORGOT_PASSWORD' | translate }}</button>
+                    <button (click)="redirectPage()">{{ 'AUTH.BUTTONS.SIGN_UP' | translate }}</button>
+                    } @else {
+                    <button (click)="redirectPage()">{{ 'AUTH.BUTTONS.SIGN_IN_ALREADY_HAVE_ACCOUNT' | translate
+                        }}</button>
+                    }
+                </div>
+            </div>
+        </div>
+        <app-footer-auth />
+    </div>
+</section>

@@ -1,0 +1,40 @@
+<div #basicInput class="basic-input-component">
+  <div class="input-wrapper" [class.focused]="focused || value" [class.error]="showError">
+      <input class="basic-input-field" [type]="currentType" [value]="value" (focus)="focused = true" (blur)="focused = false; onBlur()" (input)="onInput($event)" />
+
+    @if (label) {
+    <label class="basic-input-label">
+      {{ label | translate }}
+      @if (required) {
+        <span class="required">*</span>
+      }
+    </label>
+    }
+
+    @if (type === 'password') {
+    <button type="button" class="password-toggle" (click)="togglePassword()">
+      <mat-icon>visibility</mat-icon>
+    </button>
+    }
+  </div>
+  <div class="error-container">
+    @if (showError) {
+      <div class="error-message">
+        @if (hasMaxLengthError) {
+          <p>* {{ 'VALIDATIONS.MAX_LENGTH' | translate: { maxLength: maxLength } }}</p>
+        }
+        @if (hasMinLengthError) {
+          <p>* {{ 'VALIDATIONS.MIN_LENGTH' | translate: { minLength: minLength } }}</p>
+        }
+        @if (hasRequiredError) {
+          <p>* {{ 'VALIDATIONS.REQUIRED' | translate }}</p>
+        }
+      </div>
+    }
+    @else {
+      <div class="error-message">
+        <p>&nbsp;</p>
+      </div>
+      }
+  </div>
+</div>
