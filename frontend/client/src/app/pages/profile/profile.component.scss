@@ -1,0 +1,185 @@
+.profile {
+    max-width: 100%;
+    margin: 0 auto;
+    padding-bottom: 40px;
+    margin-top: 120px;
+}
+
+/* COVER */
+.profile-cover {
+    height: 180px;
+    background: linear-gradient(135deg, #ccc, #999);
+    border-radius: 12px;
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 12px;
+    }
+}
+
+/* HEADER */
+.profile-header {
+    display: flex;
+    justify-content: space-between;
+    margin-top: -60px;
+    padding: 0 20px;
+}
+
+.left {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 4px solid white;
+    object-fit: cover;
+}
+
+/* USER INFO */
+.user-info {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    h2 {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .username {
+        opacity: 0.6;
+        font-size: 14px;
+    }
+
+    .bio {
+        font-size: 14px;
+    }
+
+    a {
+        color: #007bff;
+        font-size: 13px;
+    }
+}
+
+/* STATS */
+.stats {
+    display: flex;
+    gap: 16px;
+    margin-top: 6px;
+    font-size: 14px;
+}
+
+/* ACTIONS */
+.actions {
+    display: flex;
+    gap: 8px;
+
+    button {
+        padding: 8px 14px;
+        border-radius: 8px;
+        border: 1px solid #ddd;
+        cursor: pointer;
+        background: white;
+    }
+
+    .primary {
+        background: black;
+        color: white;
+        border: none;
+    }
+}
+
+/* TABS */
+.tabs {
+    display: flex;
+    gap: 24px;
+    margin-top: 30px;
+    padding: 0 20px;
+    border-bottom: 1px solid #eee;
+
+    span {
+        padding-bottom: 10px;
+        cursor: pointer;
+        opacity: 0.6;
+    }
+
+    .active {
+        opacity: 1;
+        border-bottom: 2px solid black;
+    }
+}
+
+/* FEED */
+.profile-feed {
+    margin-top: 20px;
+}
+
+/* GRID */
+.masonry {
+    column-count: 3;
+    column-gap: 12px;
+    padding: 0 20px;
+}
+
+.post-card {
+    position: relative;
+    break-inside: avoid;
+    margin-bottom: 12px;
+    cursor: pointer;
+
+    img,
+    video {
+        width: 100%;
+        border-radius: 10px;
+        object-fit: cover;
+    }
+
+    .overlay {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 16px;
+        background: rgba(0, 0, 0, 0.4);
+        color: white;
+        opacity: 0;
+        transition: 0.2s;
+    }
+
+    &:hover .overlay {
+        opacity: 1;
+    }
+}
+
+/* EMPTY */
+.empty {
+    text-align: center;
+    margin-top: 40px;
+    opacity: 0.6;
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+
+    .profile-header {
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .masonry {
+        column-count: 2;
+    }
+
+    .avatar {
+        width: 90px;
+        height: 90px;
+    }
+}

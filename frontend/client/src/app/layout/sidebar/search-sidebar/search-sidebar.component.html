@@ -1,0 +1,29 @@
+<div class="overlay" (click)="onOverlayClick($event)">
+
+    <div class="search-sidebar" (click)="$event.stopPropagation()">
+
+        <div class="header">
+            <h2>Buscar</h2>
+            <button (click)="handleClose()">✕</button>
+        </div>
+
+        <input 
+            #input 
+            type="text" 
+            [(ngModel)]="query" 
+            placeholder="Buscar usuários, posts..."
+            autocomplete="off"
+        />
+
+        <!-- RESULTADOS (placeholder) -->
+        <div class="results">
+            @if(query.length > 0) {
+            <p>Resultados para "{{query}}"</p>
+            } @else {
+            <p class="empty">Comece a digitar...</p>
+            }
+        </div>
+
+    </div>
+
+</div>

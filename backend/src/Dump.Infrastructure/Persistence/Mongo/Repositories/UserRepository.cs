@@ -19,15 +19,13 @@ public class UserRepository : IUserRepository
 
     public async Task<User?> GetByEmailAsync(string email)
     {
-        var filter = Builders<User>.Filter.Eq("email", email);
-        var userfounded = await _users.Find(filter).FirstOrDefaultAsync();
+        var userfounded = await _users.Find(u => u.Email == email).FirstOrDefaultAsync();
         return userfounded;
     }
 
     public async Task<User?> GetByPhoneNumberAsync(string phoneNumber)
     {
-        var filter = Builders<User>.Filter.Eq("phoneNumber", phoneNumber);
-        var userfounded = await _users.Find(filter).FirstOrDefaultAsync();
+        var userfounded = await _users.Find(u => u.PhoneNumber == phoneNumber).FirstOrDefaultAsync();
         return userfounded;
     }
     public async Task<User?> GetByUsernameAsync(string username)
@@ -46,5 +44,17 @@ public class UserRepository : IUserRepository
     {
 
         await _users.DeleteOneAsync(u => u.Id == id);
+    }
+
+    public async Task<User[]> GetRelatedByCurrentUser(string id)
+    {
+        var usersfounded = await _users.Find(u => u.Id != id).ToListAsync();
+        return usersfounded.ToArray();
+    }
+
+    public async Task UpdateUsers(User currentUser, User targetUser)
+    {
+        await _users.ReplaceOneAsync(u => u.Id == currentUser.Id, currentUser);
+        await _users.ReplaceOneAsync(u => u.Id == targetUser.Id, targetUser);
     }
 }

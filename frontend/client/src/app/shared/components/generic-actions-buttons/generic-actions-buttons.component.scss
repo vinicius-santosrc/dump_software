@@ -1,0 +1,20 @@
+.generic-actions-buttons {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    button {
+            width: 182px;
+            padding: 8px;
+            border-radius: 12px;
+            cursor: pointer;
+        }
+    .followBtn {
+        background-color: #1881E2;
+        color: white;
+        border: 1px solid #1881E2;
+    }
+    
+    .sendMessage, .followingBtn {
+        border: none;
+    }
+}

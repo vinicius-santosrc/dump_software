@@ -41,10 +41,32 @@ namespace Dump.API
                 var connectionString = Environment.GetEnvironmentVariable("MONGO_CONNECTION");
                 return new MongoDB.Driver.MongoClient(connectionString);
             });
+            services.AddSingleton<MongoDB.Driver.IMongoDatabase>(sp =>
+            {
+                var client = sp.GetRequiredService<MongoDB.Driver.IMongoClient>();
+                var databaseName = Environment.GetEnvironmentVariable("MONGO_DATABASE") ?? "dump_db";
+                return client.GetDatabase(databaseName);
+            });
 
             // Repositories
             services.AddScoped<Dump.Application.Interfaces.IUserRepository, Dump.Infrastructure.Persistence.Mongo.Repositories.UserRepository>();
             services.AddScoped<Dump.Application.Interfaces.IRefreshTokenRepository, Dump.Infrastructure.Persistence.Mongo.Repositories.RefreshTokenRepository>();
+
+            // Posts
+            services.AddScoped<Dump.Application.Interfaces.IPostsRepository, Dump.Infrastructure.Persistence.Mongo.Repositories.PostsRepository>();
+            services.AddScoped<Dump.Application.Interfaces.ICommentsRepository, Dump.Infrastructure.Persistence.Mongo.Repositories.CommentsRepository>();
+
+            // Post service
+            services.AddScoped<Dump.Application.Features.Post.PostService>();
+
+            // Comments service
+            services.AddScoped<Dump.Application.Features.Post.CommentsService>();
+
+            // User service
+            services.AddScoped<Dump.Application.Features.User.UserService>();
+
+            // Message Service
+            services.AddScoped<Dump.Application.Features.Messages.MessageService>();
 
             // Auth service
             services.AddScoped<AuthService>();

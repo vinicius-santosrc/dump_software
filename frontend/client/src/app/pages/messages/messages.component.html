@@ -1,0 +1,10 @@
+<div class="messages">
+    <!-- SIDEBAR -->
+    <app-messages-sidebar 
+      [relatedUsers]="relatedUsers" 
+      (selectUser)="selectedUser = $event"
+    />
+
+    <!-- CHAT -->
+    <app-messages-chat [user]="selectedUser" style="width: 100%;" />
+</div>

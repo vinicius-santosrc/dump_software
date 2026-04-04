@@ -1,0 +1,69 @@
+<section class="user-card user-card--interactive user-card--hoverable" [ngClass]="{
+    'user-card--light': theme === 'light',
+    'user-card--dark': theme !== 'light'
+  }" role="button" tabindex="0" aria-label="User profile card">
+
+    <div class="user-card__container user-card__container--flex user-card__container--row">
+
+        <!-- PROFILE IMAGE -->
+        <div class="user-card__avatar-wrapper user-card__avatar-wrapper--rounded user-card__avatar-wrapper--with-border"
+            [style.width]="imageWidth" [style.height]="imageWidth" (click)="onClickCard()" [ngClass]="{
+                'user-card__avatar-wrapper--verified': user?.verified,
+                'user-card__avatar-wrapper--default': !user?.profilePictureUrl
+            }">
+            <img class="user-card__avatar-image"
+                [src]="user?.profilePictureUrl || 'assets/app/media/default-avatar.webp'" [alt]="user?.fullName"
+                loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false" [style.width]="'100%'"
+                [style.height]="'100%'" />
+
+            <!-- ONLINE INDICATOR -->
+            <span class="user-card__avatar-status user-card__avatar-status--online"></span>
+        </div>
+
+        <!-- USER INFO -->
+        <div class="user-card__info user-card__info--column" (click)="onClickCard()">
+
+            <div class="user-card__header">
+                <span class="user-card__name" [style.fontSize]="fontSize" [title]="user?.fullName">
+                    {{ user?.fullName }} <mat-icon
+                        style="font-size: 14px; width: 14px; height: 14px;">verified</mat-icon>
+                </span>
+            </div>
+
+            <div class="user-card__meta">
+                <span class="user-card__username" [style.fontSize]="fontSize" [title]="'@' + user?.username">
+                    {{ '@' + user?.username }}
+                </span>
+            </div>
+        </div>
+
+        <!-- ACTION BUTTON -->
+        @if(showActionButton) {
+        <div class="user-card__actions">
+            @if(hasFollowButton) {
+            @if(isFollowing) {
+            <button (click)="handleFollowButtonClick()"
+                class="user-card__following-btn user-card__follow-btn--following" type="button"
+                aria-label="Unfollow user">
+                {{ 'FEED.CARD.BUTTON.UNFOLLOW' | translate }}
+            </button>
+            }
+            @else {
+            <button (click)="handleFollowButtonClick()" class="user-card__follow-btn" type="button"
+                aria-label="Follow user">
+                + {{ 'FEED.CARD.BUTTON.FOLLOW' | translate }}
+            </button>
+            }
+            }
+            @else {
+            <button (click)="onClickActionButton()" class="user-card__follow-btn" type="button"
+                aria-label="Follow user">
+                {{ buttonText | translate }}
+            </button>
+            }
+        </div>
+        }
+
+    </div>
+
+</section>

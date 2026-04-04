@@ -59,3 +59,4 @@
 /Users/vinicius/Documents/GitHub/dump_software/backend/src/Dump.API/obj/Debug/net9.0/Dump.API.pdb
 /Users/vinicius/Documents/GitHub/dump_software/backend/src/Dump.API/obj/Debug/net9.0/Dump.API.genruntimeconfig.cache
 /Users/vinicius/Documents/GitHub/dump_software/backend/src/Dump.API/obj/Debug/net9.0/ref/Dump.API.dll
+/Users/vinicius/Documents/GitHub/dump_software/backend/src/Dump.API/obj/Debug/net9.0/Dump.API.sourcelink.json

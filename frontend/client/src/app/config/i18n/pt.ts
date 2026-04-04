@@ -24,6 +24,22 @@ export const locale = {
                 CONTINUE: 'Continuar'
             }
         },
+        HEADER: {
+            ACTIONS: {
+                SIDEBAR: {
+                    TITLE: "Ações rápidas",
+                    HOME: "Início",
+                    DUMPS: "Dumps",
+                    SEARCH: "Buscar",
+                    ALERTS: "Notificações",
+                    SAVES: "Salvos",
+                    ADD_POST: "Novo dump",
+                    MENU: "Menu",
+                    SETTINGS: "Ajustes",
+                },
+                CONVERSATIONS: "Conversas"
+            }
+        },
         LANGUAGES: {
             PT_BR: "Português (Brasil)",
             EN_US: "English (United States)",
@@ -45,6 +61,27 @@ export const locale = {
             INVALID_EMAIL: "Por favor, insira um email válido.",
             MIN_LENGTH: "Este campo deve conter no mínimo {{minLength}} caracteres.",
             MAX_LENGTH: "Este campo deve conter no máximo {{maxLength}} caracteres."
+        },
+        FEED: {
+            MEMORIES: {
+                ADD: "Adicionar memória",
+                YOURS: "Sua memória"
+            },
+            POST: {
+                FOLLOW: "Seguir"
+            },
+            CARD: {
+                WHO_FOLLOW: "quem seguir",
+                TENDING_TOPICS: "sobre o que estão falando",
+                SEE_ALL: "Ver tudo",
+                BUTTON: {
+                    FOLLOW: "Conectar",
+                    TALK: "Conversar",
+                    UNFOLLOW: "Conectado",
+                    MORE_INFO: "Saber mais",
+                    OF_POSTS: "de posts"
+                }
+            }
         }
     }
 }

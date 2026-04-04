@@ -1,0 +1,17 @@
+<div class="post-media">
+
+    @if(media.length === 1) {
+
+    @if(media[0].type === 'image') {
+    <img [src]="media[0].url" alt="Post" />
+    }
+
+    @if(media[0].type === 'video') {
+    <app-video-dump [src]="media[0].url" />
+    }
+
+    } @else {
+    <app-post-carousel [media]="media" />
+    }
+
+</div>

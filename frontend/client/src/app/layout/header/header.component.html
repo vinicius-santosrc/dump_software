@@ -1,0 +1,28 @@
+<header class="header-component" [ngStyle]="{'background': router.url === '/' ? '#ffffff' : null}"
+    [class.hidden]="isHidden">
+    @if(router.url === '/') {
+    <div class="header-component-top">
+        <div class="header-component-left">
+        </div>
+        <div class="header-component-center">
+            <img [src]="logo" alt="Dump Logo" />
+        </div>
+        <div class="header-component-right">
+            <button (click)="openMessages()">
+                <img class="message-icon" width="32" height="32"
+                    src="https://img.icons8.com/windows/32/telegram-app.png" alt="telegram-app" />
+                <span>{{"HEADER.ACTIONS.CONVERSATIONS" | translate}}</span>
+            </button>
+            <div class="account-details">
+                <img [src]="current_user?.profilePictureUrl || 'assets/app/media/default-avatar.webp'"
+                    alt="Your account" />
+            </div>
+        </div>
+    </div>
+}
+    @if(router.url === '/') {
+    <div class="header-component-bottom">
+        <app-memories-component [width]="width" [user]="current_user" />
+    </div>
+    }
+</header>

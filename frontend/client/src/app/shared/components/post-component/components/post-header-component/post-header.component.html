@@ -1,0 +1,13 @@
+<div class="post-title">
+    <div class="account-post-detail">
+        <app-generic-card-user 
+            [user]="user" 
+            [theme]="theme" 
+            [style.width]="'100%'"
+        />
+    </div>
+
+    <div class="post-media-caption" [id]="isModal ? 'light' : 'dark'">
+        <span>{{ caption }}</span>
+    </div>
+</div>

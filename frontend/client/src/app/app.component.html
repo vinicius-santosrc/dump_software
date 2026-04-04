@@ -4,5 +4,19 @@
     <img [src]="splashScreenImage" alt="Splash" class="splash-logo" />
   </div>
 </div>
-
+@if(!WHITE_LIST_ROUTES.includes(window.location.pathname)) {
+  <!-- LATERAL BARRA -->
+  
+  <app-sidebar-component />
+  
+  <!-- HEADER -->
+  <app-header [width]="width" />
+  <main class="dump_content">
+    <aside class="dump_content_aside" [style.width]="width" [style.margin]="'auto'">
+      <router-outlet />
+    </aside>
+  </main>
+}
+@else {
 <router-outlet />
+}

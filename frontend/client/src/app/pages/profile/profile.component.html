@@ -1,0 +1,70 @@
+<section class="profile">
+
+    <!-- COVER -->
+    <div class="profile-cover">
+        <img src="{{user?.coverPhotoUrl}}" alt="Capa do perfil" />
+    </div>
+
+    <!-- HEADER -->
+    <div class="profile-header">
+
+        <div class="left">
+            <app-generic-card-user [user]="user" [imageWidth]="'120px'" [fontSize]="'18px'"
+                [showActionButton]="false"></app-generic-card-user>
+
+            <div class="stats">
+                <span><b>{{posts?.length}}</b> posts</span>
+                <span><b>{{user?.followers?.length}}</b> seguidores</span>
+                <span><b>{{user?.following?.length}}</b> seguindo</span>
+            </div>
+        </div>
+
+        <!-- ACTIONS -->
+        <app-generic-actions-buttons [user]="user" />
+
+    </div>
+
+    <!-- TABS -->
+    <div class="tabs">
+        <span [class.active]="activeTab === 'posts'" (click)="setTab('posts')">Posts</span>
+        <span [class.active]="activeTab === 'media'" (click)="setTab('media')">Mídia</span>
+        <span [class.active]="activeTab === 'likes'" (click)="setTab('likes')">Curtidas</span>
+    </div>
+
+    <!-- FEED -->
+    <div class="profile-feed">
+
+        <!-- EMPTY -->
+        @if(!posts || posts.length === 0) {
+        <div class="empty">
+            <p>Nenhum post ainda</p>
+        </div>
+        }
+
+        <!-- POSTS -->
+        <div class="masonry">
+
+            @for (post of filteredPosts; track post.id; let i = $index) {
+
+            <div class="post-card" (click)="navigateToPost(post)">
+
+                @if(post.media[0].type === "image") {
+                <img [src]="post.media[0]?.url" />
+                } @else {
+                <video [src]="post.media[0]?.url"></video>
+                }
+
+                <div class="overlay">
+                    <span>❤️ {{post.likes?.length}}</span>
+                    <span>💬 {{post.comments?.length}}</span>
+                </div>
+
+            </div>
+
+            }
+
+        </div>
+
+    </div>
+
+</section>

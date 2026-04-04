@@ -10,7 +10,7 @@ export const locale = {
             JOIN_DUMP: "Entrar en Dump",
             FORGOT_PASSWORD: "Recuperar cuenta",
             INPUTS: {
-                EMAIL: "Número de teléfono, nombre de usuario o correo electrónico",
+                EMAIL: "Número de teléfono, usuario o correo electrónico",
                 EMAIL_SIGN_UP: "Número de teléfono o correo electrónico",
                 PASSWORD: "Contraseña",
                 FULL_NAME: "Nombre completo",
@@ -22,6 +22,19 @@ export const locale = {
                 SIGN_UP: "Crear nueva cuenta",
                 SIGN_IN_ALREADY_HAVE_ACCOUNT: "¿Ya tienes una cuenta? Inicia sesión",
                 CONTINUE: "Continuar"
+            }
+        },
+        HEADER: {
+            ACTIONS: {
+                SIDEBAR: {
+                    TITLE: "Acciones rápidas",
+                    HOME: "Inicio",
+                    DUMPS: "Dumps",
+                    SEARCH: "Buscar",
+                    ALERTS: "Notificaciones",
+                    SAVES: "Guardados"
+                },
+                CONVERSATIONS: "Conversaciones"
             }
         },
         LANGUAGES: {
@@ -37,14 +50,27 @@ export const locale = {
                 HELP: "Ayuda",
                 PRIVACY: "Privacidad",
                 TERMS: "Términos",
-                LOCALIZATIONS: "Localizaciones",
+                LOCALIZATIONS: "Ubicaciones",
             }
         },
         VALIDATIONS: {
             REQUIRED: "Este campo es obligatorio.",
-            INVALID_EMAIL: "Por favor, introduce un correo electrónico válido.",
-            MIN_LENGTH: "Este campo debe contener al menos {{minLength}} caracteres.",
-            MAX_LENGTH: "Este campo debe contener como máximo {{maxLength}} caracteres."
+            INVALID_EMAIL: "Por favor, introduce un correo válido.",
+            MIN_LENGTH: "Este campo debe tener al menos {{minLength}} caracteres.",
+            MAX_LENGTH: "Este campo debe tener como máximo {{maxLength}} caracteres."
+        },
+        FEED: {
+            MEMORIES: {
+                ADD: "Agregar recuerdo",
+                YOURS: "Tu recuerdo"
+            },
+            POST: {
+                FOLLOW: "Seguir"
+            },
+            CARD: {
+                WHO_FOLLOW: "a quién seguir",
+                TENDING_TOPICS: "de qué están hablando"
+            }
         }
     }
-};
+}

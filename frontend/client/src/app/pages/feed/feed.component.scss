@@ -1,0 +1,111 @@
+.feed-component {
+    margin: auto;
+    margin-top: 216px;
+    display: flex;
+    align-items: top;
+    gap: 22px;
+    transition: width 0.3s ease;
+}
+
+.feed-inside {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.feed-who-follow {
+    width: 260px;
+}
+
+.topic-item {
+    width: 100%;
+    cursor: pointer;
+
+    aside {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .top-item-info {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .top-item-info {
+        span {
+            font-size: 16px;
+            color: #5A5A5A;
+        }
+
+        #title {
+            color: black;
+        }
+    }
+
+    button {
+        background-color: transparent;
+        border: none;
+        color: #1881E2;
+        outline: none;
+    }
+}
+
+.profile_user_related {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .profile_user_related_info {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        .profile_user_related_name {
+            display: flex;
+            flex-direction: column;
+            span {
+                font-size: 14px;
+            }
+        }
+        img {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+        }
+    }
+
+    button {
+        background-color: transparent;
+        border: none;
+        color: #1881E2;
+        outline: none;
+    }
+}
+
+.feed-recommendations {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .feed-component {
+        margin-top: 120px;
+        flex-direction: column;
+        width: 100%;
+        padding: 0;
+    }
+
+    .feed-inside {
+        width: 100%;
+    }
+
+    .feed-recommendations {
+        display: none;
+    }
+
+    app-post-component {
+        width: 100%;
+    }
+}

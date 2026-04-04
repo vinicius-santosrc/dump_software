@@ -1,0 +1,14 @@
+<div class="post-actions" [ngClass]="{'post-actions--light': theme === 'light', 'post-actions--dark': theme !== 'light'}">
+    <button (click)="handleLike(post?.id)">
+        <mat-icon class="heart" [class.liked]="liked" [fontSet]="liked ? 'material-icons-outlined' : 'material-symbols-outlined'">favorite</mat-icon>
+        <span [class.like-up]="liked" [class.like-down]="!liked">{{post?.likes?.length}}</span>
+    </button>
+    <button (click)="handleSave()">
+        <mat-icon fontSet="material-icons-outlined">bookmark_border</mat-icon>
+        <span>{{post?.saves?.length}}</span>
+    </button>
+    <button (click)="handleSend()">
+        <mat-icon fontSet="material-symbols-outlined">send</mat-icon>
+        <span>0</span>
+    </button>
+</div>

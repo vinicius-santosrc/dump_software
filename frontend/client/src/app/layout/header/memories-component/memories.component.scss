@@ -1,0 +1,81 @@
+@use '../../../../styles/variables.scss' as variable;
+.memories-list {
+    display: flex;
+    justify-content: flex-start;
+    gap: 18px;
+    align-items: center;
+    width: 880px;
+    margin: auto;
+
+    @media (max-width: 768px) {
+        width: 100%;
+        padding: 0 12px;
+        gap: 12px;
+        overflow-x: auto;
+        scroll-behavior: smooth;
+
+        /* remove scrollbar visual */
+        &::-webkit-scrollbar {
+            display: none;
+        }
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+}
+
+.memorie-card {
+    text-align: center;
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    gap: 8px;
+    cursor: pointer;
+    img {
+        border-radius: 66px;
+        width: 66px;
+        height: 66px;
+        object-fit: cover;
+        margin: auto;
+    }
+
+    span {
+        font-size: 14px;
+        text-align: center;
+    }
+
+    .add-icon {
+        top: 60%;
+        left: 40%;
+        position: absolute;
+        border-radius: 100%;
+        width: 20px;
+        height: 20px;
+        margin: auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        background-color: variable.$principal-blue;
+    }
+
+    @media (max-width: 768px) {
+        min-width: 60px;
+
+        span {
+            display: none;
+        }
+
+        img {
+            width: 56px;
+            height: 56px;
+        }
+
+        .add-icon {
+            width: 18px;
+            height: 18px;
+            font-size: 12px;
+            top: 58%;
+            left: 38%;
+        }
+    }
+}

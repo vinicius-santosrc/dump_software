@@ -10,3 +10,4 @@
 /Users/vinicius/Documents/GitHub/dump_software/backend/src/Dump.Domain/obj/Debug/net9.0/Dump.Domain.pdb
 /Users/vinicius/Documents/GitHub/dump_software/backend/src/Dump.Domain/obj/Debug/net9.0/ref/Dump.Domain.dll
 /Users/vinicius/Documents/GitHub/dump_software/backend/src/Dump.Domain/obj/Debug/net9.0/Dump.Domain.csproj.AssemblyReference.cache
+/Users/vinicius/Documents/GitHub/dump_software/backend/src/Dump.Domain/obj/Debug/net9.0/Dump.Domain.sourcelink.json

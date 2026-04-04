@@ -25,8 +25,6 @@ export class AuthService {
         return this.http.post(`${API_CONFIG.baseUrl}${this.API}/login`, data, { withCredentials: true }).pipe(
             tap((response: any) => {
                 localStorage.setItem('accessToken', response.accessToken);
-                const router = inject(Router);
-                router.navigate(["/"])
             })
         );
     }

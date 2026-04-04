@@ -1,0 +1,47 @@
+<div class="comments" [class]="theme">
+
+    @if(comments.length === 0) {
+        <p class="empty">Sem comentários ainda. Seja o primeiro a comentar!</p>
+    }
+
+    @for(comment of comments; track comment._id) {
+        <ng-container *ngTemplateOutlet="commentTpl; context: { $implicit: comment, level: 0 }"></ng-container>
+    }
+
+    <ng-template #commentTpl let-comment let-level="level">
+        <div class="comment" [style.marginLeft.px]="level * 16">
+
+            <div class="avatar"></div>
+
+            <div class="content">
+                <span class="username">{{"@" + comment.user?.username || 'user'}}</span>
+                <span class="text">{{comment.content}}</span>
+
+                <span class="reply-btn" (click)="startReply(comment._id)">Responder</span>
+
+                <!-- INPUT RESPOSTA -->
+                @if(replyingToId === comment._id) {
+                    <div class="reply-box">
+                        <input 
+                            type="text" 
+                            placeholder="Responder..."
+                        />
+                        <button (click)="sendReply(comment)">Enviar</button>
+                        <button class="cancel" (click)="cancelReply()">Cancelar</button>
+                    </div>
+                }
+
+                <!-- RESPONSES (RECURSIVO) -->
+                @if(comment.responses?.length > 0) {
+                    <div class="responses">
+                        @for(child of comment.responses; track child._id) {
+                            <ng-container *ngTemplateOutlet="commentTpl; context: { $implicit: child, level: level + 1 }"></ng-container>
+                        }
+                    </div>
+                }
+            </div>
+
+        </div>
+    </ng-template>
+
+</div>

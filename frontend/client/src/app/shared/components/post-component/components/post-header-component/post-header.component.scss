@@ -1,0 +1,27 @@
+.post-title {
+    padding: 12px 20px;
+}
+
+.post-media-caption {
+    margin: 16px 0px;
+}
+
+.account-post-detail {
+    display: flex;
+    width: 100%;
+}
+
+#light span {
+    color: white;
+}
+
+@media (max-width: 768px) {
+    .post-title {
+        padding: 10px 12px;
+    }
+
+    .post-media-caption {
+        margin: 10px 0;
+        font-size: 14px;
+    }
+}

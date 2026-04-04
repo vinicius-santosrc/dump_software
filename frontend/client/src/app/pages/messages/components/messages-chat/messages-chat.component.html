@@ -1,0 +1,54 @@
+<section class="messages__chat" *ngIf="user">
+    <header class="chat__header">
+        <div class="chat__user">
+            <img [src]="user.profilePictureUrl" />
+            <div>
+                <p>{{ user.fullName }}</p>
+                <span>Active 9m ago</span>
+            </div>
+        </div>
+
+        <div class="chat__actions">
+            <button id="call">
+                <mat-icon>phone</mat-icon>
+            </button>
+            <button id="video-call">
+                <mat-icon>video_call</mat-icon>
+            </button>
+            <button id="info">
+                <mat-icon>info</mat-icon>
+            </button>
+        </div>
+    </header>
+
+    <div class="chat__body" style="scroll-behavior: smooth;">
+        <div *ngFor="let msg of messages" class="message" [class.me]="msg.senderId === current_user.id">
+            <div class="message__bubble" [class.message__bubble--mine]="msg.senderId === current_user.id">
+                {{ msg.text }}
+            </div>
+        </div>
+    </div>
+
+    <div class="chat__input">
+        <div class="chat__input-actions">
+            <button>＋</button>
+
+        </div>
+
+        <input type="text" [(ngModel)]="input" placeholder="Escreva uma mensagem" />
+
+        <button *ngIf="input !== ''" (click)="sendMessage()">Enviar</button>
+
+        <div class="chat__input-right" *ngIf="input === ''">
+            <button>😊</button>
+            <button>👍</button>
+        </div>
+    </div>
+</section>
+
+<section class="no_chat__screen" *ngIf="!user">
+    <div class="no_chat__content">
+        <h2>Select a conversation</h2>
+        <p>Choose a conversation from the left to start chatting.</p>
+    </div>
+</section>

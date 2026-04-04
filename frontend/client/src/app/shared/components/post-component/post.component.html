@@ -1,0 +1,9 @@
+<article [ngStyle]="{'background-color': backgroundColor, 'color': textColor}">
+    <div class="post-component-ref">
+        <app-post-header [user]="post?.user" [caption]="post?.caption" [theme]="textColor == '#ffffff' ? 'dark' : 'light'" />
+
+        <app-post-media [media]="post?.media || []" />
+
+        <app-post-action-buttons [post]="post" [theme]="textColor == '#ffffff' ? 'dark' : 'light'"/>
+    </div>
+</article>

@@ -30,7 +30,7 @@ public class AuthService
     public async Task<AuthRegisterResponse> Register(RegisterDto dto)
     {
         var username = await GenerateUsername(dto.FullName);
-        var user = new User
+        var user = new Dump.Domain.Entities.User
         {
             FullName = dto.FullName,
             BirthDate = dto.BirthDate,
@@ -74,9 +74,12 @@ public class AuthService
 
     public async Task<AuthResponse> Login(LoginDto userLogin)
     {
-        User? user;
+        Dump.Domain.Entities.User? user;
 
         var input = userLogin.UserOrCellphoneOrEmail;
+
+        if(input == "")
+            throw new UnauthorizedException("Input de login é obrigatório");
 
         if (input.Contains("@"))
         {
@@ -163,7 +166,7 @@ public class AuthService
         };
     }
 
-    private string GenerateJwt(User user)
+    private string GenerateJwt(Dump.Domain.Entities.User user)
     {
         var key = new SymmetricSecurityKey(
             Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("JWT_KEY"))
@@ -213,5 +216,10 @@ public class AuthService
         } while (exists);
 
         return username;
+    }
+
+    public async Task<Dump.Domain.Entities.User?> GetUserById(string id)
+    {
+        return await _userRepository.GetByIdAsync(id);
     }
 }

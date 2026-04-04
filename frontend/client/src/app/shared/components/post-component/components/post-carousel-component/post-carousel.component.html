@@ -1,0 +1,42 @@
+<div class="carousel-wrapper">
+
+    <div 
+        class="carousel" 
+        [style.transform]="'translateX(-' + currentIndex * 100 + '%)'"
+        (touchstart)="onTouchStart($event)"
+        (touchmove)="onTouchMove($event)"
+        (touchend)="onTouchEnd()"
+    >
+        @for(item of media; track item.url) {
+
+        <div class="slide">
+
+            @if(item.type === 'image') {
+            <img [src]="item.url" alt="Post" />
+            }
+
+            @if(item.type === 'video') {
+            <app-video-dump [src]="item.url" />
+            }
+
+        </div>
+
+        }
+    </div>
+
+    <!-- ARROWS -->
+    @if(media.length > 1) {
+    <button class="prev" (click)="prev()">‹</button>
+    <button class="next" (click)="next()">›</button>
+    }
+
+    <!-- DOTS -->
+    @if(media.length > 1) {
+    <div class="dots">
+        @for(item of media; let i = $index; track i) {
+        <span [class.active]="i === currentIndex" (click)="goTo(i)"></span>
+        }
+    </div>
+    }
+
+</div>

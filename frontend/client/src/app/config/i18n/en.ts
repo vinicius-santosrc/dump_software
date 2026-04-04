@@ -24,6 +24,19 @@ export const locale = {
                 CONTINUE: "Continue"
             }
         },
+        HEADER: {
+            ACTIONS: {
+                SIDEBAR: {
+                    TITLE: "Quick actions",
+                    HOME: "Home",
+                    DUMPS: "Dumps",
+                    SEARCH: "Search",
+                    ALERTS: "Notifications",
+                    SAVES: "Saved"
+                },
+                CONVERSATIONS: "Messages"
+            }
+        },
         LANGUAGES: {
             PT_BR: "Portuguese (Brazil)",
             EN_US: "English (United States)",
@@ -43,8 +56,21 @@ export const locale = {
         VALIDATIONS: {
             REQUIRED: "This field is required.",
             INVALID_EMAIL: "Please enter a valid email.",
-            MIN_LENGTH: "This field must contain at least {{minLength}} characters.",
-            MAX_LENGTH: "This field must contain at most {{maxLength}} characters."
+            MIN_LENGTH: "This field must have at least {{minLength}} characters.",
+            MAX_LENGTH: "This field must have at most {{maxLength}} characters."
+        },
+        FEED: {
+            MEMORIES: {
+                ADD: "Add memory",
+                YOURS: "Your memory"
+            },
+            POST: {
+                FOLLOW: "Follow"
+            },
+            CARD: {
+                WHO_FOLLOW: "who to follow",
+                TENDING_TOPICS: "what people are talking about"
+            }
         }
     }
-};
+}

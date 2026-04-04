@@ -59,4 +59,8 @@ public class User
 
     [BsonElement("updatedAt")]
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+
+    [BsonElement("coverPhotoUrl")]
+    public string CoverPhotoUrl { get; set; } = string.Empty;
+
 }

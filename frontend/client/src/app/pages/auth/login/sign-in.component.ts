@@ -177,7 +177,7 @@ export class SignInComponent implements OnInit {
             }).subscribe({
                 next: (res) => {
                     // this.authService.setToken(res.token);
-                    console.log('Login sucesso', res);
+                    this.router.navigate(["/"])
                 },
                 error: (err) => {
                     console.error('Erro', err);

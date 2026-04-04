@@ -1,0 +1,111 @@
+/**
+ * Created By: Vinícius da Silva Santos
+ * Creation Date: 2026-03-31
+ * Copyright (c) 2026 Dump Software. All rights reserved.
+ * This software is licensed under the MIT License. See the LICENSE file in the project root for more information.
+ */
+
+import { Injectable } from '@angular/core';
+import { UserService } from '../../core/services/user/user.service';
+import { BehaviorSubject } from 'rxjs';
+import { PostsService } from '../../core/services/post/post.service';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class ProfileComponentService {
+
+  private readonly backgroundColorSubject = new BehaviorSubject<string>('#ffffff');
+  backgroundColor$ = this.backgroundColorSubject.asObservable();
+
+    constructor(
+        private readonly userService: UserService,
+        private readonly postsService: PostsService
+  ) {}
+
+  getUserByUsername(username: string) {
+    return this.userService.getUserByUsername(username);
+  }
+
+  setBackgroundFromImage(imageUrl: string, username?: string) {
+    if (!imageUrl) return;
+
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.src = imageUrl + '?cacheBust=' + new Date().getTime();
+
+    img.onload = () => {
+      try {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+
+        if (!ctx) throw new Error('No ctx');
+
+        const size = 50;
+        canvas.width = size;
+        canvas.height = size;
+
+        ctx.drawImage(img, 0, 0, size, size);
+
+        const imageData = ctx.getImageData(0, 0, size, size);
+        const data = imageData.data;
+
+        let r = 0, g = 0, b = 0;
+        let count = 0;
+
+        for (let i = 0; i < data.length; i += 4) {
+          r += data[i];
+          g += data[i + 1];
+          b += data[i + 2];
+          count++;
+        }
+
+        r = Math.floor(r / count);
+        g = Math.floor(g / count);
+        b = Math.floor(b / count);
+
+        const lighten = (v: number) => Math.min(255, v + 80);
+
+        this.backgroundColorSubject.next(
+          `rgb(${lighten(r)}, ${lighten(g)}, ${lighten(b)})`
+        );
+
+        const elements = globalThis.document.getElementsByClassName('dump_content');
+
+        if (elements && elements.length > 0) {
+          const el = elements[0] as HTMLElement;
+          el.style.background = `rgb(${lighten(r)}, ${lighten(g)}, ${lighten(b)})`;
+        }
+
+      } catch {
+        this.generateColorFromUsername(username || 'user');
+      }
+    };
+
+    img.onerror = () => {
+      this.generateColorFromUsername(username || 'user');
+    };
+  }
+
+  private generateColorFromUsername(username: string) {
+    let hash = 0;
+
+    for (let i = 0; i < username.length; i++) {
+      hash = username.charCodeAt(i) + ((hash << 5) - hash);
+    }
+
+    let r = (hash >> 0) & 255;
+    let g = (hash >> 8) & 255;
+    let b = (hash >> 16) & 255;
+
+    r = Math.min(255, r + 100);
+    g = Math.min(255, g + 100);
+    b = Math.min(255, b + 100);
+
+    this.backgroundColorSubject.next(`rgb(${r}, ${g}, ${b})`);
+  }
+    
+    public getPostsByUser(userId: string): any {
+        return this.postsService.getByUser(userId);
+    }
+}

@@ -1,0 +1,32 @@
+<nav class="navigation-bar desktop" [class.closed]="!isSidebarOpen" [style.width]="isSidebarOpen ? '213px' : '140px'">
+    <div class="navigation-bar-inside">
+        <div class="navigation-bar-title" [style.flexDirection]="!isSidebarOpen ? 'row-reverse' : 'row'">
+            <h1 [style.opacity]="isSidebarOpen ? 1 : 0">{{"HEADER.ACTIONS.SIDEBAR.TITLE" | translate}}</h1>
+            <button (click)="handleOpenSideBar()"><mat-icon>{{isSidebarOpen ? 'keyboard_arrow_left' : 'keyboard_arrow_right'}}</mat-icon></button>
+        </div>
+        <div class="navigation-bar-actions">
+            @for(item of navigationLinks; track item.route) {
+            <div class="navigator-item" [style.width]="isSidebarOpen ? '213px' : '140px'">
+                <a 
+                    routerLinkActive="active" 
+                    [routerLink]="item.isLink ? item.route : null" 
+                    class="navigator-item"
+                    (click)="handleNavigation(item, $event)"
+                >
+                    <mat-icon fontSet="material-symbols-outlined">{{item.icon}}</mat-icon>
+                    <span>{{ item.label | translate }}</span>
+                </a>
+            </div>
+            }
+        </div>
+    </div>
+</nav>
+<app-search-sidebar *ngIf="isSearchOpen" (close)="closeSearch()" />
+<nav class="mobile-navigation mobile">
+    @for(item of mobileNavigationLinks; track item.route) {
+        <a [routerLink]="item.route" routerLinkActive="active" class="mobile-item">
+            <mat-icon fontSet="material-symbols-outlined">{{item.icon}}</mat-icon>
+            <span>{{ item.label | translate }}</span>
+        </a>
+    }
+</nav>
