@@ -1,0 +1,22 @@
+<!-- TEXT MESSAGE -->
+@if(type != 'post') {
+<div class="message__bubble" [class.message__bubble--mine]="isMine">
+    {{ message?.text }}
+</div>
+}
+<!-- POST MESSAGE -->
+@else {
+<div class="message__bubble message__bubble--post" [class.message__bubble--mine]="isMine">
+    <div class="post-preview">
+        <p class="post-label">Compartilhado</p>
+
+        <div class="post-card" (click)="goToPost(message?.post)">
+            <app-post-media class="media-post" [media]="message?.post?.media || []" />
+            <div class="post-info">
+                <strong>{{ message?.post?.user?.fullName || 'Usuário' }}</strong>
+                <p>{{ message?.post?.caption || '...' }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+}

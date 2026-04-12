@@ -24,7 +24,8 @@ import { PostActionButtonsComponent } from "../../shared/components/post-action-
     templateUrl: "./profile.component.html",
     styleUrl: "./profile.component.scss",
     imports: [CommonModule, MatIcon, GenericCardUserComponent, GenericActionsButtonsComponent, PostActionButtonsComponent]
-,})
+    ,
+})
 export class ProfileComponent implements OnInit {
     user: User | any;
     username: string | null = "";
@@ -41,7 +42,7 @@ export class ProfileComponent implements OnInit {
         private readonly _router: Router,
         private readonly dialog: MatDialog,
         private readonly location: Location
-    ) { 
+    ) {
         this.router = _router;
     }
 
@@ -51,7 +52,9 @@ export class ProfileComponent implements OnInit {
             this.username = username;
             this.getUserData(username ?? "");
         });
-        this.current_user = this.userService.getUser();
+        this.userService.user$.subscribe((user: any) => {
+            this.current_user = user;
+        });
         this.profileService.backgroundColor$.subscribe(color => {
             this.backgroundColor = color;
         });
@@ -67,7 +70,7 @@ export class ProfileComponent implements OnInit {
 
     getUserPosts(userId: string) {
         this.profileService.getPostsByUser(userId).subscribe((posts: Post[]) => {
-            this.posts = posts;  
+            this.posts = posts;
         })
     }
 
@@ -77,9 +80,7 @@ export class ProfileComponent implements OnInit {
 
         // open modal
         const dialogRef = this.dialog.open(PostPageComponent, {
-            data: { post },
-            panelClass: 'custom-dialog',
-            backdropClass: 'dialog-backdrop'
+            data: { post }
         });
 
         dialogRef.afterClosed().subscribe(() => {

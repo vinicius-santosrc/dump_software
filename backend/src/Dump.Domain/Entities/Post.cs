@@ -5,7 +5,7 @@ namespace Dump.Domain.Entities;
 public class Post
 {
     [BsonElement("id")]
-    public string Id { get; set; } = Guid.NewGuid().ToString();
+    public string? Id { get; set; } = Guid.NewGuid().ToString();
 
     [BsonElement("user")]
     public string User { get; set; } = string.Empty;
@@ -44,16 +44,16 @@ public class Post
     public PostML ML { get; set; } = new();
 
     [BsonElement("createdAt")]
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime? CreatedAt { get; set; } = DateTime.UtcNow;
 
     [BsonElement("updatedAt")]
-    public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime? UpdatedAt { get; set; } = DateTime.UtcNow;
 }
 
 public class PostResponse
 {
     [BsonElement("id")]
-    public string Id { get; set; } = Guid.NewGuid().ToString();
+    public string? Id { get; set; } = Guid.NewGuid().ToString();
 
     [BsonElement("user")]
     public User User { get; set; }
@@ -92,10 +92,10 @@ public class PostResponse
     public PostML ML { get; set; } = new();
 
     [BsonElement("createdAt")]
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime? CreatedAt { get; set; } = DateTime.UtcNow;
 
     [BsonElement("updatedAt")]
-    public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime? UpdatedAt { get; set; } = DateTime.UtcNow;
 }
 
 public class PostMedia

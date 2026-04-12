@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Dump.Application.Features.Post;
 using Dump.Application.DTOs;
+using Dump.Domain.Entities;
 
 namespace Dump.API.Controllers;
 
@@ -13,6 +14,13 @@ public class PostController : ControllerBase
     public PostController(PostService postService)
     {
         _postService = postService;
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> CreatePost([FromBody] Post post)
+    {
+        await _postService.CreatePost(post);
+        return Ok(true);
     }
 
     [HttpPost("getByUser")]

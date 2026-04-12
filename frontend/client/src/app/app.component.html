@@ -1,3 +1,4 @@
+<div class="top-loader" [class.active]="routeLoading"></div>
 <!-- splash screen -->
 <div #splashScreen class="m-splash-screen">
   <div class="splash-container">
@@ -13,10 +14,15 @@
   <app-header [width]="width" />
   <main class="dump_content">
     <aside class="dump_content_aside" [style.width]="width" [style.margin]="'auto'">
-      <router-outlet />
+      @if(!routeLoading) {
+        <router-outlet />
+      }
     </aside>
+    <app-notification></app-notification>
   </main>
 }
 @else {
-<router-outlet />
+  @if(!routeLoading) {
+    <router-outlet />
+  }
 }

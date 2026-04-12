@@ -55,27 +55,31 @@ export interface Location {
     long: number;
 }
 
-export interface Post {
-    id: string;
-    user: User;
+export class Post {
+    id?: string = '';
+    user!: any;
 
-    caption: string;
-    media: Media[];
-    location: Location;
+    caption: string = '';
+    media: Media[] = [];
+    location!: Location;
 
-    hashtags: string[];
-    mentions: User[];
+    hashtags: string[] = [];
+    mentions: User[] = [];
 
-    likes: string[];
-    saves: string[];
-    comments: Comments[] | string[];
+    likes: string[] = [];
+    saves: string[] = [];
+    comments: Comments[] | string[] = [];
 
-    reports: string[];
+    reports: string[] = [];
 
-    visibility: 'public' | 'private'
+    visibility: 'public' | 'private' = 'public';
 
-    ml: PostML
+    ml!: PostML;
 
-    createdAt: any;
-    updatedAt: any;
+    createdAt: any = null;
+    updatedAt: any = null;
+
+    constructor(init?: Partial<Post>) {
+        Object.assign(this, init);
+    }
 }

@@ -1,10 +1,20 @@
 <div class="messages">
-    <!-- SIDEBAR -->
-    <app-messages-sidebar 
-      [relatedUsers]="relatedUsers" 
-      (selectUser)="selectedUser = $event"
-    />
+  @if(isMobile) {
+  @if(!selectedConversation) {
+  <!-- SIDEBAR -->
+  <app-messages-sidebar (onSelectUser)="selectedConversation = $event" />
+  }
 
-    <!-- CHAT -->
-    <app-messages-chat [user]="selectedUser" style="width: 100%;" />
+  @if(selectedConversation) {
+  <!-- CHAT -->
+  <app-messages-chat [conversation]="selectedConversation" style="width: 100%;" />
+  }
+  }
+  @else {
+  <!-- SIDEBAR -->
+  <app-messages-sidebar (onSelectUser)="selectedConversation = $event" />
+
+  <!-- CHAT -->
+  <app-messages-chat [conversation]="selectedConversation" style="width: 100%;" />
+  }
 </div>

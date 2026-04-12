@@ -19,6 +19,10 @@
     transition: transform 0.2s ease, color 0.3s ease;
 }
 
+.sendicon {
+    transform: rotateZ(-35deg);
+}
+
 .heart.liked {
     color: #1881E2;
     fill: #1881E2;

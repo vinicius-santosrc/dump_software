@@ -3,7 +3,20 @@
     @if(media.length === 1) {
 
     @if(media[0].type === 'image') {
-    <img [src]="media[0].url" alt="Post" />
+    <div class="media-container">
+
+        @if(isLoading) {
+        <div class="media-skeleton"></div>
+        }
+
+        <img 
+            [src]="media[0].url" 
+            alt="Post"
+            (load)="onMediaLoad()"
+            [class.loaded]="!isLoading"
+        />
+
+    </div>
     }
 
     @if(media[0].type === 'video') {

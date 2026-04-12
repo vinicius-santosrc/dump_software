@@ -1,0 +1,1 @@
+export const DEFAULT_AVATAR_IMAGE = 'assets/app/media/default-avatar.webp';

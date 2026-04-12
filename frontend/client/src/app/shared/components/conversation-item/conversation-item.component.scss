@@ -1,0 +1,91 @@
+.circular {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    justify-content: center;
+    margin: auto;
+    width: 120px;
+    height: 120px;
+    border-radius: 12px;
+
+    img {
+        width: 62px;
+        height: 62px;
+        margin: auto;
+    }
+
+    .circular-name {
+        font-size: 12px;
+        max-width: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}
+.conversation-item {
+    display: flex;
+    gap: 12px;
+    padding: 12px 16px;
+    cursor: pointer;
+    transition: 0.2s;
+
+    &:hover {
+        background: #f5f5f5;
+    }
+
+    &.active {
+        background: #e7f3ff;
+    }
+
+    img {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    &__content {
+        flex: 1;
+    }
+
+    .top {
+        display: flex;
+        position: relative;
+        justify-content: space-between;
+
+        .name {
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .time {
+            font-size: 12px;
+            color: #888;
+        }
+    }
+
+    .last {
+        font-size: 13px;
+        color: #65676b;
+        margin-top: 2px;
+    }
+}
+
+.conversation__top {
+    position: relative;
+}
+
+.badge {
+    position: absolute;
+    right: 0;
+    top: -20px;
+    bottom: 50%;
+    background: #45b0b4;
+    width: 25px;
+    height: 25px;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}

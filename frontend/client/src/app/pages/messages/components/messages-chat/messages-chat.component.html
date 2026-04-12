@@ -1,10 +1,14 @@
-<section class="messages__chat" *ngIf="user">
+<section #chatBody class="messages__chat" *ngIf="conversation?.id">
     <header class="chat__header">
         <div class="chat__user">
-            <img [src]="user.profilePictureUrl" />
+            <div class="chat__image-user">
+                <img [src]="getConversationAvatar()" />
+                <span class="online-dot" *ngIf="isUserOnline(conversation.participants[0])">
+                </span>
+            </div>
             <div>
-                <p>{{ user.fullName }}</p>
-                <span>Active 9m ago</span>
+                <p>{{ getConversationName() }}</p>
+                <span>{{ getConversationUser() }}</span>
             </div>
         </div>
 
@@ -21,11 +25,37 @@
         </div>
     </header>
 
-    <div class="chat__body" style="scroll-behavior: smooth;">
-        <div *ngFor="let msg of messages" class="message" [class.me]="msg.senderId === current_user.id">
-            <div class="message__bubble" [class.message__bubble--mine]="msg.senderId === current_user.id">
-                {{ msg.text }}
+    <div #scrollContainer class="chat__body" style="scroll-behavior: smooth;">
+        <div *ngFor="let msg of messages; let i = index" class="message" [class.me]="msg.senderId === current_user?.id">
+
+            @if(msg.senderId != current_user?.id) {
+            <img class="message__avatar"
+                [src]="getUserById(msg.senderId)?.profilePictureUrl || 'assets/app/media/default-avatar.webp'" />
+            }
+
+            <div class="message__content">
+                <span *ngIf="isGroup && msg.senderId !== current_user?.id" class="message__name">
+                    {{ getUserById(msg.senderId)?.fullName }}
+                </span>
+
+                <app-message-renderer [message]="msg" [isMine]="msg.senderId === current_user?.id">
+                </app-message-renderer>
+                <span class="message__status" *ngIf="i === messages.length - 1 && msg.senderId === current_user?.id">
+                    {{ getMessageStatus(msg) }}
+                </span>
+
+                <button *ngIf="msg.status === 'error'" (click)="sendMessage()" class="retry-btn">
+                    Reenviar
+                </button>
             </div>
+
+            @if(msg.senderId == current_user?.id) {
+            <img class="message__avatar"
+                [src]="getUserById(msg.senderId)?.profilePictureUrl || 'assets/app/media/default-avatar.webp'" alt/>
+            }
+        </div>
+        <div class="typing" *ngIf="typingUsers.size > 0">
+            <div class="loader"></div>
         </div>
     </div>
 
@@ -35,9 +65,10 @@
 
         </div>
 
-        <input type="text" [(ngModel)]="input" placeholder="Escreva uma mensagem" />
+        <input (input)="onTyping()" (blur)="onStopTyping()" type="text" [(ngModel)]="input" placeholder="Escreva uma mensagem" />
 
-        <button *ngIf="input !== ''" (click)="sendMessage()">Enviar</button>
+        <button *ngIf="input !== ''"
+            (click)="sendMessage()">Enviar</button>
 
         <div class="chat__input-right" *ngIf="input === ''">
             <button>😊</button>
@@ -46,9 +77,9 @@
     </div>
 </section>
 
-<section class="no_chat__screen" *ngIf="!user">
+<section class="no_chat__screen" *ngIf="!conversation?.id">
     <div class="no_chat__content">
-        <h2>Select a conversation</h2>
-        <p>Choose a conversation from the left to start chatting.</p>
+        <h2>Selecione uma conversa</h2>
+        <p>Selecione um chat para começar a conversar no dump.</p>
     </div>
 </section>

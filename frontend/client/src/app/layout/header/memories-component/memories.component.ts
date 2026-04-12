@@ -1,13 +1,15 @@
 import { Component, Input, OnInit } from "@angular/core";
+import { CommonModule } from "@angular/common";
 import { TranslateModule } from "@ngx-translate/core";
 import { User } from "../../../core/models/user/user.model";
 import { MemoriesService } from "../../../core/services/memories/memories.service";
+import { SkeletonComponent } from "../../../shared/components/skeleton/skeleton.component";
 
 @Component({
     selector: "app-memories-component",
     templateUrl: "./memories.component.html",
     styleUrl: "./memories.component.scss",
-    imports: [TranslateModule]
+    imports: [CommonModule, TranslateModule, SkeletonComponent]
 })
 export class MemoriesComponent implements OnInit {
     @Input() user: User | null = null;
@@ -17,7 +19,8 @@ export class MemoriesComponent implements OnInit {
     constructor(
         private readonly memoriesService: MemoriesService
     ) { }
-    memoriesList: any = [];
+    memoriesList: any[] = [];
+    loading: boolean = true;
 
     get isMobile(): boolean {
         return window.innerWidth <= 768;
@@ -31,15 +34,18 @@ export class MemoriesComponent implements OnInit {
     }
 
     public async getAllMoments() {
+        this.loading = true;
+
         const response = await this.memoriesService
             .getByUser(this.user?.id ?? "");
 
-        this.memoriesList = response ?? [];
+        this.memoriesList = Array.isArray(response) ? response : [];
 
-        // verifica se o usuário tem story
-        this.hasMyMemorie = this.memoriesList.some(
-            (m: any) => m.user.id === this.user?.id
+        this.hasMyMemorie = Array.isArray(this.memoriesList) && this.memoriesList.some(
+            (m: any) => m?.user?.id === this.user?.id
         );
+
+        this.loading = false;
     }
 
     handleMyStory() {

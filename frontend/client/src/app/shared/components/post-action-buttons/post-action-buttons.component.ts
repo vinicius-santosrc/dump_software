@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Input } from "@angular/core";
+import { AfterViewInit, Component, Input, OnChanges, SimpleChanges } from "@angular/core";
 import { CommonModule } from '@angular/common';
 import { Post } from "../../../core/models/feed/post.model";
 import { PostComponentService } from "../post-component/post-component.service";
@@ -12,25 +12,28 @@ import { MatIcon } from "@angular/material/icon";
     styleUrls: ['./post-action-buttons.component.scss'],
     imports: [CommonModule, MatIcon],
 })
-export class PostActionButtonsComponent implements AfterViewInit{
-    @Input() post: Post | undefined;
+export class PostActionButtonsComponent implements OnChanges {
+    @Input() post: Post | undefined = {} as Post;
     @Input() theme: 'light' | 'dark' = 'light';
     liked = false;
     current_user: any;
     router: any;
-    
+
 
     constructor(
         private readonly postService: PostComponentService,
         private readonly userService: UserService,
         public angularRouter: Router,
     ) {
-        this.current_user = this.userService.getUser();
+        this.userService.user$.subscribe((user: any) => {
+            this.current_user = user;
+        });
         this.router = angularRouter;
     }
-
-    ngAfterViewInit(): void {
-        this.liked = this.post?.likes?.includes(this.current_user.id) ?? false;
+    ngOnChanges(changes: SimpleChanges): void {
+        if (changes['post'] && this.post && this.current_user) {
+            this.liked = this.post.likes?.includes(this.current_user.id) ?? false;
+        }
     }
 
     handleLike(postId: string | undefined) {
@@ -55,6 +58,10 @@ export class PostActionButtonsComponent implements AfterViewInit{
     }
 
     handleSend() {
-        this.postService.sendPost(this.post?.id)
+        if (!this.post?.id) {
+            console.error('postId undefined no handleSend', this.post);
+            return;
+        }
+        this.postService.sendPost(this.post.id);
     }
 }

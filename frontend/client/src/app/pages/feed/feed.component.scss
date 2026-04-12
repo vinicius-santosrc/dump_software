@@ -1,6 +1,11 @@
 .feed-component {
     margin: auto;
-    margin-top: 216px;
+    margin-top: 126px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+.feed-component_content {
     display: flex;
     align-items: top;
     gap: 22px;
@@ -11,6 +16,7 @@
     display: flex;
     flex-direction: column;
     gap: 16px;
+    width: 100%;
 }
 
 .feed-who-follow {
@@ -91,9 +97,11 @@
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
     .feed-component {
-        margin-top: 120px;
-        flex-direction: column;
+        margin-top: 40px;
+    }
+    .feed-component_content {
         width: 100%;
+        flex-direction: column;
         padding: 0;
     }
 
@@ -107,5 +115,79 @@
 
     app-post-component {
         width: 100%;
+    }
+}
+
+.post-skeleton {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 12px 0;
+}
+
+.skeleton-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #e0e0e0;
+    animation: shimmer 1.5s infinite;
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+}
+
+.line {
+    height: 10px;
+    background: #e0e0e0;
+    border-radius: 6px;
+    animation: shimmer 1.5s infinite;
+}
+
+.line.short {
+    width: 120px;
+}
+
+.line.smaller {
+    width: 80px;
+}
+
+.line.small {
+    width: 60%;
+}
+
+.skeleton-media {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    background: #e0e0e0;
+    border-radius: 8px;
+    animation: shimmer 1.5s infinite;
+}
+
+.skeleton-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+@keyframes shimmer {
+    0% {
+        opacity: 0.6;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0.6;
     }
 }

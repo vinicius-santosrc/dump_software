@@ -1,29 +1,43 @@
 <main class="feed-component">
-    <div class="feed-inside">
-        @for (post of posts; track post.id) {
-        <app-post-component [post]="post" />
-        }
-    </div>
-    <div class="feed-recommendations">
-        <app-generic-card-component width="264px" title="FEED.CARD.WHO_FOLLOW">
-            @for(user of relatedUsers; track user.id) {
-                <app-generic-card-user [user]="user" [showActionButton]="true" fontSize="px" [buttonText]="'+ ' + ('FEED.CARD.BUTTON.FOLLOW' | translate)" (actionBtn)="navigateToProfile(user)" />
+    <app-memories-component [user]="current_user" />
+    <div class="feed-component_content">
+
+        <div class="feed-inside">
+
+            @if(loading) {
+            @for (item of [1,2,3,4]; track item) {
+            <app-skeleton type="post"></app-skeleton>
             }
-        </app-generic-card-component>
-        <app-generic-card-component width="264px" title="FEED.CARD.TENDING_TOPICS">
-            @for(topic of topics; track topic.id) {
-            <div class="topic-item">
-                <aside>
-                    <div class="top-item-info">
-                        <span id="title">{{topic.title}}</span>
-                        <span>+{{topic.postsRelated}}m {{'FEED.CARD.BUTTON.OF_POSTS' | translate}}</span>
-                    </div>
-                    <div class="btn-action">
-                        <button>{{'FEED.CARD.BUTTON.MORE_INFO' | translate}}</button>
-                    </div>
-                </aside>
-            </div>
+            } @else {
+            @for (post of posts; track post.id) {
+            <app-post-component [post]="post" />
             }
-        </app-generic-card-component>
+            }
+
+        </div>
+        <div class="feed-recommendations">
+            <app-generic-card-component width="264px" title="FEED.CARD.WHO_FOLLOW">
+                @for(user of relatedUsers; track user.id) {
+                <app-generic-card-user [user]="user" [showActionButton]="true" fontSize="px"
+                    [buttonText]="'+ ' + ('FEED.CARD.BUTTON.FOLLOW' | translate)"
+                    (actionBtn)="navigateToProfile(user)" />
+                }
+            </app-generic-card-component>
+            <app-generic-card-component width="264px" title="FEED.CARD.TENDING_TOPICS">
+                @for(topic of topics; track topic.id) {
+                <div class="topic-item">
+                    <aside>
+                        <div class="top-item-info">
+                            <span id="title">{{topic.title}}</span>
+                            <span>+{{topic.postsRelated}}m {{'FEED.CARD.BUTTON.OF_POSTS' | translate}}</span>
+                        </div>
+                        <div class="btn-action">
+                            <button>{{'FEED.CARD.BUTTON.MORE_INFO' | translate}}</button>
+                        </div>
+                    </aside>
+                </div>
+                }
+            </app-generic-card-component>
+        </div>
     </div>
 </main>

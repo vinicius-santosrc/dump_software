@@ -43,4 +43,8 @@ export class UserService {
             targetUserId
         });
     }
+
+    getUserById(id: string) {
+        return this.http.get(`${API_CONFIG.baseUrl}${this.API}/getById/${id}`);
+    }
 }

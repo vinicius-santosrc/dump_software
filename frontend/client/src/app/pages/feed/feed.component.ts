@@ -16,15 +16,18 @@ import { User } from "../../core/models/user/user.model";
 import { Topic } from "../../core/models/feed/topic.model";
 import { Router } from "@angular/router";
 import { GenericCardUserComponent } from "../../shared/components/generic-card-user/generic-card-user.component";
+import { MemoriesComponent } from "../../layout/header/memories-component/memories.component";
+import { SkeletonComponent } from "../../shared/components/skeleton/skeleton.component";
 
 @Component({
     selector: "app-feed-component",
     templateUrl: "./feed.component.html",
     styleUrl: "./feed.component.scss",
-    imports: [TranslateModule, PostComponent, CardComponent, GenericCardUserComponent]
+    imports: [TranslateModule, PostComponent, CardComponent, GenericCardUserComponent, MemoriesComponent, SkeletonComponent]
 })
 export class FeedComponent implements OnInit {
     posts: Post[] = [];
+    loading: boolean = true;
     public current_user: any;
     relatedUsers: User[] = [];
     router: any;
@@ -227,7 +230,9 @@ export class FeedComponent implements OnInit {
         public userService: UserService,
         public _router: Router
     ) {
-        this.current_user = this.userService.getUser();
+        this.userService.user$.subscribe((user: any) => {
+            this.current_user = user;
+        });
         this.router = _router;
     }
 
@@ -236,9 +241,11 @@ export class FeedComponent implements OnInit {
         this.getRelatedUsers();
     }
     getPosts() {
+        this.loading = true;
         this.postsService.getByCurrentUser(this.current_user.id).subscribe(posts => {
             this.posts = (posts) as Post[];
             this.posts = this.posts.reverse();
+            this.loading = false;
         });
     }
 

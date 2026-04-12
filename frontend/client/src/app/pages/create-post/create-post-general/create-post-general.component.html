@@ -1,0 +1,41 @@
+<main class="create-new-post__inside">
+    <div class="create-new-post__photo-content">
+        <img *ngIf="files.length && files[0].type.startsWith('image')" [src]="getPreview(files[0])" />
+
+        <video 
+          *ngIf="files.length && files[0].type.startsWith('video')" 
+          [src]="getPreview(files[0])" 
+          controls
+        ></video>
+    </div>
+    <div class="create-new-post__details">
+        <app-basic-input [label]="'Insira uma legenda...'" type="textarea" (valueChange)="post.caption = $event" />
+
+        <app-setting-item label="Adicionar áudio" icon="music_note" [action]="openAudio" [disabled]="true" />
+        
+        <app-setting-item 
+          label="Marcar pessoas" 
+          icon="person_add" 
+          [enableDropdown]="true" 
+          [dropdownItems]="users" 
+          [displayKey]="'username'" 
+          [multiple]="true"
+          [action]="tagPeople"
+          [disabled]="true"
+        />
+        
+        <app-setting-item label="Adicionar localização" icon="location_on" [enableDropdown]="true" [dropdownItems]="locations" [action]="tagPeople" [disabled]="true"/>
+        
+        <app-setting-item label="Adicionar rótulo IA" icon="smart_toy" [disabled]="true" />
+        
+        <app-setting-item label="Público" value="Todos" icon="public" [disabled]="true" />
+        
+        <app-setting-item label="Desativar comentários" icon="comment" [disabled]="false" type="toggle" />
+        
+        <app-setting-item label="Ocultar curtidas" icon="favorite" [disabled]="false" type="toggle" />
+
+        <button (click)="sharePost()" [disabled]="loading">
+            {{ loading ? 'Enviando...' : 'Compartilhar' }}
+        </button>
+    </div>
+</main>

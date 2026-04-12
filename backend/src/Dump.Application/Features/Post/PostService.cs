@@ -44,6 +44,12 @@ public class PostService
         };
     }
 
+    public async Task<Dump.Domain.Entities.Post> CreatePost(Dump.Domain.Entities.Post post)
+    {
+        await _postRepository.CreateAsync(post);
+        return post;
+    }
+
     public async Task<Dump.Domain.Entities.PostResponse[]> GetByUser(string id)
     {
         var posts = await _postRepository.GetByUser(id);

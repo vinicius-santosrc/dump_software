@@ -87,6 +87,14 @@
     }
 }
 
+.navigator-item {
+    cursor: pointer;
+    transition: 0.3s;
+    &:hover {
+        scale: 1.01;
+    }
+}
+
 /* MOBILE RESPONSIVENESS */
 @media (max-width: 768px) {
     .navigation-bar.desktop {

@@ -1,0 +1,22 @@
+.share-post {
+    padding: 16px;
+    &__header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+    
+            h1 {
+                font-size: 16px;
+            }
+    
+            button {
+                background-color: transparent;
+                border: none;
+                cursor: pointer;
+            }
+        }
+    &__content {
+        display: flex;
+        flex-wrap: wrap;
+    }
+}

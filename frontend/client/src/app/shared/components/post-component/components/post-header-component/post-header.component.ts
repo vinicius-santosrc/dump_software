@@ -11,7 +11,7 @@ import { User } from '../../../../../core/models/user/user.model';
     styleUrl: './post-header.component.scss'
 })
 export class PostHeaderComponent {
-    @Input() user: User | undefined;
+    @Input() user: any = {} as User;
     @Input() caption: string | undefined;
     @Input() theme: 'dark' | 'light' = 'light';
     @Input() isModal: boolean = false;

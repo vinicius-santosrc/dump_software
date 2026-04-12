@@ -28,7 +28,7 @@ import { MatButtonModule } from '@angular/material/button';
     }]
 })
 export class BasicInputComponent implements OnInit, AfterViewInit, ControlValueAccessor {
-    @Input() type: 'text' | 'email' | 'password' | 'date' | 'tel' = 'text';
+    @Input() type: 'text' | 'email' | 'password' | 'date' | 'tel' | 'textarea' = 'text';
     @Input() label: string = '';
     @Input() maxLength?: number;
     @Input() minLength?: number;

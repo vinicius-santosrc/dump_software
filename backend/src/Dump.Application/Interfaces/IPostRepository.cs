@@ -8,4 +8,5 @@ public interface IPostsRepository
     Task<Post[]> GetByUserProfile(string id);
     Task<Post> GetById(string postId);
     Task<Post> UpdatePost(Post post);
+    Task CreateAsync(Post post);
 }

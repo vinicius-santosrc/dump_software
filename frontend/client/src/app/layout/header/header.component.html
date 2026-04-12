@@ -1,6 +1,6 @@
-<header class="header-component" [ngStyle]="{'background': router.url === '/' ? '#ffffff' : null}"
+<header class="header-component" [ngStyle]="{'background': isHome ? '#ffffff' : null}"
     [class.hidden]="isHidden">
-    @if(router.url === '/') {
+    @if(isHome) {
     <div class="header-component-top">
         <div class="header-component-left">
         </div>
@@ -20,9 +20,9 @@
         </div>
     </div>
 }
-    @if(router.url === '/') {
+    <!-- @if(isHome) {
     <div class="header-component-bottom">
         <app-memories-component [width]="width" [user]="current_user" />
     </div>
-    }
+    } -->
 </header>

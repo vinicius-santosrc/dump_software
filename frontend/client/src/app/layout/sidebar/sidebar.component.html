@@ -6,12 +6,11 @@
         </div>
         <div class="navigation-bar-actions">
             @for(item of navigationLinks; track item.route) {
-            <div class="navigator-item" [style.width]="isSidebarOpen ? '213px' : '140px'">
+            <div class="navigator-item" (click)="handleNavigation(item, $event)" [style.width]="isSidebarOpen ? '213px' : '140px'">
                 <a 
                     routerLinkActive="active" 
                     [routerLink]="item.isLink ? item.route : null" 
                     class="navigator-item"
-                    (click)="handleNavigation(item, $event)"
                 >
                     <mat-icon fontSet="material-symbols-outlined">{{item.icon}}</mat-icon>
                     <span>{{ item.label | translate }}</span>
@@ -22,6 +21,7 @@
     </div>
 </nav>
 <app-search-sidebar *ngIf="isSearchOpen" (close)="closeSearch()" />
+@if(!isMessagePage) {
 <nav class="mobile-navigation mobile">
     @for(item of mobileNavigationLinks; track item.route) {
         <a [routerLink]="item.route" routerLinkActive="active" class="mobile-item">
@@ -30,3 +30,4 @@
         </a>
     }
 </nav>
+}

@@ -1,0 +1,25 @@
+<section class="new-conversation">
+    <div class="new-conversation__inside">
+        <div class="new-conversation__header">
+            <h1>Nova conversa</h1>
+            <button (click)="close()">
+                <mat-icon>close</mat-icon>
+            </button>
+        </div>
+        <div class="new-conversation__search-input">
+            <app-basic-input type="text" label="Escreva um nome..." (valueChange)="input = $event" />
+        </div>
+        <div class="new-conversation__chats">
+            @for(user of userList; track user.id) {
+            <app-generic-card-user [user]="user" [actionBtnCheckBox]="true" [redirectOnClick]="false"
+                (toggleSelection)="onToggleUser($event)" />
+            }
+        </div>
+        <div class="new-conversation__btn">
+            <button (click)="createConversation()" [disabled]="selectedUserIds.length == 0">
+                <span>Criar conversa
+                </span>
+            </button>
+        </div>
+    </div>
+</section>

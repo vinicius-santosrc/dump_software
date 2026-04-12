@@ -1,3 +1,6 @@
+@if(loading) {
+    <app-skeleton type="user"></app-skeleton>
+} @else {
 <section class="user-card user-card--interactive user-card--hoverable" [ngClass]="{
     'user-card--light': theme === 'light',
     'user-card--dark': theme !== 'light'
@@ -17,7 +20,7 @@
                 [style.height]="'100%'" />
 
             <!-- ONLINE INDICATOR -->
-            <span class="user-card__avatar-status user-card__avatar-status--online"></span>
+            <!-- <span class="user-card__avatar-status user-card__avatar-status--online"></span> -->
         </div>
 
         <!-- USER INFO -->
@@ -40,6 +43,14 @@
         <!-- ACTION BUTTON -->
         @if(showActionButton) {
         <div class="user-card__actions">
+            @if(actionBtnCheckBox) {
+                <label 
+                    class="checkbox" 
+                    [ngClass]="{ 'checkbox--active': isSelected }"
+                    (click)="$event.stopPropagation(); isSelected = !isSelected">
+                </label>
+            }
+            @else {
             @if(hasFollowButton) {
             @if(isFollowing) {
             <button (click)="handleFollowButtonClick()"
@@ -60,10 +71,11 @@
                 aria-label="Follow user">
                 {{ buttonText | translate }}
             </button>
-            }
+            }}
         </div>
         }
 
     </div>
 
 </section>
+}

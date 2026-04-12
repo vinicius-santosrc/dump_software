@@ -9,7 +9,7 @@ import { Component, Input, OnInit } from "@angular/core";
 import { TranslateModule } from "@ngx-translate/core";
 import { UserService } from "../../core/services/user/user.service";
 import { MemoriesComponent } from "./memories-component/memories.component";
-import { Router } from "@angular/router";
+import { Router, NavigationEnd } from "@angular/router";
 import { NgStyle } from "@angular/common";
 
 @Component({
@@ -25,11 +25,11 @@ export class HeaderComponent implements OnInit{
     @Input() width: string = "";
     public readonly logo = "assets/app/media/anim/icon/splash-screen.svg";
     public current_user: any;
+    public isHome: boolean = false;
     constructor(
         public userService: UserService,
         public router: Router
     ) { 
-        this.current_user = this.userService.getUser()
         window.addEventListener('scroll', () => {
             const currentScroll = window.scrollY || document.documentElement.scrollTop;
 
@@ -43,11 +43,24 @@ export class HeaderComponent implements OnInit{
 
             this.lastScrollTop = Math.max(0, currentScroll);
         });
+
+        this.router.events.subscribe(event => {
+            if (event instanceof NavigationEnd) {
+                // força atualização do template
+                this.isHome = this.router.url === '/';
+            }
+        });
     }    
 
     ngOnInit(): void {
+        this.userService.user$.subscribe((user: any) => {
+            this.current_user = user;
+        });
+
         this.listenSidebar();
+        this.isHome = this.router.url === '/';
     }
+
     listenSidebar() {
         const updateWidth = (isOpen: boolean) => {
             this.width = isOpen

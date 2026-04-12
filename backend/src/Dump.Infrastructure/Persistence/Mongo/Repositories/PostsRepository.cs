@@ -6,6 +6,7 @@ using System;
 using System.Threading.Tasks;
 
 namespace Dump.Infrastructure.Persistence.Mongo.Repositories;
+
 public class PostsRepository : IPostsRepository
 {
     private readonly IMongoCollection<Post> _posts;
@@ -14,6 +15,10 @@ public class PostsRepository : IPostsRepository
     {
         var database = mongoClient.GetDatabase("dump_dev");
         _posts = database.GetCollection<Post>("posts");
+    }
+    public async Task CreateAsync(Post post)
+    {
+        await _posts.InsertOneAsync(post);
     }
 
     public async Task<Post[]> GetByUser(string id)

@@ -1,3 +1,24 @@
+.top-loader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0%;
+  height: 3px;
+  background: linear-gradient(90deg, #ff0080, #7928ca);
+  z-index: 99999;
+  transition: width 0.4s ease;
+}
+
+.top-loader.active {
+  width: 100%;
+  animation: loading-bar 1s infinite;
+}
+
+@keyframes loading-bar {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
 .m-splash-screen {
   position: fixed;
   top: 0;
@@ -42,6 +63,6 @@
 
   .dump_content_aside {
     width: 100% !important;
-    margin: 150px 0 !important;
+    margin: 100px 0 !important;
   }
 }

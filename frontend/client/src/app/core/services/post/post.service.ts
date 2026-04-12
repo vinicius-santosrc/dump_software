@@ -3,6 +3,7 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { API_CONFIG } from "../../config/api.config";
 import { CommentsService } from "../comments/comments.service";
+import { Post } from '../../models/feed/post.model';
 
 @Injectable({
     providedIn: 'root'
@@ -26,5 +27,9 @@ export class PostsService {
 
     public handleLike(postId: string, likerId: string) {
         return this.http.post(`${API_CONFIG.baseUrl}${this.API}/handleLike`, { postId: postId, likerId: likerId });
+    }
+
+    public createPost(post: Post) {
+        return this.http.post(`${API_CONFIG.baseUrl}${this.API}`, post);
     }
 }

@@ -1,0 +1,31 @@
+<section class="share-post">
+    <div class="share-post__inside">
+        <div class="share-post__header">
+            <h1>Compartilhar</h1>
+            <button (click)="close()">
+                <mat-icon>close</mat-icon>
+            </button>
+        </div>
+        <div class="share-post__content">
+            @for (convo of ((conversations$ | async) ?? []); track convo.id) {
+                <app-conversation-item 
+                    [convo]="convo" 
+                    [currentUser]="current_user" 
+                    [typingMap]="typing$ | async" 
+                    variant="circular"
+                    (clicked)="onSelect(convo)"
+                    [ngClass]="{ 'selected': selectedConversations.includes(convo.id) }"
+                ></app-conversation-item>
+            }
+        </div>
+        <div class="share-post__bottom">
+            <button 
+                class="send-btn"
+                *ngIf="selectedConversations.length > 0"
+                (click)="send()"
+            >
+                Enviar ({{ selectedConversations.length }})
+            </button>
+        </div>
+    </div>
+</section> 

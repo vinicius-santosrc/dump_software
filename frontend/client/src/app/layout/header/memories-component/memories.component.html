@@ -1,21 +1,32 @@
 <section class="memories-component">
     <div class="memories-inside">
-        <div class="memories-list" [style.width]="width">
-            <div class="memorie-card" (click)="handleMyStory()">
-                <img [src]="user?.profilePictureUrl || 'assets/app/media/default-avatar.webp'" alt="Meu story" />
-                <span>{{!hasMyMemorie ? ("FEED.MEMORIES.ADD" | translate) : ("FEED.MEMORIES.YOURS" | translate)}}</span>
-                @if(!hasMyMemorie) {
-                <div class="add-icon">+</div>
+        <div class="memories-list" [style.width]="'100%'">
+
+            @if(loading) {
+                @for (item of [1,2,3,4,5]; track item) {
+                <app-skeleton type="story"></app-skeleton>
                 }
-            </div>
-            @for(memorie of memoriesList; track memorie.id) {
-                @if(memorie.user.id !== user?.id) {
-                <div class="memorie-card">
-                    <img [src]="memorie?.user?.profilePictureUrl || 'assets/app/media/default-avatar.webp'" alt="avatar" />
-                    <span>{{memorie.user.username}}</span>
+            } @else {
+
+                <div class="memorie-card" (click)="handleMyStory()">
+                    <img [src]="user?.profilePictureUrl || 'assets/app/media/default-avatar.webp'" alt="Meu story" />
+                    <span>{{!hasMyMemorie ? ("FEED.MEMORIES.ADD" | translate) : ("FEED.MEMORIES.YOURS" | translate)}}</span>
+                    @if(!hasMyMemorie) {
+                    <div class="add-icon">+</div>
+                    }
                 </div>
+
+                @for(memorie of memoriesList; track memorie.id) {
+                    @if(memorie?.user?.id !== user?.id) {
+                    <div class="memorie-card">
+                        <img [src]="memorie?.user?.profilePictureUrl || 'assets/app/media/default-avatar.webp'" alt="avatar" />
+                        <span>{{memorie.user.username}}</span>
+                    </div>
+                    }
                 }
+
             }
+
         </div>
     </div>
 </section>

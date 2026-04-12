@@ -10,13 +10,18 @@
 
 .slide {
     min-width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: black;
+    aspect-ratio: 1 / 1;
 }
 
 img,
 app-video-dump {
     width: 100%;
-    height: auto;
-    object-fit: cover;
+    height: 100%;
+    object-fit: contain;
 }
 
 /* arrows */
@@ -68,4 +73,3 @@ app-video-dump {
 .dots span.active {
     opacity: 1;
 }
-

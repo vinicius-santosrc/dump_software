@@ -6,8 +6,8 @@
                 <button>
                     <mat-icon>more_vert</mat-icon>
                 </button>
-                <button>
-                    <mat-icon>edit</mat-icon>
+                <button (click)="clickCreateConversation()">
+                    <mat-icon>add</mat-icon>
                 </button>
             </div>
         </div>
@@ -23,21 +23,11 @@
     </div>
 
     <div class="messages__list">
-        @for(convo of relatedUsers; track convo.id) {
-            <div class="conversation" 
-                 [class.active]="convo.active"
-                 (click)="onSelect(convo)">
-                <img [src]="convo.profilePictureUrl || '/assets/app/media/default-avatar.webp'" alt="{{ convo.fullName }}"/>
+        @for (convo of ((conversations$ | async) ?? []); track convo.id) {
+            <app-conversation-item [convo]="convo" [currentUser]="current_user" [typingMap]="typing$ | async" variant="default"
+                (clicked)="onSelect(convo)"></app-conversation-item>
 
-                <div class="conversation__content">
-                    <div class="conversation__top">
-                        <span class="name">{{ convo.fullName }}</span>
-                        <span class="time">Ativo agora</span>
-                    </div>
-
-                    <span class="last">Nenhuma mensagem</span>
-                </div>
-            </div>
+           
         }
     </div>
 </aside>

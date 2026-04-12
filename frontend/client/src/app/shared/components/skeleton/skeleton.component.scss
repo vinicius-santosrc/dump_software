@@ -1,0 +1,103 @@
+/* shimmer base */
+@mixin shimmer {
+    background: linear-gradient(90deg,
+            #e0e0e0 25%,
+            #f5f5f5 37%,
+            #e0e0e0 63%);
+    background-size: 400px 100%;
+    animation: shimmer 1.4s infinite linear;
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -400px 0;
+    }
+
+    100% {
+        background-position: 400px 0;
+    }
+}
+
+/* POST */
+.post {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.header {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    @include shimmer;
+}
+
+.info {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+}
+
+.line {
+    height: 10px;
+    border-radius: 6px;
+    @include shimmer;
+}
+
+.line.short {
+    width: 120px;
+}
+
+.line.smaller {
+    width: 80px;
+}
+
+.line.small {
+    width: 60%;
+}
+
+.media {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border-radius: 8px;
+    @include shimmer;
+}
+
+.actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* USER */
+.user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* STORY */
+.story {
+    display: flex;
+    justify-content: center;
+}
+
+.circle {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    @include shimmer;
+}
+
+/* GENERIC */
+.generic {
+    border-radius: 8px;
+    @include shimmer;
+}

@@ -1,6 +1,13 @@
 <div #basicInput class="basic-input-component">
   <div class="input-wrapper" [class.focused]="focused || value" [class.error]="showError">
-      <input class="basic-input-field" [type]="currentType" [value]="value" (focus)="focused = true" (blur)="focused = false; onBlur()" (input)="onInput($event)" />
+    @if(type === 'textarea') {
+      <textarea class="basic-input-field"  [value]="value" (focus)="focused = true"
+      (blur)="focused = false; onBlur()" (input)="onInput($event)"></textarea>
+    }
+    @else {
+      <input class="basic-input-field" [type]="currentType" [value]="value" (focus)="focused = true"
+      (blur)="focused = false; onBlur()" (input)="onInput($event)" />
+    }
 
     @if (label) {
     <label class="basic-input-label">

@@ -13,6 +13,7 @@ import { PostCarouselComponent } from "../post-carousel-component/post-carousel.
 export class PostMediaComponent implements AfterViewInit {
 
     @Input() media: any[] = [];
+    isLoading: boolean = true;
 
     currentIndex: number = 0;
 
@@ -36,5 +37,9 @@ export class PostMediaComponent implements AfterViewInit {
 
     goTo(index: number) {
         this.currentIndex = index;
+    }
+
+    onMediaLoad() {
+        this.isLoading = false;
     }
 }

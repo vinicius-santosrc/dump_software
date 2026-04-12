@@ -1,0 +1,35 @@
+<div class="conversation-item" [ngClass]="variant" (click)="onClick()">
+
+  <img 
+    class="avatar" 
+    [src]="getConversationAvatar()" 
+    [alt]="getConversationName()" 
+  />
+
+  <!-- DEFAULT -->
+  <div *ngIf="variant === 'default'" class="content">
+
+    <div class="top">
+      <span class="name">{{ getConversationName() }}</span>
+      <span class="time">Ativo agora</span>
+    </div>
+
+    <div class="bottom">
+      <span class="last">
+        <span *ngIf="isTyping()" class="typing">digitando...</span>
+        <span *ngIf="!isTyping()">{{ getLastMessage() }}</span>
+      </span>
+
+      <span class="badge" *ngIf="getUnreadCount() > 0">
+        {{ getUnreadCount() }}
+      </span>
+    </div>
+
+  </div>
+
+  <!-- CIRCULAR -->
+  <div *ngIf="variant === 'circular'" class="circular-name">
+    {{ getConversationName() }}
+  </div>
+
+</div>

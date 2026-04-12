@@ -17,7 +17,7 @@ import { PostMediaComponent } from "./components/post-media-component/post-media
     imports: [CommonModule, TranslateModule, PostActionButtonsComponent, PostHeaderComponent, PostMediaComponent],
 })
 export class PostComponent implements AfterViewInit, OnDestroy {
-    public current_user: User;
+    public current_user: User | undefined = {} as User;
     public router: any;
 
     constructor(
@@ -25,7 +25,9 @@ export class PostComponent implements AfterViewInit, OnDestroy {
         private readonly userService: UserService,
         public angularRouter: Router,
     ) {
-        this.current_user = this.userService.getUser();
+        this.userService.user$.subscribe((user: any) => {
+            this.current_user = user;
+        });
         this.router = angularRouter;
     }
 

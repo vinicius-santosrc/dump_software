@@ -11,16 +11,20 @@ import { RouterModule } from "@angular/router";
 import { MatIcon } from "@angular/material/icon";
 import { SearchSidebarComponent } from "./search-sidebar/search-sidebar.component";
 import { CommonModule } from "@angular/common";
+import { CreatePostComponent } from "../../pages/create-post/create-post.component";
+import { MatDialog, MatDialogModule } from "@angular/material/dialog";
 
 @Component({
     selector: "app-sidebar-component",
     templateUrl: "./sidebar.component.html",
     styleUrl: "./sidebar.component.scss",
-    imports: [TranslateModule, RouterModule, MatIcon, SearchSidebarComponent, CommonModule]
+    imports: [TranslateModule, RouterModule, MatIcon, SearchSidebarComponent, CommonModule, MatDialogModule]
 })
 export class SidebarComponent {
     isSidebarOpen: boolean = localStorage.getItem("sidebar") === "true";
     isSearchOpen: boolean = false;
+    isMessagePage: boolean = globalThis.location.pathname === "/messages/inbox"
+    constructor(private readonly dialog: MatDialog) { }
 
     navigationLinks = [
         {
@@ -39,7 +43,10 @@ export class SidebarComponent {
             icon: "search",
             route: "/search",
             isLink: false,
-            label: "HEADER.ACTIONS.SIDEBAR.SEARCH"
+            label: "HEADER.ACTIONS.SIDEBAR.SEARCH",
+            action: () => {
+                this.handleSearchClick();
+            }
         },
         {
             icon: "favorite",
@@ -57,7 +64,12 @@ export class SidebarComponent {
             icon: "add_circle",
             route: "/create",
             isLink: false,
-            label: "HEADER.ACTIONS.SIDEBAR.ADD_POST"
+            label: "HEADER.ACTIONS.SIDEBAR.ADD_POST",
+            action: () => {
+                this.dialog.open(CreatePostComponent, {
+                    minWidth: '1000px',
+                });
+            }
         },
         {
             icon: "menu",
@@ -126,10 +138,10 @@ export class SidebarComponent {
     }
 
     handleNavigation(item: any, event: Event) {
-        if (item.icon === 'search') {
+        if (!item.isLink && item.action) {
             event.preventDefault();
             event.stopPropagation();
-            this.handleSearchClick();
+            item.action(event);
         }
     }
 }

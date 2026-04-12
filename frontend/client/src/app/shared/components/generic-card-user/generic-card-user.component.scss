@@ -88,6 +88,30 @@
 .user-card__actions {
   display: flex;
   align-items: center;
+
+  .checkbox {
+    width: 30px;
+    height: 30px;
+    border: 1px solid #1881E2;
+    border-radius: 50%;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.2s ease;
+  }
+
+  .checkbox--active {
+    background: #1881E2;
+  }
+
+  .checkbox--active::after {
+    content: '✓';
+    position: absolute;
+    color: #fff;
+    font-size: 16px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
 }
 
 .user-card__follow-btn {

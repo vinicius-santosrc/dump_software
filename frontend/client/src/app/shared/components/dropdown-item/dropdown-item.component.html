@@ -1,0 +1,26 @@
+<div class="dropdown-container" (click)="$event.stopPropagation()">
+
+    <input type="text" [(ngModel)]="search" [placeholder]="placeholder" class="search" />
+
+    <div class="list">
+        <div 
+          class="item" 
+          *ngFor="let item of filteredItems" 
+          (click)="onSelect(item)"
+          [class.selected]="multiple ? selectedItems?.includes(item) : false"
+        >
+          <span class="label">
+            {{ item[displayKey] }}
+          </span>
+
+          <span class="check" *ngIf="multiple && selectedItems.includes(item)">
+            ✓
+          </span>
+        </div>
+
+        <div class="empty" *ngIf="!filteredItems.length">
+            Nenhum resultado
+        </div>
+    </div>
+
+</div>

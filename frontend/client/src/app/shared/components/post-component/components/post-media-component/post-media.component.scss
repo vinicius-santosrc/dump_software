@@ -4,11 +4,47 @@
 }
 
 /* IMAGE / VIDEO */
+.media-container {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    background: black;
+}
+
 img,
 video {
     width: 100%;
-    height: auto;
-    object-fit: cover;
+    height: 100%;
+    object-fit: contain;
+}
+
+img {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+img.loaded {
+    opacity: 1;
+}
+
+.media-skeleton {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        #e0e0e0 25%,
+        #f5f5f5 37%,
+        #e0e0e0 63%
+    );
+    background-size: 400px 100%;
+    animation: shimmer 1.4s infinite linear;
+    z-index: 1;
+}
+
+@keyframes shimmer {
+    0% { background-position: -400px 0; }
+    100% { background-position: 400px 0; }
 }
 
 /* VIDEO */

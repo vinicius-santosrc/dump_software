@@ -16,7 +16,9 @@ export class GenericActionsButtonsComponent implements OnInit, OnChanges {
     @Input() user?: User | null = null;
 
     constructor(private readonly userService: UserService) {
-        this.current_user = this.userService.getUser();
+        this.userService.user$.subscribe((user: any) => {
+            this.current_user = user;
+        });
     }
 
     ngOnInit() {
@@ -58,7 +60,7 @@ export class GenericActionsButtonsComponent implements OnInit, OnChanges {
     talkButton() {
 
     }
-    
+
     handleFollowButtonClick() {
         if (!this.user) return;
 

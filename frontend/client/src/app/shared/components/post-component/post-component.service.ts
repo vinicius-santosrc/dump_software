@@ -1,20 +1,24 @@
 import { Injectable, ElementRef, QueryList } from '@angular/core';
 import { PostsService } from '../../../core/services/post/post.service';
 import { UserService } from '../../../core/services/user/user.service';
-import { User } from '../../../core/models/user/user.model';
+import { MatDialog } from '@angular/material/dialog';
+import { SharePostComponent } from '../share-post-component/share-post-component';
 
 @Injectable({ providedIn: 'root' })
 export class PostComponentService {
 
     private observer: IntersectionObserver | null = null;
     private isMutedGlobal: boolean = false;
-    public current_user: User;
+    public current_user: any;
 
     constructor(
         private readonly postsService: PostsService,
-        private readonly userService: UserService
+        private readonly userService: UserService,
+        private readonly dialog: MatDialog
     ) {
-        this.current_user = this.userService.getUser();
+        this.userService.user$.subscribe((user: any) => {
+            this.current_user = user;
+        });
     }
 
     setupObserver(videoElements: QueryList<ElementRef<HTMLVideoElement>>) {
@@ -178,8 +182,16 @@ export class PostComponentService {
     }
 
     sendPost(postId: string | undefined) {
+        if (!postId) {
+            console.error('postId undefined in sendPost');
+            return;
+        }
+
         try {
-            // if (postId) this.postsService.handleLike(postId, this.current_user.id);
+            this.dialog.open(SharePostComponent, {
+                data: {postId: postId},
+                width: '500px'
+            });
         }
         catch (error) {
             console.error(error);

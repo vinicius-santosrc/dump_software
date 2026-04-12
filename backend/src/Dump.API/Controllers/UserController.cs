@@ -28,8 +28,8 @@ public class UserController : ControllerBase
         public string TargetUserId { get; set; }
     }
 
-    [HttpPost("getById")]
-    public async Task<IActionResult> GetById([FromBody] string id)
+    [HttpPost("getById/{id}")]
+    public async Task<IActionResult> GetById(string id)
     {
         var user = await _userService.GetById(id);
         return Ok(user);

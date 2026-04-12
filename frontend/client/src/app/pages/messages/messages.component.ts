@@ -1,49 +1,44 @@
-import { Component } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { MessagesSidebarComponent } from "./components/messages-sidebar/messages-sidebar.component";
 import { MessagesChatComponent } from "./components/messages-chat/messages-chat.component";
 import { UserService } from "../../core/services/user/user.service";
-
-interface Message {
-  text: string;
-  fromMe: boolean;
-  time?: string;
-}
-
-interface Conversation {
-  id: number;
-  name: string;
-  avatar: string;
-  lastMessage: string;
-  time: string;
-  active?: boolean;
-  messages: Message[];
-}
-
+import { MessagesStoreService } from "./conversation.store.service";
+import { MessagesService } from "./messages.service";
 @Component({
   selector: "app-messages-component",
   templateUrl: "./messages.component.html",
   styleUrls: ["./messages.component.scss"],
   imports: [MessagesSidebarComponent, MessagesChatComponent],
 })
-export class MessagesComponent {
+export class MessagesComponent implements OnInit {
   search = "";
-  relatedUsers: any[] = [];
-  selectedUser: any = null;
+  conversations: any[] = [];
+  selectedConversation: any;
   input: string = "";
   
   constructor(
-    private readonly useservice: UserService
-  ) {
-    this.getRelatedUsers();
+    private readonly userService: UserService,
+    private readonly messagesService: MessagesService,
+    private readonly store: MessagesStoreService
+  ) { }
+
+  ngOnInit() {
+    this.getConversations();
   }
 
-  getRelatedUsers() {
-    this.useservice.getRelatedByCurrentUser().subscribe((users: any) => {
-      this.relatedUsers = users;
-    });
+  getConversations() {
+    this.messagesService.getConversationsByUserId(this.userService?.getUser().id)
+      .subscribe((conversations: any) => {
+        this.conversations = conversations;
+        this.store.setConversations(conversations);
+      });
   }
 
-  onSelectUser(user: any) {
-    this.selectedUser = user;
+  get isMobile(): boolean {
+    return window.innerWidth <= 768;
+  }
+
+  onSelectUser(conversationDoc: any) {
+    this.selectedConversation = conversationDoc;
   }
 }
