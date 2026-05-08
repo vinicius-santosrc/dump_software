@@ -1,0 +1,10 @@
+<app-generic-modal-component [title]="'USER_PROFILE.MODAL.FOLLOWING.TITLE'" subtitle="{{ 'USER_PROFILE.MODAL.FOLLOWING.SUBTITLE' | translate: { username: data.user.username } }}" [actionButtons]="[]">
+    <div class="followers-search">
+        <app-basic-input (valueChange)="onSearchChange($event)" iconName="search"/>
+    </div>
+    <div class="following-list">
+        @for(user of users; track user?.id) {
+        <app-generic-card-user [user]="user" />
+        }
+    </div>
+</app-generic-modal-component>

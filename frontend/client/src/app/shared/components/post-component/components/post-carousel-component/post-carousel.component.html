@@ -7,20 +7,26 @@
         (touchmove)="onTouchMove($event)"
         (touchend)="onTouchEnd()"
     >
-        @for(item of media; track item.url) {
+        @for(item of media; track $index) {
 
         <div class="slide">
 
-            @if(item.type === 'image') {
-            <img 
-                [src]="item.url" 
-                alt="Post"
-                [style.aspectRatio]="item.width && item.height ? (item.width + ' / ' + item.height) : '1 / 1'"
-            />
+            <!-- IMAGE -->
+            @if((!isPreview && item.type === 'image') || (isPreview && item.type?.startsWith('image'))) {
+                <img 
+                    [src]="isPreview ? getPreview?.(item) : item.url"
+                    alt="Post"
+                    [style.aspectRatio]="!isPreview && item.width && item.height ? (item.width + ' / ' + item.height) : '1 / 1'"
+                />
             }
 
-            @if(item.type === 'video') {
-            <app-video-dump [src]="item.url" />
+            <!-- VIDEO -->
+            @if((!isPreview && item.type === 'video') || (isPreview && item.type?.startsWith('video'))) {
+                @if(isPreview) {
+                    <video [src]="getPreview?.(item)" controls></video>
+                } @else {
+                    <app-video-dump [src]="item.url" />
+                }
             }
 
         </div>

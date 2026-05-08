@@ -3,12 +3,14 @@ import { Component, Inject, Optional } from "@angular/core";
 import { MAT_DIALOG_DATA, MatDialog } from "@angular/material/dialog";
 import { MatIcon } from "@angular/material/icon";
 import { CreatePostGeneralComponent } from "./create-post-general/create-post-general.component";
+import { GenericButtonComponent } from "../../shared/components/generic-button-component/generic-button.component";
+import { TranslateModule } from "@ngx-translate/core";
 
 @Component({
     selector: "app-create-post-component",
     templateUrl: "./create-post.component.html",
     styleUrl: "./create-post.component.scss",
-    imports: [MatIcon, CommonModule, CreatePostGeneralComponent]
+    imports: [MatIcon, CommonModule, CreatePostGeneralComponent, GenericButtonComponent, TranslateModule]
 })
 export class CreatePostComponent {
     @Optional() @Inject(MAT_DIALOG_DATA) data: any;
@@ -19,6 +21,10 @@ export class CreatePostComponent {
 
     constructor(private readonly dialog: MatDialog) { }
 
+    get isMobile(): boolean {
+        return window.innerWidth <= 768;
+    }
+    
     close() {
         this.dialog.closeAll();
     }

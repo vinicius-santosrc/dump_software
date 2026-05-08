@@ -1,28 +1,26 @@
-<header class="header-component" [ngStyle]="{'background': isHome ? '#ffffff' : null}"
-    [class.hidden]="isHidden">
-    @if(isHome) {
+<header *ngIf="showHeader" class="header-component" [class.hidden]="isHidden">
     <div class="header-component-top">
         <div class="header-component-left">
         </div>
         <div class="header-component-center">
-            <img [src]="logo" alt="Dump Logo" />
+            <a routerLinkActive="active" [routerLink]="'/'">
+                @if(showDumpLogo) {
+                     <img [src]="logo" alt="Dump Logo" />
+                }
+            </a>
         </div>
         <div class="header-component-right">
-            <button (click)="openMessages()">
+            <button class="message_btn" (click)="openMessages()">
                 <img class="message-icon" width="32" height="32"
                     src="https://img.icons8.com/windows/32/telegram-app.png" alt="telegram-app" />
                 <span>{{"HEADER.ACTIONS.CONVERSATIONS" | translate}}</span>
             </button>
             <div class="account-details">
-                <img [src]="current_user?.profilePictureUrl || 'assets/app/media/default-avatar.webp'"
-                    alt="Your account" />
+                <a routerLinkActive="active" [routerLink]="'/' + current_user.username">
+                    <img [src]="current_user?.thumbnail || current_user?.profilePictureUrl || 'assets/app/media/default-avatar.webp'"
+                        alt="Your account" />
+                </a>
             </div>
         </div>
     </div>
-}
-    <!-- @if(isHome) {
-    <div class="header-component-bottom">
-        <app-memories-component [width]="width" [user]="current_user" />
-    </div>
-    } -->
 </header>

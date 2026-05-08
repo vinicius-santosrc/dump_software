@@ -1,4 +1,3 @@
-<!-- POST -->
 @if(type === 'post') {
 <div class="post">
     <div class="header">
@@ -30,6 +29,25 @@
 @if(type === 'story') {
 <div class="story">
     <div class="circle"></div>
+</div>
+}
+
+<!-- COMMENT (com avatar + 2 linhas) -->
+@if(type === 'comment') {
+<div class="comment">
+    <div class="avatar"></div>
+    <div class="content">
+        <div class="line short"></div>
+        <div class="line"></div>
+    </div>
+</div>
+}
+
+<!-- COMMENT SIMPLE (apenas linhas) -->
+@if(type === 'commentSimple') {
+<div class="comment-simple">
+    <div class="line short"></div>
+    <div class="line"></div>
 </div>
 }
 

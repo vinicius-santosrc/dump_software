@@ -1,7 +1,7 @@
 <section class="create-post">
     <div class="create-post__inside">
         <div class="create-post__header">
-            <h1>Criar nova publicação</h1>
+            <h1>{{ 'CREATE_POST.HEADER' | translate }}</h1>
             <button (click)="close()">
                 <mat-icon>close</mat-icon>
             </button>
@@ -24,14 +24,20 @@
             />
 
             <img src="/assets/app/media/undraw_upload_cucu.svg" alt />
-            <p>Arraste fotos ou vídeos aqui</p>
+            <p>{{ 'IMAGE_DRAG_AND_DROP.INSTRUCTION' | translate }}</p>
 
-            <button (click)="fileInput.click()">
-                <span>Selecionar do dispositivo</span>
-            </button>
+            
+                <app-generic-button
+                    label="IMAGE_DRAG_AND_DROP.BUTTON"
+                    (onClick)="fileInput.click()"
+                    padding="10px 16px"
+                    marginY="12px"
+                    width="312px"
+                ></app-generic-button>
+            
 
             <div *ngIf="files.length > 0" class="preview">
-                <p>{{ files.length }} arquivo(s) selecionado(s)</p>
+                <p>{{ 'IMAGE_DRAG_AND_DROP.SELECTED' | translate:{ count: files.length } }}</p>
             </div>
         </div>
         <app-create-post-general-component *ngIf="files.length > 0" [files]="files" />

@@ -9,19 +9,7 @@
     <div class="user-card__container user-card__container--flex user-card__container--row">
 
         <!-- PROFILE IMAGE -->
-        <div class="user-card__avatar-wrapper user-card__avatar-wrapper--rounded user-card__avatar-wrapper--with-border"
-            [style.width]="imageWidth" [style.height]="imageWidth" (click)="onClickCard()" [ngClass]="{
-                'user-card__avatar-wrapper--verified': user?.verified,
-                'user-card__avatar-wrapper--default': !user?.profilePictureUrl
-            }">
-            <img class="user-card__avatar-image"
-                [src]="user?.profilePictureUrl || 'assets/app/media/default-avatar.webp'" [alt]="user?.fullName"
-                loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false" [style.width]="'100%'"
-                [style.height]="'100%'" />
-
-            <!-- ONLINE INDICATOR -->
-            <!-- <span class="user-card__avatar-status user-card__avatar-status--online"></span> -->
-        </div>
+        <app-avatar-item [user]="user" [width]="imageWidth" [height]="imageWidth" />
 
         <!-- USER INFO -->
         <div class="user-card__info user-card__info--column" (click)="onClickCard()">
@@ -47,7 +35,7 @@
                 <label 
                     class="checkbox" 
                     [ngClass]="{ 'checkbox--active': isSelected }"
-                    (click)="$event.stopPropagation(); isSelected = !isSelected">
+                    (click)="onClickCard()">
                 </label>
             }
             @else {
@@ -55,14 +43,22 @@
             @if(isFollowing) {
             <button (click)="handleFollowButtonClick()"
                 class="user-card__following-btn user-card__follow-btn--following" type="button"
-                aria-label="Unfollow user">
-                {{ 'FEED.CARD.BUTTON.UNFOLLOW' | translate }}
+                aria-label="Unfollow user" [disabled]="isFollowLoading">
+                @if(isFollowLoading) {
+                    <app-loader width="16px" height="16px" theme="light"></app-loader>
+                } @else {
+                    {{ 'FEED.CARD.BUTTON.UNFOLLOW' | translate }}
+                }
             </button>
             }
             @else {
             <button (click)="handleFollowButtonClick()" class="user-card__follow-btn" type="button"
-                aria-label="Follow user">
-                + {{ 'FEED.CARD.BUTTON.FOLLOW' | translate }}
+                aria-label="Follow user" [disabled]="isFollowLoading">
+                @if(isFollowLoading) {
+                    <app-loader width="16px" height="16px" theme="light"></app-loader>
+                } @else {
+                    + {{ 'FEED.CARD.BUTTON.FOLLOW' | translate }}
+                }
             </button>
             }
             }

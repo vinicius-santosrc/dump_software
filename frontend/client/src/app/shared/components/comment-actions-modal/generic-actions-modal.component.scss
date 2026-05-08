@@ -1,0 +1,20 @@
+.comment-actions-modal {
+    width: 100%;
+    .comment-modal__inside {
+        display: flex;
+        flex-direction: column;
+        button {
+            background-color: transparent;
+            border: none;
+            width: 100%;
+            padding: 12px;
+            cursor: pointer;
+            border-bottom: 1px solid lightgray;
+            outline: none;
+        }
+
+        .danger {
+            color: red;
+        }
+    }
+}

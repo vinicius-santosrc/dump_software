@@ -83,16 +83,43 @@
     gap: 10px;
 }
 
+/* COMMENT */
+.comment {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+}
+
+.comment .avatar {
+    width: 32px;
+    height: 32px;
+}
+
+.comment .content {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+}
+
+/* COMMENT SIMPLE */
+.comment-simple {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
 /* STORY */
 .story {
     display: flex;
+    gap: 12px;
     justify-content: center;
 }
 
 .circle {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
+    width: 100px;
+    height: 152px;
+    border-radius: 12px;
     @include shimmer;
 }
 

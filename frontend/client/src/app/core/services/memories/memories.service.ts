@@ -1,5 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
+import { firstValueFrom } from "rxjs";
 import { API_CONFIG } from "../../config/api.config";
 
 @Injectable({
@@ -10,7 +11,21 @@ export class MemoriesService {
 
     constructor(private readonly http: HttpClient) { }
 
-    public async getByUser(id: string) {
-        return this.http.post(`${API_CONFIG.baseUrl}${this.API}/getByUser`, id);
+    public async getFeed(currentUserId: string) {
+        return await firstValueFrom(
+            this.http.get<any[]>(`${API_CONFIG.baseUrl}${this.API}/feed/${currentUserId}`)
+        );
+    }
+
+    public async getByUser(userId: string) {
+        return await firstValueFrom(
+            this.http.get<any[]>(`${API_CONFIG.baseUrl}${this.API}/user/${userId}`)
+        );
+    }
+
+    public async getById(id: string) {
+        return await firstValueFrom(
+            this.http.get(`${API_CONFIG.baseUrl}${this.API}/${id}`)
+        );
     }
 }

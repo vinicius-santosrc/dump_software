@@ -7,22 +7,36 @@
 </div>
 @if(!WHITE_LIST_ROUTES.includes(window.location.pathname)) {
   <!-- LATERAL BARRA -->
-  
-  <app-sidebar-component />
-  
-  <!-- HEADER -->
-  <app-header [width]="width" />
-  <main class="dump_content">
-    <aside class="dump_content_aside" [style.width]="width" [style.margin]="'auto'">
-      @if(!routeLoading) {
-        <router-outlet />
-      }
-    </aside>
-    <app-notification></app-notification>
-  </main>
+
+  <div class="dump">
+    <app-sidebar-component />
+    
+    <!-- HEADER -->
+    <app-header />
+    <main class="dump_content">
+      <aside class="dump_content_aside" [style.width]="width" [style.margin]="'auto'">
+        <div class="page-container" [class.loading]="routeLoading">
+          @if(!routeLoading) {
+          <div class="page-content loaded">
+            <router-outlet />
+          </div>
+          }
+        </div>
+      </aside>
+      <app-notification></app-notification>
+    </main>
+  </div>
 }
 @else {
-  @if(!routeLoading) {
-    <router-outlet />
-  }
+  <div class="page-container" [class.loading]="routeLoading">
+    @if(!routeLoading) {
+      <div class="page-content loaded">
+        <router-outlet />
+      </div>
+    }
+  </div>
 }
+
+<!-- <div class="page-bottom">
+    <app-footer-auth [showBorder]="false" />
+</div> -->

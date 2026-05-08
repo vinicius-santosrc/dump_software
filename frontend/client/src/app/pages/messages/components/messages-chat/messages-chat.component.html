@@ -1,6 +1,11 @@
 <section #chatBody class="messages__chat" *ngIf="conversation?.id">
     <header class="chat__header">
         <div class="chat__user">
+            @if(isMobile) {
+            <ng-container>
+                <button (click)="closeConversation()" mat-icon-button><mat-icon>arrow_back_ios</mat-icon></button>
+            </ng-container>
+            }
             <div class="chat__image-user">
                 <img [src]="getConversationAvatar()" />
                 <span class="online-dot" *ngIf="isUserOnline(conversation.participants[0])">
@@ -14,44 +19,45 @@
 
         <div class="chat__actions">
             <button id="call">
-                <mat-icon>phone</mat-icon>
+                <mat-icon fontSet="material-symbols-outlined">phone</mat-icon>
             </button>
             <button id="video-call">
-                <mat-icon>video_call</mat-icon>
+                <mat-icon fontSet="material-symbols-outlined">videocam</mat-icon>
             </button>
             <button id="info">
-                <mat-icon>info</mat-icon>
+                <mat-icon fontSet="material-symbols-outlined">info</mat-icon>
             </button>
         </div>
     </header>
 
     <div #scrollContainer class="chat__body" style="scroll-behavior: smooth;">
-        <div *ngFor="let msg of messages; let i = index" class="message" [class.me]="msg.senderId === current_user?.id">
+        <div *ngFor="let msg of messages; let i = index" class="message"
+            [class.me]="msg?.sender?.id === current_user?.id">
 
-            @if(msg.senderId != current_user?.id) {
-            <img class="message__avatar"
-                [src]="getUserById(msg.senderId)?.profilePictureUrl || 'assets/app/media/default-avatar.webp'" />
+            @if(msg?.sender?.id != current_user?.id) {
+            <img class="message__avatar" alt="Avatar"
+                [src]="getUserById(msg?.sender?.id)?.profilePictureUrl || 'assets/app/media/default-avatar.webp'" />
             }
 
             <div class="message__content">
-                <span *ngIf="isGroup && msg.senderId !== current_user?.id" class="message__name">
-                    {{ getUserById(msg.senderId)?.fullName }}
+                <span *ngIf="isGroup && msg?.sender?.id !== current_user?.id" class="message__name">
+                    {{ getUserById(msg?.sender?.id)?.fullName }}
                 </span>
 
-                <app-message-renderer [message]="msg" [isMine]="msg.senderId === current_user?.id">
+                <app-message-renderer [message]="msg" [isMine]="msg?.sender?.id === current_user?.id">
                 </app-message-renderer>
-                <span class="message__status" *ngIf="i === messages.length - 1 && msg.senderId === current_user?.id">
-                    {{ getMessageStatus(msg) }}
+                <span class="message__status" *ngIf="i === messages.length - 1 && msg?.sender?.id === current_user?.id">
+                    {{ getMessageStatus(msg) | translate}}
                 </span>
 
                 <button *ngIf="msg.status === 'error'" (click)="sendMessage()" class="retry-btn">
-                    Reenviar
+                    {{'MESSAGES_INBOX.CHAT.BUTTON.RESEND' | translate}}
                 </button>
             </div>
 
-            @if(msg.senderId == current_user?.id) {
+            @if(msg?.sender?.id == current_user?.id) {
             <img class="message__avatar"
-                [src]="getUserById(msg.senderId)?.profilePictureUrl || 'assets/app/media/default-avatar.webp'" alt/>
+                [src]="getUserById(msg?.sender?.id)?.profilePictureUrl || 'assets/app/media/default-avatar.webp'" alt />
             }
         </div>
         <div class="typing" *ngIf="typingUsers.size > 0">
@@ -61,25 +67,30 @@
 
     <div class="chat__input">
         <div class="chat__input-actions">
-            <button>＋</button>
-
+            <button><mat-icon>add</mat-icon></button>
         </div>
 
-        <input (input)="onTyping()" (blur)="onStopTyping()" type="text" [(ngModel)]="input" placeholder="Escreva uma mensagem" />
+        <!-- <input (input)="onTyping()" (blur)="onStopTyping()" type="text" [(ngModel)]="input"
+            placeholder="Escreva uma mensagem" /> -->
+        <div class="input-content">
+            <app-basic-input type="textarea" (input)="onTyping()" (blur)="onStopTyping()" [value]="input" (valueChange)="input = $event"
+                label="MESSAGES_INBOX.CHAT.INPUT.PLACEHOLDER" />
+        </div>
 
-        <button *ngIf="input !== ''"
-            (click)="sendMessage()">Enviar</button>
+        <app-generic-button *ngIf="input !== ''" label="" iconName="send" (onClick)="sendMessage()" padding="6px"
+            fontSize="13px" borderRadius="50%"></app-generic-button>
 
         <div class="chat__input-right" *ngIf="input === ''">
-            <button>😊</button>
-            <button>👍</button>
+            <button><mat-icon>face</mat-icon></button>
+            <button><mat-icon>thumb_up</mat-icon></button>
         </div>
     </div>
 </section>
 
 <section class="no_chat__screen" *ngIf="!conversation?.id">
     <div class="no_chat__content">
-        <h2>Selecione uma conversa</h2>
-        <p>Selecione um chat para começar a conversar no dump.</p>
+        <h2>{{'MESSAGES_INBOX.NOT_SELECTED.TITLE' | translate}}</h2>
+        <p>{{'MESSAGES_INBOX.NOT_SELECTED.SUBTITLE' | translate}}</p>
+        <app-generic-button label="{{'MESSAGES_INBOX.NOT_SELECTED.BUTTON' | translate}}" (onClick)="openCreateConversations()" marginY="12px" />
     </div>
 </section>

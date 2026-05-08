@@ -3,24 +3,59 @@
     <div class="search-sidebar" (click)="$event.stopPropagation()">
 
         <div class="header">
-            <h2>Buscar</h2>
-            <button (click)="handleClose()">✕</button>
+            <h2>{{ 'SEARCH.HEADER' | translate }}</h2>
+            <button (click)="handleClose()"><mat-icon>close</mat-icon></button>
         </div>
 
-        <input 
-            #input 
-            type="text" 
-            [(ngModel)]="query" 
-            placeholder="Buscar usuários, posts..."
-            autocomplete="off"
-        />
+        <app-basic-input (valueChange)="onSearchChange($event)" [label]="'SEARCH.LABEL'" />
 
-        <!-- RESULTADOS (placeholder) -->
         <div class="results">
-            @if(query.length > 0) {
-            <p>Resultados para "{{query}}"</p>
-            } @else {
-            <p class="empty">Comece a digitar...</p>
+
+            @if(loading) {
+            <app-loader />
+            }
+
+            @if(results?.users?.length) {
+            <div class="section">
+                <h4>{{ 'SEARCH.SECTION.USERS' | translate }}</h4>
+                <div class="section__inside">
+                    @for(user of results.users; track user.id) {
+                    <app-generic-card-user fontSize="12px" [user]="user" (click)="add_recent(user)" />
+                    }
+                </div>
+            </div>
+            }
+
+            @if(results?.posts?.length) {
+            <div class="section">
+                <h4>{{ 'SEARCH.SECTION.POSTS' | translate }}</h4>
+                <div class="grid">
+                    @for(post of results.posts; track post.id) {
+                    <app-post-media [media]="post.media" />
+                    }
+                </div>
+            </div>
+            }
+
+            @if(!loading && query == '' && !results?.users?.length && !results?.posts?.length) {
+            <div class="recent-search">
+            
+                <div class="header_recent">
+                    <span>{{ 'SEARCH.RECENT' | translate }}</span>
+                    <button (click)="clear()">{{ 'SEARCH.CLEAR_ALL' | translate }}</button>
+                </div>
+            
+                @for (item of recentSearches; track item.id) {
+                <div class="recent_item">
+                    <app-generic-card-user [showActionButton]="false" fontSize="12px" [user]="item" />
+            
+                    <button mat-icon-button (click)="remove(item.id); $event.stopPropagation()">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                </div>
+                }
+            
+            </div>
             }
         </div>
 

@@ -48,6 +48,12 @@ public class Post
 
     [BsonElement("updatedAt")]
     public DateTime? UpdatedAt { get; set; } = DateTime.UtcNow;
+
+    [BsonElement("isDeleted")]
+    public bool IsDeleted { get; set; }
+
+    [BsonElement("archived")]
+    public bool Archived { get; set; }
 }
 
 public class PostResponse
@@ -83,7 +89,7 @@ public class PostResponse
     public List<string> Reports { get; set; } = new();
 
     [BsonElement("comments")]
-    public List<string> Comments { get; set; } = new();
+    public Comment[] Comments { get; set; } = [];
 
     [BsonElement("visibility")]
     public string Visibility { get; set; } = "public";
@@ -96,6 +102,12 @@ public class PostResponse
 
     [BsonElement("updatedAt")]
     public DateTime? UpdatedAt { get; set; } = DateTime.UtcNow;
+
+    [BsonElement("isDeleted")]
+    public bool IsDeleted { get; set; }
+
+    [BsonElement("archived")]
+    public bool Archived { get; set; }
 }
 
 public class PostMedia
@@ -111,6 +123,9 @@ public class PostMedia
 
     [BsonElement("type")]
     public string Type { get; set; } = "image";
+
+    [BsonElement("thumbnail")]
+    public string Thumbnail { get; set; } = string.Empty;
 }
 
 public class PostLocation
@@ -141,6 +156,9 @@ public class PostComment
 
     [BsonElement("createdAt")]
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+    [BsonElement("isDeleted")]
+    public bool IsDeleted { get; set; }
 }
 
 public class PostML

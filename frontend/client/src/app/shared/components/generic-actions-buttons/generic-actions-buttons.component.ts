@@ -2,6 +2,9 @@ import { Component, Input, OnInit, OnChanges, SimpleChanges } from "@angular/cor
 import { TranslateModule } from "@ngx-translate/core";
 import { User } from "../../../core/models/user/user.model";
 import { UserService } from "../../../core/services/user/user.service";
+import { CreateConversationService } from "../create-conversation-component/create-conversation.service";
+import { MatDialog } from "@angular/material/dialog";
+import { ProfileEditComponent } from "../../../pages/profile/edit/profile-edit.component";
 
 @Component({
     selector: "app-generic-actions-buttons",
@@ -15,7 +18,7 @@ export class GenericActionsButtonsComponent implements OnInit, OnChanges {
 
     @Input() user?: User | null = null;
 
-    constructor(private readonly userService: UserService) {
+    constructor(private readonly userService: UserService, private readonly createConversationService: CreateConversationService, private readonly dialog: MatDialog) {
         this.userService.user$.subscribe((user: any) => {
             this.current_user = user;
         });
@@ -39,7 +42,18 @@ export class GenericActionsButtonsComponent implements OnInit, OnChanges {
 
     get buttons() {
         if (this.user?.id === this.current_user?.id) {
-            return [];
+            return [
+                {
+                    label: 'Editar perfil',
+                    onClick: () => this.handleEdit(),
+                    class: 'followingBtn'
+                },
+                {
+                    label: 'Arquivados',
+                    onClick: () => null,
+                    class: 'followingBtn'
+                },
+            ];
         }
         return [
             {
@@ -58,7 +72,11 @@ export class GenericActionsButtonsComponent implements OnInit, OnChanges {
     }
 
     talkButton() {
+        this.createConversationService.createConversation([this.user?.id, this.current_user.id]).subscribe(() => {
+            const newUrl = `/messages/inbox`;
 
+            globalThis.location.href = newUrl;
+        })
     }
 
     handleFollowButtonClick() {
@@ -67,6 +85,16 @@ export class GenericActionsButtonsComponent implements OnInit, OnChanges {
         this.userService.followUser(this.userService.getUser().id, this.user?.id || '').subscribe(() => {
             this.isFollowing = !this.isFollowing;
         });
+    }
+
+    get isMobile(): boolean {
+        return window.innerWidth <= 768;
+    }
+
+    handleEdit() {
+        this.dialog.open(ProfileEditComponent, {
+            minWidth: this.isMobile ? '400px' : '1000px',
+        })
     }
 
 }

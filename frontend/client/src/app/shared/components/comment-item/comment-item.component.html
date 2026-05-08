@@ -1,0 +1,88 @@
+<div class="comment" [class.dark]="theme === 'dark'" [class.light]="theme === 'light'" [class.simple]="style === 'simple'" [class.default]="style === 'default'" [style.marginLeft.px]="level * 16">
+
+    <div class="avatar" *ngIf="!comment.isDeleted">
+        <img [src]="comment.user?.profilePictureUrl" alt />
+    </div>
+
+    <div class="content">
+        <!-- SE NÃO DELETADO -->
+        <ng-container *ngIf="!comment.isDeleted; else deletedTemplate">
+
+          <ng-container *ngIf="style === 'simple'; else defaultStyle">
+            <span class="simple-text">
+              <strong>{{ '@' + (comment.user?.username) }}:</strong>
+              {{ comment.content }}
+            </span>
+            <span class="reply-btn" (click)="onReply()">{{ 'FEED.POST.COMMENTS.ITEM.REPLY' | translate }}</span>
+          </ng-container>
+
+          <ng-template #defaultStyle>
+
+            <div class="main-line">
+              <span class="username">
+                <a [class.light]="theme === 'light'" [class.dark]="theme === 'dark'"  [routerLink]="'/' + comment?.user?.username">
+                  {{ comment.user?.username || 'user' }}
+                </a>:
+              </span>
+              <span class="text">{{ comment.content }}</span>
+            </div>
+
+            <div class="meta">
+              <span class="time">{{ formatDateToNow(comment.createdAt) }}</span>
+              <span class="likes">{{ comment.likes || 0 }}</span>
+              <span class="reply-btn" (click)="onReply()">{{ 'FEED.POST.COMMENTS.ITEM.REPLY' | translate }}</span>
+              <span class="reply-btn" (click)="options()"><mat-icon>more_horiz</mat-icon></span>
+            </div>
+
+            <ng-container *ngIf="comment.responses?.length > 0">
+              <div class="view-replies" (click)="toggleReplies()">
+                <span *ngIf="!isLoadingReplies && !showReplies">
+                  {{ 'FEED.POST.COMMENTS.ITEM.SHOW_RESPONSES' | translate:{ count: comment.responses.length } }}
+                </span>
+                <span *ngIf="isLoadingReplies">
+                  {{ 'FEED.POST.COMMENTS.ITEM.LOADING' | translate }}
+                </span>
+                <span *ngIf="showReplies && !isLoadingReplies">
+                  {{ 'FEED.POST.COMMENTS.ITEM.HIDE_RESPONSES' | translate }}
+                </span>
+              </div>
+            </ng-container>
+
+          </ng-template>
+
+        </ng-container>
+
+        <!-- TEMPLATE DE DELETADO -->
+        <ng-template #deletedTemplate>
+          <div class="deleted-comment">
+            <i>{{ 'FEED.POST.COMMENTS.DELETED' | translate }}</i>
+          </div>
+        </ng-template>
+
+        <!-- REPLY BOX (bloqueado se deletado) -->
+        <ng-container *ngIf="replyingToId === comment?.id && !comment.isDeleted">
+          <div class="reply-box"> 
+              <input type="text" placeholder="{{ 'FEED.POST.COMMENTS.ITEM.REPLY' | translate }}" />
+              <button (click)="onSendReply()">{{ 'FEED.POST.COMMENTS.ITEM.SEND' | translate }}</button>
+              <button class="cancel" (click)="onCancel()">{{ 'FEED.POST.COMMENTS.ITEM.CANCEL' | translate }}</button>
+          </div>
+        </ng-container>
+
+        <!-- RESPOSTAS (MOSTRAR MESMO SE PAI DELETADO) -->
+        <ng-container *ngIf="comment.responses?.length > 0">
+          <div class="responses" *ngIf="showReplies || comment.isDeleted">
+              <app-comment-item 
+                  *ngFor="let child of comment.responses; trackBy: trackById" 
+                  [comment]="child" 
+                  [level]="level + 1" 
+                  [replyingToId]="replyingToId"
+                  [theme]="theme"
+                  [style]="style"
+                  (reply)="reply.emit($event)" 
+                  (sendReply)="sendReply.emit($event)" 
+                  (cancelReply)="cancelReply.emit()" />
+          </div>
+        </ng-container>
+    </div>
+
+</div>

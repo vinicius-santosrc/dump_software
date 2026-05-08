@@ -2,11 +2,12 @@ import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
 import { AppDropdownComponent } from "../dropdown-item/dropdown-item.component";
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-setting-item',
     standalone: true,
-    imports: [CommonModule, MatIcon, AppDropdownComponent],
+    imports: [CommonModule, MatIcon, AppDropdownComponent, TranslateModule],
     templateUrl: './app-setting-item.component.html',
     styleUrl: './app-setting-item.component.scss'
 })
@@ -30,6 +31,9 @@ export class AppSettingItemComponent {
 
     handleClick() {
         if (this.disabled) return;
+
+        if (this.type == 'toggle') this.toggle();
+
 
         if (this.enableDropdown) {
             this.isOpen = !this.isOpen;

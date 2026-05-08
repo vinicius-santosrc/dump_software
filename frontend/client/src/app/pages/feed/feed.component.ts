@@ -18,12 +18,14 @@ import { Router } from "@angular/router";
 import { GenericCardUserComponent } from "../../shared/components/generic-card-user/generic-card-user.component";
 import { MemoriesComponent } from "../../layout/header/memories-component/memories.component";
 import { SkeletonComponent } from "../../shared/components/skeleton/skeleton.component";
-
+import { GenericButtonComponent } from "../../shared/components/generic-button-component/generic-button.component";
+import { MatTabsModule } from '@angular/material/tabs';
+import { FooterAuthComponent } from "../../shared/components/footer-auth-component/footer-auth-component";
 @Component({
     selector: "app-feed-component",
     templateUrl: "./feed.component.html",
     styleUrl: "./feed.component.scss",
-    imports: [TranslateModule, PostComponent, CardComponent, GenericCardUserComponent, MemoriesComponent, SkeletonComponent]
+    imports: [TranslateModule, PostComponent, CardComponent, GenericCardUserComponent, MemoriesComponent, SkeletonComponent, GenericButtonComponent, MatTabsModule, FooterAuthComponent]
 })
 export class FeedComponent implements OnInit {
     posts: Post[] = [];

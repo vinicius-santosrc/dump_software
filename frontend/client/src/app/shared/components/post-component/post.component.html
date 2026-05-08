@@ -1,9 +1,11 @@
 <article [ngStyle]="{'background-color': backgroundColor, 'color': textColor}">
     <div class="post-component-ref">
-        <app-post-header [user]="post?.user" [caption]="post?.caption" [theme]="textColor == '#ffffff' ? 'dark' : 'light'" />
+        <app-post-header [user]="post?.user" [post]="post" [caption]="post?.caption" [theme]="textColor == '#ffffff' ? 'dark' : 'light'" />
 
-        <app-post-media [media]="post?.media || []" />
+        <app-post-media [media]="post?.media || []" [postId]="post?.id" (likeChanged)="onLikeChanged($event)" />
 
         <app-post-action-buttons [post]="post" [theme]="textColor == '#ffffff' ? 'dark' : 'light'"/>
+
+        <app-post-comments [comments]="post?.comments ?? []" [theme]="'dark'" />
     </div>
 </article>

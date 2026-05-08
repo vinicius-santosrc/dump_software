@@ -57,6 +57,9 @@ namespace Dump.Domain.Entities
 
         [BsonElement("updatedAt")]
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+
+        [BsonElement("isDeleted")]
+        public bool IsDeleted { get; set; } = false;
     }
 
     public class CommentML

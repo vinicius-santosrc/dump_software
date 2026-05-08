@@ -1,4 +1,5 @@
 import {
+    AfterViewInit,
     Component,
     ElementRef,
     Input,
@@ -8,16 +9,20 @@ import {
 } from '@angular/core';
 import { VideoDumpService } from './video-dump.service';
 import { MatIcon } from "@angular/material/icon";
+import { MatButtonModule } from "@angular/material/button";
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-video-dump',
     templateUrl: './video-dump.component.html',
     styleUrls: ['./video-dump.component.scss'],
-    imports: [MatIcon],
+    imports: [CommonModule, MatIcon, MatButtonModule],
+    standalone: true
 })
-export class VideoDumpComponent implements OnInit, OnDestroy {
+export class VideoDumpComponent implements OnInit, OnDestroy, AfterViewInit {
 
     @Input() src!: string;
+    @Input() thumbnail!: string;
 
     @ViewChild('video') videoRef!: ElementRef<HTMLVideoElement>;
 
@@ -31,12 +36,12 @@ export class VideoDumpComponent implements OnInit, OnDestroy {
 
     isLoading = true;
 
+    hasLoaded = false;
+
     private currentSub: any;
     private muteSub: any;
 
-    private tapTimeout: any;
-
-    constructor(private videoService: VideoDumpService) { }
+    constructor(private readonly videoService: VideoDumpService) { }
 
     ngOnInit(): void {
         this.isMuted = this.videoService.getMute();
@@ -61,12 +66,15 @@ export class VideoDumpComponent implements OnInit, OnDestroy {
     ngAfterViewInit(): void {
         const video = this.videoRef.nativeElement;
 
-        video.muted = this.isMuted;
+        video.muted = this.isMuted ?? true;
         video.playsInline = true;
 
         this.observer = new IntersectionObserver(
             ([entry]) => {
                 if (entry.isIntersecting) {
+                    if (!this.hasLoaded) {
+                        this.loadVideo();
+                    }
                     this.play();
                 } else {
                     video.pause();
@@ -94,42 +102,28 @@ export class VideoDumpComponent implements OnInit, OnDestroy {
         });
     }
 
+    loadVideo() {
+        if (this.hasLoaded) return;
+
+        const video = this.videoRef?.nativeElement;
+        if (!video) return;
+
+        video.src = this.src;
+        video.load();
+        this.hasLoaded = true;
+    }
+
     play() {
         const video = this.videoRef.nativeElement;
+        if (!this.hasLoaded) {
+            this.loadVideo();
+        }
         this.videoService.setCurrent(video);
         video.play().catch(() => { });
     }
 
     toggleMute() {
         this.videoService.toggleMute();
-    }
-
-    handleTap(event: PointerEvent) {
-        if (this.tapTimeout) {
-            clearTimeout(this.tapTimeout);
-            this.tapTimeout = null;
-
-            // DOUBLE TAP (like)
-            this.showLike = true;
-            setTimeout(() => {
-                this.showLike = false;
-            }, 600);
-
-            return;
-        }
-
-        this.tapTimeout = setTimeout(() => {
-            const video = this.videoRef.nativeElement;
-
-            if (video.paused) {
-                this.play();
-            } else {
-                video.pause();
-                this.isPaused = true;
-            }
-
-            this.tapTimeout = null;
-        }, 250);
     }
 
     onTimeUpdate() {

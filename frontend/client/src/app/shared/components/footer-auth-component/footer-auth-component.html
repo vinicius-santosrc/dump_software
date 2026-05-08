@@ -1,5 +1,7 @@
 <footer class="footer-auth">
+    @if(showBorder) {
     <div class="separator"></div>
+    }
     <section class="footer-top fast-links">
         @for (button of actionButtons; track button) {
         <button>{{ button.label | translate }}</button>

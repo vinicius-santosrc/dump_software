@@ -1,4 +1,4 @@
-<div class="post-media">
+<div class="post-media" (pointerup)="handleTap()">
 
     @if(media.length === 1) {
 
@@ -10,7 +10,8 @@
         }
 
         <img 
-            [src]="media[0].url" 
+            loading="lazy"
+            [src]="isLoading ? (media[0].thumbnail || media[0].url) : media[0].url" 
             alt="Post"
             (load)="onMediaLoad()"
             [class.loaded]="!isLoading"
@@ -20,11 +21,19 @@
     }
 
     @if(media[0].type === 'video') {
-    <app-video-dump [src]="media[0].url" />
+    <app-video-dump 
+        #videoPlayer
+        [src]="media[0].url" 
+        [thumbnail]="media[0].thumbnail" 
+    />
     }
 
     } @else {
     <app-post-carousel [media]="media" />
     }
+
+    <!-- Double tap like animation -->
+    <div class="like-burst" *ngIf="showLike">❤️</div>
+    <div class="like-burst" *ngIf="showDislike">💔</div>
 
 </div>

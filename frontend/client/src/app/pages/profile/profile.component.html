@@ -1,50 +1,89 @@
+@if(loading) {
+<div class="loader-wrapper">
+    <app-loader />
+</div>
+} @else if(user) {
 <section class="profile">
 
-    <!-- COVER -->
-    <div class="profile-cover">
-        <img src="{{user?.coverPhotoUrl}}" alt="Capa do perfil" />
-    </div>
-
-    <!-- HEADER -->
+    <!-- HEADER IG STYLE -->
     <div class="profile-header">
 
-        <div class="left">
-            <app-generic-card-user [user]="user" [imageWidth]="'120px'" [fontSize]="'18px'"
-                [showActionButton]="false"></app-generic-card-user>
-
-            <div class="stats">
-                <span><b>{{posts?.length}}</b> posts</span>
-                <span><b>{{user?.followers?.length}}</b> seguidores</span>
-                <span><b>{{user?.following?.length}}</b> seguindo</span>
-            </div>
+        <!-- AVATAR (mantido via componente) -->
+        <div class="avatar-block">
+            <app-avatar-item [user]="user" width="140px" height="140px" />
         </div>
 
-        <!-- ACTIONS -->
-        <app-generic-actions-buttons [user]="user" />
+        <!-- INFO -->
+        <div class="info-block">
 
+            <!-- TOP ROW -->
+            <div class="top-row">
+                <h2>{{ user?.username }} @if(user?.verified) {
+                    <mat-icon style="font-size: 14px; width: 14px; height: 14px;">verified</mat-icon>
+                    }
+                </h2>
+
+            </div>
+
+            <!-- STATS -->
+            <div class="stats">
+                <span><b>{{posts?.length}}</b> posts</span>
+                <span (click)="openFollowers()">{{'USER_PROFILE.INFORMATION.FOLLOWERS' | translate:{ count: user?.followers?.length } }}</span>
+                <span (click)="openFollowing()">{{'USER_PROFILE.INFORMATION.FOLLOWING' | translate:{ count: user?.following?.length } }}</span>
+            </div>
+
+            <div class="bio" *ngIf="user?.bio">
+                <strong>{{ user?.fullName }}</strong>
+                <p 
+                  [innerHTML]="formatBio(user?.bio)" 
+                  (click)="onBioClick($event)">
+                </p>
+                <p class="profile-website">
+                    <a 
+                      [href]="user.website?.startsWith('http') ? user.website : 'https://' + user.website" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                    >
+                      {{ user?.website }}
+                    </a>
+                </p>
+            </div>
+            <!-- ACTIONS -->
+            <app-generic-actions-buttons [user]="user" />
+
+        </div>
+
+    </div>
+
+    <!-- STORIES (placeholder estrutural) -->
+    <div class="stories" *ngIf="user?.stories?.length">
+        <div class="story" *ngFor="let story of user.stories">
+            <div class="story-border">
+                <img [src]="story.url" />
+            </div>
+        </div>
     </div>
 
     <!-- TABS -->
     <div class="tabs">
-        <span [class.active]="activeTab === 'posts'" (click)="setTab('posts')">Posts</span>
-        <span [class.active]="activeTab === 'media'" (click)="setTab('media')">Mídia</span>
-        <span [class.active]="activeTab === 'likes'" (click)="setTab('likes')">Curtidas</span>
+        <span [class.active]="activeTab === 'posts'" (click)="setTab('posts')">{{ 'USER_PROFILE.TABS.POSTS' | translate }}</span>
+        <span [class.active]="activeTab === 'media'" (click)="setTab('media')">{{ 'USER_PROFILE.TABS.MEDIA' | translate }}</span>
+        <span [class.active]="activeTab === 'likes'" (click)="setTab('likes')">{{ 'USER_PROFILE.TABS.LIKES' | translate }}</span>
     </div>
 
     <!-- FEED -->
     <div class="profile-feed">
 
-        <!-- EMPTY -->
         @if(!posts || posts.length === 0) {
         <div class="empty">
-            <p>Nenhum post ainda</p>
+            <p>{{ 'USER_PROFILE.FEED.EMPTY' | translate }}</p>
         </div>
         }
 
-        <!-- POSTS -->
-        <div class="masonry">
+        <!-- GRID IG (substitui masonry) -->
+        <div class="posts-grid">
 
-            @for (post of filteredPosts; track post.id; let i = $index) {
+            @for (post of filteredPosts; track post.id) {
 
             <div class="post-card" (click)="navigateToPost(post)">
 
@@ -55,8 +94,7 @@
                 }
 
                 <div class="overlay">
-                    <span>❤️ {{post.likes?.length}}</span>
-                    <span>💬 {{post.comments?.length}}</span>
+
                 </div>
 
             </div>
@@ -68,3 +106,7 @@
     </div>
 
 </section>
+}
+@else {
+<app-not-found />
+}

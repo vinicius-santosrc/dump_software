@@ -21,4 +21,26 @@ public class CommentsRepository : ICommentsRepository
     {
         return (await _comments.Find(c => c.PostReference == postId).ToListAsync()).ToArray();
     }
+
+    public async Task<Comment?> GetByIdAsync(string id)
+    {
+        return await _comments.Find(c => c.Id == id).FirstOrDefaultAsync();
+    }
+
+    public async Task RemoveAsync(string id)
+    {
+        var update = Builders<Comment>.Update
+            .Set(c => c.IsDeleted, true)
+            .Set(c => c.UpdatedAt, DateTime.UtcNow);
+
+        await _comments.UpdateOneAsync(
+            c => c.Id == id,
+            update
+        );
+    }
+
+    public async Task UpdateAsync(Comment comment)
+    {
+        await _comments.ReplaceOneAsync(c => c.Id == comment.Id, comment);
+    }
 }

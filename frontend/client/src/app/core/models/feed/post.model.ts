@@ -4,7 +4,8 @@ export interface Media {
     url: string;
     width: string;
     height: string;
-    type: "image" | "video"
+    type: "image" | "video",
+    thumbnail?: string
 }
 
 export interface PostML {
@@ -47,6 +48,7 @@ export interface Comments {
     createdAt: any;
     updatedAt: any;
     postReference: string;
+    isDeleted: boolean;
 }
 
 export interface Location {
@@ -78,6 +80,9 @@ export class Post {
 
     createdAt: any = null;
     updatedAt: any = null;
+
+    isDeleted: boolean = false;
+    archived: boolean = false;
 
     constructor(init?: Partial<Post>) {
         Object.assign(this, init);

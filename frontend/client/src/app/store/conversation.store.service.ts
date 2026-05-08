@@ -1,16 +1,16 @@
 import { Injectable } from "@angular/core";
 import { BehaviorSubject } from "rxjs";
-import { UserService } from "../../core/services/user/user.service";
+import { UserService } from "../core/services/user/user.service";
 
 @Injectable({ providedIn: 'root' })
 export class MessagesStoreService {
-    constructor(private readonly userService: UserService) {}
-    private readonly conversations$ = new BehaviorSubject<any[]>([]);
+    constructor(private readonly userService: UserService) { }
+    public readonly conversations$ = new BehaviorSubject<any[]>([]);
     conversationsObs$ = this.conversations$.asObservable();
 
     private readonly typing$ = new BehaviorSubject<{ [key: string]: string[] }>({});
     typingObs$ = this.typing$.asObservable();
-    
+
     public readonly activeConversationId$ = new BehaviorSubject<string | null>(null);
     activeConversationIdObs$ = this.activeConversationId$.asObservable();
 
@@ -22,6 +22,9 @@ export class MessagesStoreService {
 
     public readonly activeMessages$ = new BehaviorSubject<any[]>([]);
     activeMessagesObs$ = this.activeMessages$.asObservable();
+
+    private readonly _refresh$ = new BehaviorSubject<void>(undefined);
+    refresh$ = this._refresh$.asObservable();
 
     setActiveMessages(messages: any[]) {
         this.activeMessages$.next(messages ?? []);
@@ -172,4 +175,15 @@ export class MessagesStoreService {
         this.usersMap$.next(map);
     }
 
+    addConversation(conversation: any) {
+        const current = this.conversations$.value ?? [];
+
+        const exists = current.some(c => c.id === conversation.id);
+        if (exists) return;
+
+        this.conversations$.next([conversation, ...current]);
+    }
+    refreshTrigger() {
+        this._refresh$.next();
+    }
 }

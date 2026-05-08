@@ -3,16 +3,19 @@
 footer {
     margin-bottom: 48px;
 }
+
 .fast-links {
     display: flex;
     gap: 6px;
     margin: auto;
+    flex-wrap: wrap;
     justify-content: center;
     margin: 14px 0px;
 
     button {
         background-color: transparent;
-        color: variable.$principal-gray;
+        // color: var(--color-gray);
+        color: var(--color-text-secondary);
         border: none;
         cursor: pointer;
         font-size: 14px;
@@ -23,7 +26,7 @@ footer {
 .separator {
     width: 100%;
     height: 1px;
-    background-color: variable.$light-gray;
+    background: var(--color-gray);
     margin: 12px 0px;
 }
 
@@ -31,14 +34,19 @@ footer {
     display: flex;
     gap: 12px;
     justify-content: center;
+    flex-wrap: wrap;
+
     select {
         border: none;
         cursor: pointer;
         outline: none;
-        color: variable.$principal-gray;
+        color: var(--color-text-secondary);
+        background-color: transparent;
     }
+
     span {
         font-size: 14px;
-        color: variable.$principal-gray;
+        text-align: center;
+        color: var(--color-text-secondary);
     }
 }

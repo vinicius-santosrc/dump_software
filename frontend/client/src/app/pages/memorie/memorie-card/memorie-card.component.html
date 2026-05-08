@@ -1,0 +1,44 @@
+<!-- STORY VIEWER -->
+<div class="story-viewer">
+    <div class="overlay" (click)="closeStory()"></div>
+
+    <div class="story-container">
+
+        <!-- HEADER -->
+        <div class="story-header">
+            <app-avatar-item [user]="memorie?.user" />
+
+            <div class="info">
+                <span class="username">{{ memorie?.user?.username }}</span>
+                <span class="time">{{formatDateToNow(memorie?.createdAt)}}</span>
+            </div>
+        </div>
+
+        <!-- IMAGE -->
+        @if(memorie.photoUrl.includes('video')) {
+        <video class="story-image" [src]="memorie?.photoUrl" alt>
+            <source [src]="memorie?.photoUrl" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+
+        }
+        @else {
+            <img class="story-image" [src]="memorie?.photoUrl" alt />
+        }
+
+
+        <!-- ACTIONS -->
+        <div class="story-actions">
+            <div class="input">
+                <app-basic-input style="width: 100%;" label="Enviar mensagem..." />
+            </div>
+            <button mat-icon-button>
+                <mat-icon class="sendicon" fontSet="material-symbols-outlined">favorite</mat-icon>
+            </button>
+            <button mat-icon-button (click)="handleSend()">
+                <mat-icon class="sendicon" fontSet="material-symbols-outlined">send</mat-icon>
+            </button>
+        </div>
+
+    </div>
+</div>

@@ -1,20 +1,26 @@
 .post-media {
     position: relative;
     overflow: hidden;
+    // max-height: 650px;
 }
 
 /* IMAGE / VIDEO */
 .media-container {
     position: relative;
     width: 100%;
-    aspect-ratio: 1 / 1;
+    max-height: 80vh; /* prevents oversized videos */
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background: black;
 }
 
 img,
 video {
-    width: 100%;
-    height: 100%;
+    max-width: 100%;
+    max-height: 80vh;
+    width: auto;
+    height: auto;
     object-fit: contain;
 }
 
@@ -50,11 +56,14 @@ img.loaded {
 /* VIDEO */
 .video-container {
     position: relative;
+    cursor: pointer;
 
     video {
-        width: 100%;
-        object-fit: cover;
-        min-height: 200px;
+        max-width: 100%;
+        max-height: 80vh;
+        width: auto;
+        height: auto;
+        object-fit: contain;
     }
 
     .video-overlay {
@@ -76,7 +85,7 @@ img.loaded {
 
     .volume-btn {
         position: absolute;
-        bottom: 12px;
+        top: 12px;
         right: 12px;
         background: rgba(0, 0, 0, 0.5);
         border: none;
@@ -91,6 +100,34 @@ img.loaded {
         mat-icon {
             color: white;
         }
+    }
+}
+
+.like-burst {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 80px;
+    pointer-events: none;
+    animation: pop 0.6s ease;
+}
+
+@keyframes pop {
+    0% {
+        transform: scale(0.5);
+        opacity: 0;
+    }
+
+    50% {
+        transform: scale(1.2);
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 0;
     }
 }
 

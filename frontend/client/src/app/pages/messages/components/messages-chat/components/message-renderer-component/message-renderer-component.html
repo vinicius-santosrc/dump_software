@@ -1,20 +1,40 @@
 <!-- TEXT MESSAGE -->
-@if(type != 'post') {
+@if(type != 'post' && type != 'story') {
 <div class="message__bubble" [class.message__bubble--mine]="isMine">
     {{ message?.text }}
 </div>
 }
 <!-- POST MESSAGE -->
-@else {
+@if(type === 'post') {
 <div class="message__bubble message__bubble--post" [class.message__bubble--mine]="isMine">
     <div class="post-preview">
-        <p class="post-label">Compartilhado</p>
+        <p class="post-label">{{'MESSAGES_INBOX.CHAT.POST.SHARED' | translate}}</p>
 
         <div class="post-card" (click)="goToPost(message?.post)">
             <app-post-media class="media-post" [media]="message?.post?.media || []" />
             <div class="post-info">
-                <strong>{{ message?.post?.user?.fullName || 'Usuário' }}</strong>
-                <p>{{ message?.post?.caption || '...' }}</p>
+                <strong>{{ message?.post?.user?.fullName }}</strong>
+                <p>{{ message?.post?.caption }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+}
+
+<!-- STORY MESSAGE -->
+@if(type === 'story') {
+<div class="message__bubble message__bubble--post" [class.message__bubble--mine]="isMine">
+    <div class="post-preview">
+        <p class="post-label">Story</p>
+
+        <div class="post-card" (click)="goToStory(message?.story)">
+            @if(message?.story?.photoUrl) {
+                <img class="story-preview-image" [src]="message?.story?.thumbnail" />
+            }
+
+            <div class="post-info">
+                <strong>{{ message?.story?.user?.username }}</strong>
+                <p>{{'MESSAGES_INBOX.CHAT.BUTTON.SEE_STORY' | translate}}</p>
             </div>
         </div>
     </div>

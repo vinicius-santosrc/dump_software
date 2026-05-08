@@ -1,10 +1,3 @@
-/**
- * Created By: Vinícius da Silva Santos
- * Creation Date: 2026-03-31
- * Copyright (c) 2026 Dump Software. All rights reserved.
- * This software is licensed under the MIT License. See the LICENSE file in the project root for more information.
- */
-
 import { Injectable } from '@angular/core';
 import { UserService } from '../../core/services/user/user.service';
 import { BehaviorSubject } from 'rxjs';
@@ -29,10 +22,24 @@ export class ProfileComponentService {
 
   setBackgroundFromImage(imageUrl: string, username?: string) {
     if (!imageUrl) return;
+    if (imageUrl === "white" || imageUrl.startsWith("#") || imageUrl.startsWith("rgb")) {
+      const color = imageUrl === "white" ? "#ffffff" : imageUrl;
+
+        this.backgroundColorSubject.next(color);
+
+        const elements = globalThis.document.getElementsByClassName('dump_content');
+
+        if (elements && elements.length > 0) {
+            const el = elements[0] as HTMLElement;
+            el.style.background = color;
+        }
+
+        return;
+    }
 
     const img = new Image();
     img.crossOrigin = 'anonymous';
-    img.src = imageUrl + '?cacheBust=' + new Date().getTime();
+    img.src = imageUrl + '?cacheBust=' + Date.now();
 
     img.onload = () => {
       try {

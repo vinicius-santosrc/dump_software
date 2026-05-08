@@ -12,9 +12,8 @@ export class NotificationService {
     show(notification: any) {
         const current = this._notifications.value;
         this._notifications.next([notification, ...current]);
-
         // auto remove (tipo toast)
-        setTimeout(() => this.remove(notification), 4000);
+        setTimeout(() => this.remove(notification), 10000);
     }
 
     remove(notification: any) {

@@ -13,6 +13,11 @@
         }
     }
 
+    &__chats {
+        overflow-y: scroll;
+        max-height: 53.3vh;
+    }
+
     &__search-input {
         margin: 16px 0px;
     }
@@ -23,21 +28,5 @@
         left: 0;
         width: 100%;
 
-        button {
-            width: 100%;
-            padding: 12px;
-            border: none;
-            background-color: #1881E2;
-            cursor: pointer;
-            color: white;
-        }
-
-        button:disabled {
-            width: 100%;
-            padding: 12px;
-            border: none;
-            background-color: #BBDEFF;
-            cursor: pointer;
-        }
     }
 }

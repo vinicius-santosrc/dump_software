@@ -1,23 +1,25 @@
-<div class="conversation-item" [ngClass]="variant" (click)="onClick()">
+<div [class]="variant === 'default' ? 'conversation-item' : 'conversation-item-circular'" [ngClass]="[variant, selected ? 'selected' : '']" (click)="onClick()">
 
-  <img 
-    class="avatar" 
-    [src]="getConversationAvatar()" 
-    [alt]="getConversationName()" 
-  />
+  <div class="avatar-wrapper">
+    <app-avatar-item [src]="getConversationAvatar()" [width]="'52px'" [height]="'52px'" />
+
+    <div class="check" *ngIf="selected">
+      ✓
+    </div>
+  </div>
 
   <!-- DEFAULT -->
-  <div *ngIf="variant === 'default'" class="content">
+  <div *ngIf="variant === 'default'" class="conversation-item__content">
 
     <div class="top">
       <span class="name">{{ getConversationName() }}</span>
-      <span class="time">Ativo agora</span>
+      <span class="time"></span>
     </div>
 
     <div class="bottom">
       <span class="last">
         <span *ngIf="isTyping()" class="typing">digitando...</span>
-        <span *ngIf="!isTyping()">{{ getLastMessage() }}</span>
+        <span *ngIf="!isTyping()" [style.fontWeight]="getUnreadCount() > 0 ? '600' : '500'">{{ getLastMessage() }}</span>
       </span>
 
       <span class="badge" *ngIf="getUnreadCount() > 0">

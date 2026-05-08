@@ -8,30 +8,44 @@
 import { Component, Input, OnInit } from "@angular/core";
 import { TranslateModule } from "@ngx-translate/core";
 import { UserService } from "../../core/services/user/user.service";
-import { MemoriesComponent } from "./memories-component/memories.component";
-import { Router, NavigationEnd } from "@angular/router";
-import { NgStyle } from "@angular/common";
+import { Router, NavigationEnd, RouterLink } from "@angular/router";
+import { CommonModule, NgStyle } from "@angular/common";
+import { WHITE_LIST_NAVIGATIONS } from "../../core/config/api.config";
+import { ThemeService } from "../../core/services/theme.service";
 
 @Component({
     selector: "app-header",
     templateUrl: "./header.component.html",
     styleUrl: "./header.component.scss",
-    imports: [TranslateModule, MemoriesComponent, NgStyle]
+    imports: [TranslateModule, NgStyle, CommonModule, RouterLink]
 })
-    
-export class HeaderComponent implements OnInit{
+
+export class HeaderComponent implements OnInit {
     public isHidden: boolean = false;
     private lastScrollTop: number = 0;
     @Input() width: string = "";
-    public readonly logo = "assets/app/media/anim/icon/splash-screen.svg";
+    public logo = "assets/app/media/anim/icon/splash-screen.svg";
     public current_user: any;
     public isHome: boolean = false;
+    showHeader: boolean = true;
+    showDumpLogo: boolean = false;
+    theme: 'light' | 'dark' = 'light';
     constructor(
         public userService: UserService,
-        public router: Router
-    ) { 
+        public router: Router,
+        private readonly themeService: ThemeService
+    ) {
+        this.theme = this.themeService.getTheme();
+        this.logo = this.theme === 'light' ? 'assets/app/media/anim/icon/splash-screen.svg' : 'assets/app/media/anim/icon/splash-screen-light.svg';
         window.addEventListener('scroll', () => {
             const currentScroll = window.scrollY || document.documentElement.scrollTop;
+
+            if (currentScroll > 150) {
+                this.showDumpLogo = false;
+            }
+            else {
+                this.showDumpLogo = true;
+            }
 
             if (currentScroll > this.lastScrollTop && currentScroll > 50) {
                 // scroll down
@@ -43,14 +57,20 @@ export class HeaderComponent implements OnInit{
 
             this.lastScrollTop = Math.max(0, currentScroll);
         });
+        if (WHITE_LIST_NAVIGATIONS.some(route => globalThis.location.pathname.startsWith(route))) {
+            this.showHeader = false;
+        }
 
         this.router.events.subscribe(event => {
             if (event instanceof NavigationEnd) {
                 // força atualização do template
+                const url = this.router.url;
+                this.showHeader = !WHITE_LIST_NAVIGATIONS.some(route => url.startsWith(route));
                 this.isHome = this.router.url === '/';
+                this.showDumpLogo = this.router.url === '/';
             }
         });
-    }    
+    }
 
     ngOnInit(): void {
         this.userService.user$.subscribe((user: any) => {

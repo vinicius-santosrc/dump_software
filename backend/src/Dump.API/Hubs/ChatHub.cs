@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.SignalR;
 using Dump.Application.DTOs;
 using Dump.Application.Features.Messages;
+using Dump.Application.Features.User;
 
 namespace Dump.API.Hubs;
 
@@ -8,10 +9,12 @@ public class ChatHub : Hub
 {
     private static readonly Dictionary<string, string> _onlineUsers = new();
     private readonly MessageService _messageService;
+    private readonly UserService _userService;
 
-    public ChatHub(MessageService messageService)
+    public ChatHub(MessageService messageService, UserService userService)
     {
         _messageService = messageService;
+        _userService = userService;
     }
 
     public async Task JoinConversation(string conversationId)
@@ -28,14 +31,25 @@ public class ChatHub : Hub
     {
         var message = await _messageService.CreateMessage(dto);
 
+        var newMessage = new MessageReceive
+        {
+            Conversation = await _messageService.GetConversationById(message.ConversationId),
+            Sender = await _userService.GetById(message.SenderId),
+            CreatedAt = message.CreatedAt,
+            Id = message.Id,
+            ReadBy = message.ReadBy,
+            TempId = message.TempId,
+            Text = message.Text
+        };
+
         await Clients.Group(dto.ConversationId)
-            .SendAsync("ReceiveMessage", message);
+            .SendAsync("ReceiveMessage", newMessage);
 
         // also notify user rooms (global inbox)
         foreach (var connection in _onlineUsers.Where(x => x.Key != null))
         {
             await Clients.Group($"user:{connection.Key}")
-                .SendAsync("ReceiveMessage", message);
+                .SendAsync("ReceiveMessage", newMessage);
         }
     }
 

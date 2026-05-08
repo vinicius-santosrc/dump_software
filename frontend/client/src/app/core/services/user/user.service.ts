@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable, tap } from "rxjs";
 import { HttpClient } from "@angular/common/http";
 import { API_CONFIG } from "../../config/api.config";
+import { User } from "../../models/user/user.model";
 
 @Injectable({
     providedIn: 'root'
@@ -46,5 +47,9 @@ export class UserService {
 
     getUserById(id: string) {
         return this.http.get(`${API_CONFIG.baseUrl}${this.API}/getById/${id}`);
+    }
+
+    updateUser(user: User) {
+        return this.http.post(`${API_CONFIG.baseUrl}${this.API}/update`, user);
     }
 }

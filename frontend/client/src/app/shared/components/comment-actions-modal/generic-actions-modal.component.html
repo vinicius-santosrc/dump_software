@@ -1,0 +1,11 @@
+<section class="comment-actions-modal">
+    <div class="comment-modal__inside">
+        @for (action of data.actions; track action.id) {
+        <button (click)="handleClick(action)" [class.danger]="action.type === 'danger'">
+            {{ action.label | translate}}
+        </button>
+        }
+
+        <button (click)="cancel()">{{'FEED.POST.ACTIONS.CANCEL' | translate}}</button>
+    </div>
+</section>

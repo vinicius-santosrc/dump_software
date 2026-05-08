@@ -19,7 +19,7 @@ export class ChatService {
     if (this.hubConnection?.state === signalR.HubConnectionState.Connected) return;
 
     this.hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl(`http://localhost:5207/chat?userId=${userId}`)
+      .withUrl(`${API_CONFIG.baseUrl}/chat?userId=${userId}`)
       .withAutomaticReconnect()
       .build();
 

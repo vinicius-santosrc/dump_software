@@ -6,10 +6,10 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class VideoDumpService {
 
-    private currentPlaying = new BehaviorSubject<HTMLVideoElement | null>(null);
+    private readonly currentPlaying = new BehaviorSubject<HTMLVideoElement | null>(null);
     currentPlaying$ = this.currentPlaying.asObservable();
 
-    private muted = new BehaviorSubject<boolean>(true);
+    private readonly muted = new BehaviorSubject<boolean>(true);
     muted$ = this.muted.asObservable();
 
     setCurrent(video: HTMLVideoElement) {

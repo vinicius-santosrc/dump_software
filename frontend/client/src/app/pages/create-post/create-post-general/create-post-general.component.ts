@@ -7,12 +7,18 @@ import { Media, Post } from "../../../core/models/feed/post.model";
 import { User } from "../../../core/models/user/user.model";
 import { UserService } from "../../../core/services/user/user.service";
 import { PostsService } from "../../../core/services/post/post.service";
+import { GenericButtonComponent } from "../../../shared/components/generic-button-component/generic-button.component";
+import { MatDialog } from "@angular/material/dialog";
+import { MediaProcessingService } from "../../../core/services/media/media-processing.service";
+import { firstValueFrom } from "rxjs";
+import { PostCarouselComponent } from "../../../shared/components/post-component/components/post-carousel-component/post-carousel.component";
+import { MatButtonModule } from "@angular/material/button";
 
 @Component({
     selector: "app-create-post-general-component",
     templateUrl: "./create-post-general.component.html",
     styleUrl: "./create-post-general.component.scss",
-    imports: [MatIcon, CommonModule, BasicInputComponent, AppSettingItemComponent]
+    imports: [MatIcon, CommonModule, BasicInputComponent, AppSettingItemComponent, GenericButtonComponent, PostCarouselComponent, MatButtonModule]
 })
 export class CreatePostGeneralComponent implements OnInit {
     @Input() files: File[] = [];
@@ -21,15 +27,16 @@ export class CreatePostGeneralComponent implements OnInit {
     users: User[] = [] as User[];
     loading: boolean = false;
 
-    private previewMap = new Map<File, string>();
+    private readonly previewMap = new Map<File, string>();
 
     constructor(
         private readonly userService: UserService,
-        private readonly postService: PostsService
+        private readonly postService: PostsService,
+        private readonly dialog: MatDialog,
+        private readonly mediaService: MediaProcessingService
     ) { }
 
     ngOnInit() {
-
         this.getUsers()
     }
 
@@ -65,72 +72,44 @@ export class CreatePostGeneralComponent implements OnInit {
 
             this.postService.createPost(this.post).subscribe({
                 next: (res) => {
-                    console.log('Post criado:', res);
                     this.loading = false;
+                    this.dialog.closeAll();
                 },
                 error: (err) => {
-                    console.error('Erro ao criar post:', err);
                     this.loading = false;
                 }
             });
 
         } catch (error) {
-            console.error('Erro no sharePost:', error);
             this.loading = false;
         }
-    }
-
-    toBase64(file: File): Promise<string> {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-
-            reader.readAsDataURL(file);
-
-            reader.onload = () => resolve(reader.result as string);
-            reader.onerror = error => reject(error);
-        });
-    }
-
-    getImageDimensions(base64: string): Promise<{ width: string, height: string }> {
-        return new Promise((resolve) => {
-            const img = new Image();
-            img.src = base64;
-
-            img.onload = () => {
-                resolve({
-                    width: img.width.toString(),
-                    height: img.height.toString()
-                });
-            };
-        });
     }
 
     async prepareMedia() {
         const mediaList: Media[] = [];
 
         for (const file of this.files) {
-            const base64 = await this.toBase64(file);
-
-            let width = '';
-            let height = '';
-
-            if (file.type.startsWith('image')) {
-                const dimensions = await this.getImageDimensions(base64);
-                width = dimensions.width;
-                height = dimensions.height;
-            }
-
-            mediaList.push({
-                url: base64,
-                width,
-                height,
-                type: file.type.startsWith('image') ? 'image' : 'video'
-            });
+            const media = await this.mediaService.processFile(file);
+            mediaList.push(media as any);
         }
 
         this.post.media = mediaList;
-        this.userService.user$.subscribe((user: User) => {
-            this.post.user = user.id;
-        });
+
+        const user = await firstValueFrom(this.userService.user$);
+        this.post.user = user.id;
+    }
+
+    addMoreFiles() {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'image/*,video/*';
+        input.multiple = true;
+
+        input.onchange = (event: any) => {
+            const newFiles: File[] = Array.from(event.target.files);
+            this.files = [...this.files, ...newFiles];
+        };
+
+        input.click();
     }
 }

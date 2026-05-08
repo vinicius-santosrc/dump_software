@@ -2,16 +2,19 @@ using Dump.Application.Interfaces;
 namespace Dump.Application.Features.Messages;
 
 using Dump.Application.DTOs;
+using Dump.Application.Features.User;
 using Dump.Domain.Entities;
 public class MessageService
 {
     private readonly IMessagesRepository _repository;
     private readonly IUserRepository _userRepository;
+    private readonly UserService _userService;
 
-    public MessageService(IMessagesRepository repository, IUserRepository userRepository)
+    public MessageService(IMessagesRepository repository, IUserRepository userRepository, UserService userService)
     {
         _repository = repository;
         _userRepository = userRepository;
+        _userService = userService;
     }
 
     public async Task<Message> CreateMessage(SendMessageDto dto)
@@ -39,9 +42,29 @@ public class MessageService
         return conversation;
     }
 
-    public async Task<List<Message>> GetMessages(string conversationId)
+    public async Task<List<MessageReceive>> GetMessages(string conversationId)
     {
-        return await _repository.GetByConversationIdAsync(conversationId);
+        var messages = await _repository.GetByConversationIdAsync(conversationId);
+
+        var result = new List<MessageReceive>();
+
+        foreach (var message in messages)
+        {
+            var enriched = new MessageReceive
+            {
+                Conversation = await _repository.GetByConversationId(message.ConversationId),
+                Sender = await _userService.GetById(message.SenderId),
+                CreatedAt = message.CreatedAt,
+                Id = message.Id,
+                ReadBy = message.ReadBy,
+                TempId = message.TempId,
+                Text = message.Text
+            };
+
+            result.Add(enriched);
+        }
+
+        return result.Cast<MessageReceive>().ToList();
     }
 
     public async Task<Conversation> CreateConversation(List<string> participants)

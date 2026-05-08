@@ -1,0 +1,46 @@
+<div class="overlay" (click)="onOverlayClick($event)">
+
+    <div class="search-sidebar" (click)="$event.stopPropagation()">
+
+        <div class="header">
+            <h2>{{ 'SIDEBAR.NOTIFICATIONS_SIDEBAR.HEADER' | translate }}</h2>
+            <button (click)="handleClose()"><mat-icon>close</mat-icon></button>
+        </div>
+
+        <app-basic-input (valueChange)="onSearchChange($event)"  />
+
+        <div class="results">
+
+            @if(loading) {
+            <app-loader />
+            }
+
+            @for(n of notifications; track n.id) {
+            <div class="notification-item">
+                <app-avatar-item [width]="'52px'" [height]="'52px'" [src]="n?.fromUser?.profilePictureUrl" />
+            
+                <div>
+                    <span>
+                        <b>{{n.fromUser.username }}</b>
+            
+                        @if(n.type === 'like') {
+                        {{ 'SIDEBAR.NOTIFICATIONS_SIDEBAR.ACTIONS.LIKE' | translate }}
+                        }
+                        @if(n.type === 'comment') {
+                        {{ 'SIDEBAR.NOTIFICATIONS_SIDEBAR.ACTIONS.COMMENT' | translate }}
+                        }
+                    </span>
+            
+                    <small>{{ formatDateToNow(n.createdAt) }}</small>
+                </div>
+            
+                @if(!n.isRead) {
+                <div class="dot"></div>
+                }
+            </div>
+            }
+
+
+    </div>
+
+</div>

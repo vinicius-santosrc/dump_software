@@ -1,5 +1,5 @@
 import { Post } from './../../../core/models/feed/post.model';
-import { Component, Input, AfterViewInit, OnDestroy } from "@angular/core";
+import { Component, Input, AfterViewInit, OnDestroy, Injectable } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { TranslateModule } from '@ngx-translate/core';
 import { PostComponentService } from './post-component.service';
@@ -9,12 +9,16 @@ import { Router } from '@angular/router';
 import { PostActionButtonsComponent } from "../post-action-buttons/post-action-buttons.component";
 import { PostHeaderComponent } from "./components/post-header-component/post-header.component";
 import { PostMediaComponent } from "./components/post-media-component/post-media.component";
+import { PostCommentsComponent } from "./components/post-comments-component/post-comments.component";
 
 @Component({
     selector: "app-post-component",
     templateUrl: "./post.component.html",
     styleUrl: "./post.component.scss",
-    imports: [CommonModule, TranslateModule, PostActionButtonsComponent, PostHeaderComponent, PostMediaComponent],
+    imports: [CommonModule, TranslateModule, PostActionButtonsComponent, PostHeaderComponent, PostMediaComponent, PostCommentsComponent],
+})
+@Injectable({
+    providedIn: 'root'
 })
 export class PostComponent implements AfterViewInit, OnDestroy {
     public current_user: User | undefined = {} as User;
@@ -56,5 +60,19 @@ export class PostComponent implements AfterViewInit, OnDestroy {
 
     ngOnDestroy() {
         this.postService.destroyObserver();
+    }
+
+    onLikeChanged(liked: boolean) {
+        if (!this.post || !this.current_user?.id) return;
+
+        const likes = this.post.likes || [];
+
+        if (liked) {
+            if (!likes.includes(this.current_user.id)) {
+                this.post.likes = [...likes, this.current_user.id];
+            }
+        } else {
+            this.post.likes = likes.filter(l => l !== this.current_user?.id);
+        }
     }
 }

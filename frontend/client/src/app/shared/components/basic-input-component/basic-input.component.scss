@@ -1,5 +1,6 @@
 @use '../../../../styles/variables.scss' as variable;
 @use "../../../../styles.scss";
+
 .basic-input-component {
   width: 100%;
   max-width: 100%;
@@ -35,10 +36,19 @@
   top: 50%;
   transform: translateY(-50%);
   font-size: 14px;
-  color: variable.$principal-gray;
+  color: var(--color-gray);
   pointer-events: none;
   transition: all 0.2s ease;
   background: transparent;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
 }
 
 .input-wrapper.focused .basic-input-label {
@@ -64,7 +74,7 @@
   height: 18px;
   display: inline-block;
   border-radius: 50%;
-  border: 1px solid variable.$principal-gray;
+  border: 1px solid var(--color-gray);
 }
 
 .error {
@@ -72,15 +82,25 @@
   border-radius: 14px;
 
   .basic-input-label {
-    color: variable.$error-red;
+    // color: variable.$error-red;
+    color: var(--color-danger);
   }
 
 }
+
 .error-container .error-message {
   p {
     margin-top: 4px;
     margin-left: 18px;
     font-size: 12px;
-    color: variable.$error-red;
+    // color: variable.$error-red;
+    color: var(--color-danger);
   }
+}
+
+
+.textarea {
+  min-height: 48px;
+  height: auto;
+  overflow: hidden;
 }

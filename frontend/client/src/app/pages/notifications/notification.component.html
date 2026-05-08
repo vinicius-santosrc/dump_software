@@ -1,5 +1,16 @@
-<div class="notification-container">
+<div *ngIf="(notifications$ | async)?.length" class="notification-container">
     <div *ngFor="let n of notifications$ | async" class="notification">
-        <p>{{ n.text }}</p>
+        <section class="notification" (click)="handleClick(n)">
+            <div class="notification__inside">
+                <div class="notification__user">
+                    <app-avatar-item [width]="'52px'" [height]="'52px'" [src]="n?.sender.profilePictureUrl" />
+                </div>
+                <div class="notification__content">
+                    <h2>Mensagens</h2>
+                    <span>{{n.sender?.username}}:</span>
+                    <span id="text">{{n.text}}</span>
+                </div>
+            </div>
+        </section>
     </div>
 </div>

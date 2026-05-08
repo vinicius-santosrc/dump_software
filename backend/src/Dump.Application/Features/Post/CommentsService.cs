@@ -56,4 +56,21 @@ public class CommentsService
 
         return comments.ToArray();
     }
+
+    public async Task RemoveComment(string commentId)
+    {
+        await _commentsRepository.RemoveAsync(commentId);
+    }
+
+    public async Task ReportComment(string commentId, string userId)
+    {
+        var comment = await _commentsRepository.GetByIdAsync(commentId);
+        if (comment == null) return;
+
+        if (!comment.Reports.Contains(userId))
+        {
+            comment.Reports.Add(userId);
+            await _commentsRepository.UpdateAsync(comment);
+        }
+    }
 }

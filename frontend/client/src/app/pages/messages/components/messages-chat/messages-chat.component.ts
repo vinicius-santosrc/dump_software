@@ -6,15 +6,21 @@ import { FormsModule } from "@angular/forms";
 import { CommonModule } from "@angular/common";
 import { MessagesService } from "../../messages.service";
 import { MessageRendererComponent } from "./components/message-renderer-component/message-renderer-component";
-import { MessagesStoreService } from "../../conversation.store.service";
+import { MessagesStoreService } from "../../../../store/conversation.store.service";
 import { ChatViewHelper } from "../../helpers/chat-view.helper";
+import { GenericButtonComponent } from "../../../../shared/components/generic-button-component/generic-button.component";
+import { MessagesSidebarComponent } from "../messages-sidebar/messages-sidebar.component";
+import { MatButtonModule } from "@angular/material/button";
+import { MessagesComponent } from "../../messages.component";
+import { BasicInputComponent } from "../../../../shared/components/basic-input-component/basic-input.component";
+import { TranslateModule } from "@ngx-translate/core";
 
 @Component({
     selector: "app-messages-chat",
     standalone: true,
     templateUrl: "./messages-chat.component.html",
     styleUrls: ["./messages-chat.component.scss"],
-    imports: [MatIcon, FormsModule, CommonModule, MessageRendererComponent]
+    imports: [MatIcon, FormsModule, CommonModule, MessageRendererComponent, GenericButtonComponent, MatButtonModule, BasicInputComponent, TranslateModule]
 })
 
 export class MessagesChatComponent implements OnInit, OnChanges {
@@ -39,7 +45,9 @@ export class MessagesChatComponent implements OnInit, OnChanges {
         private readonly chatService: ChatService,
         private readonly userService: UserService,
         private readonly messagesService: MessagesService,
-        private readonly messagesStore: MessagesStoreService
+        private readonly messagesStore: MessagesStoreService,
+        private readonly messagesSidebar: MessagesSidebarComponent,
+        private readonly messagesComponent: MessagesComponent
     ) {
         this.userService.user$.subscribe((user: any) => {
             this.current_user = user;
@@ -123,7 +131,7 @@ export class MessagesChatComponent implements OnInit, OnChanges {
         const userId = this.current_user.id;
 
         const unread = this.messages.filter(msg =>
-            msg.senderId !== userId &&
+            msg?.sender?.id !== userId &&
             !msg.readBy?.includes(userId)
         );
 
@@ -200,21 +208,21 @@ export class MessagesChatComponent implements OnInit, OnChanges {
 
     getMessageStatus(msg: any): string {
         if (!msg.readBy || msg.readBy.length <= 1) {
-            return 'Enviado';
+            return 'MESSAGES_INBOX.CHAT.POST.SENT';
         }
 
         const allParticipants = this.conversation?.participants?.length ?? 1;
 
         if (msg.readBy.length === allParticipants) {
-            return 'Lido';
+            return 'MESSAGES_INBOX.CHAT.POST.READ';
         }
 
-        return 'Entregue';
+        return 'MESSAGES_INBOX.CHAT.POST.DELIVERED';
     }
 
     isLastMessageFromMe(msg: any, index: number): boolean {
         const nextMsg = this.messages[index + 1];
-        return !nextMsg || nextMsg.senderId !== msg.senderId;
+        return !nextMsg || nextMsg?.sender.id !== msg?.sender.id;
     }
 
     getUserById(userId: string) {
@@ -224,4 +232,21 @@ export class MessagesChatComponent implements OnInit, OnChanges {
     isUserOnline(userId: string): boolean {
         return this.messagesStore.getOnlineUsers()?.has(userId) ?? false;
     }
+
+    //
+
+    openCreateConversations() {
+        this.messagesSidebar.clickCreateConversation()
+    }
+
+    closeConversation() {
+        this.conversation = null;
+        this.messagesComponent.selectedConversation = null;
+    }
+
+    get isMobile(): boolean {
+        return window.innerWidth <= 768;
+    }
+
 }
+

@@ -8,7 +8,7 @@ import { Component, Input } from '@angular/core';
 })
 export class SkeletonComponent {
 
-    @Input() type: 'post' | 'user' | 'story' | 'generic' = 'generic';
+    @Input() type: 'post' | 'user' | 'story' | 'comment' | 'commentSimple' | 'generic' = 'generic';
 
     // usado só no generic
     @Input() width: string = '100%';

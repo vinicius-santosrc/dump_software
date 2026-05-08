@@ -1,8 +1,9 @@
+import { MatDividerModule } from '@angular/material/divider';
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, Inject, OnDestroy, OnInit, Optional } from '@angular/core';
+import { AfterViewInit, Component, Inject, OnChanges, OnDestroy, OnInit, Optional } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Comments, Post } from '../../core/models/feed/post.model';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { PostsService } from '../../core/services/post/post.service';
 import { PostActionButtonsComponent } from "../../shared/components/post-action-buttons/post-action-buttons.component";
 import { PostMediaComponent } from "../../shared/components/post-component/components/post-media-component/post-media.component";
@@ -10,14 +11,17 @@ import { PostHeaderComponent } from "../../shared/components/post-component/comp
 import { PostComponentService } from '../../shared/components/post-component/post-component.service';
 import { PostCommentsComponent } from "../../shared/components/post-component/components/post-comments-component/post-comments.component";
 import { CommentsService } from '../../core/services/comments/comments.service';
+import { BasicInputComponent } from "../../shared/components/basic-input-component/basic-input.component";
+import { GenericButtonComponent } from "../../shared/components/generic-button-component/generic-button.component";
 
 @Component({
     selector: 'app-post-page',
-    imports: [CommonModule, PostActionButtonsComponent, PostMediaComponent, PostHeaderComponent, PostCommentsComponent],
+    imports: [CommonModule, PostActionButtonsComponent, PostMediaComponent, PostHeaderComponent, PostCommentsComponent, MatDividerModule, BasicInputComponent, GenericButtonComponent],
     templateUrl: './postpage.component.html',
-    styleUrls: ['./postpage.component.scss']
+    styleUrl: './postpage.component.scss',
+    standalone: true
 })
-export class PostPageComponent implements OnInit, AfterViewInit, OnDestroy {
+export class PostPageComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy {
     post!: Post;
     postId: string = "";
     isModal: boolean = false;
@@ -29,7 +33,6 @@ export class PostPageComponent implements OnInit, AfterViewInit, OnDestroy {
         private readonly route: ActivatedRoute,
         private readonly postService: PostsService,
         private readonly postComponentService: PostComponentService,
-        private readonly router: Router,
         private readonly commentsService: CommentsService,
         @Optional() @Inject(MAT_DIALOG_DATA) public data?: { post: Post }
     ) {}
@@ -39,6 +42,9 @@ export class PostPageComponent implements OnInit, AfterViewInit, OnDestroy {
         if (this.data?.post) {
             this.post = this.data.post;
             this.isModal = true;
+            if (this.data.post.id) { 
+                this.getComments(this.data?.post.id);
+            }
             return;
         }
 
@@ -50,6 +56,10 @@ export class PostPageComponent implements OnInit, AfterViewInit, OnDestroy {
             this.getPost(postId);
             this.getComments(postId);
         });
+    }
+
+    ngOnChanges(): void {
+        this.getComments(this.postId);
     }
 
     ngAfterViewInit() {

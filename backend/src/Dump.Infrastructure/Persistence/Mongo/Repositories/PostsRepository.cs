@@ -23,12 +23,29 @@ public class PostsRepository : IPostsRepository
 
     public async Task<Post[]> GetByUser(string id)
     {
-        return (await _posts.Find(_ => true).ToListAsync()).ToArray();
+        return (await _posts.Find(p => !p.IsDeleted && !p.Archived).ToListAsync()).ToArray();
     }
 
-    public async Task<Post[]> GetByUserProfile(string id)
+    public async Task<List<Post>> GetArchivedAsync(string userId)
     {
-        return (await _posts.Find(p => p.User == id).ToListAsync()).OrderByDescending(p => p.CreatedAt).ToArray();
+        return await _posts
+            .Find(p =>
+                p.User == userId &&
+                !p.IsDeleted &&
+                p.Archived
+            )
+            .ToListAsync();
+    }
+
+    public async Task<List<Post>> GetByUserProfile(string userId)
+    {
+        return await _posts
+            .Find(p =>
+                p.User == userId &&
+                !p.IsDeleted &&
+                !p.Archived
+            )
+            .ToListAsync();
     }
 
     public async Task<Post> GetById(string id)
@@ -44,4 +61,73 @@ public class PostsRepository : IPostsRepository
 
         return await _posts.Find(filter).FirstOrDefaultAsync();
     }
+
+    public async Task<Post[]> GetDumpsByUserProfile(string id)
+    {
+        var filter = Builders<Post>.Filter.And(
+            Builders<Post>.Filter.Eq(p => p.User, id),
+            Builders<Post>.Filter.ElemMatch(p => p.Media, m => m.Type == "video")
+        );
+
+        return (await _posts.Find(filter).ToListAsync())
+            .OrderByDescending(p => p.CreatedAt)
+            .ToArray();
+    }
+
+    public async Task ArchiveAsync(string postId)
+
+    {
+
+        var update = Builders<Post>.Update
+
+            .Set(p => p.Archived, true)
+
+            .Set(p => p.UpdatedAt, DateTime.UtcNow);
+
+        await _posts.UpdateOneAsync(p => p.Id == postId, update);
+
+    }
+
+    public async Task UnarchiveAsync(string postId)
+
+    {
+
+        var update = Builders<Post>.Update
+
+            .Set(p => p.Archived, false)
+
+            .Set(p => p.UpdatedAt, DateTime.UtcNow);
+
+        await _posts.UpdateOneAsync(p => p.Id == postId, update);
+
+    }
+
+    public async Task SoftDeleteAsync(string postId)
+
+    {
+
+        var update = Builders<Post>.Update
+
+            .Set(p => p.IsDeleted, true)
+
+            .Set(p => p.UpdatedAt, DateTime.UtcNow);
+
+        await _posts.UpdateOneAsync(p => p.Id == postId, update);
+
+    }
+
+    public async Task RestoreAsync(string postId)
+
+    {
+
+        var update = Builders<Post>.Update
+
+            .Set(p => p.IsDeleted, false)
+
+            .Set(p => p.UpdatedAt, DateTime.UtcNow);
+
+        await _posts.UpdateOneAsync(p => p.Id == postId, update);
+
+    }
+
 }

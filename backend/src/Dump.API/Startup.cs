@@ -2,6 +2,12 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Dump.Application.Features.Auth;
+using Dump.Infrastructure.Persistence.Mongo.Repositories;
+using Dump.Application.Interfaces;
+using Dump.API.GraphQL;
+using Dump.Application.Features.Search;
+using Dump.Application.Features.Messages;
+using Dump.Infrastructure.Persistence.Mongo.Migrations;
 
 namespace Dump.API
 {
@@ -51,6 +57,18 @@ namespace Dump.API
             // Repositories
             services.AddScoped<Dump.Application.Interfaces.IUserRepository, Dump.Infrastructure.Persistence.Mongo.Repositories.UserRepository>();
             services.AddScoped<Dump.Application.Interfaces.IRefreshTokenRepository, Dump.Infrastructure.Persistence.Mongo.Repositories.RefreshTokenRepository>();
+            services.AddScoped<ISearchRepository, SearchRepository>();
+            services.AddScoped<INotificationRepository, NotificationRepository>();
+
+            //Search service
+            services.AddScoped<SearchService>();
+
+            //Notification Service
+            services.AddScoped<NotificationService>();
+
+            // Memories
+            services.AddScoped<IMemoriesRepository, MemoriesRepository>();
+            services.AddScoped<MemoriesService>();
 
             // Posts
             services.AddScoped<Dump.Application.Interfaces.IPostsRepository, Dump.Infrastructure.Persistence.Mongo.Repositories.PostsRepository>();
@@ -71,6 +89,10 @@ namespace Dump.API
             // Auth service
             services.AddScoped<AuthService>();
 
+            // Migrations
+            services.AddScoped<IMigration, AddUserThumbnailGender>();
+            services.AddScoped<MigrationRunner>();
+
             // JWT authentication
             services.AddAuthentication(options =>
             {
@@ -87,9 +109,11 @@ namespace Dump.API
                     IssuerSigningKey = new SymmetricSecurityKey(key)
                 };
             });
+
+            services.AddGraphQLServer().AddQueryType<SearchQuery>();
         }
 
-        public void Configure(WebApplication app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             // Middleware
             if (env.IsDevelopment())
@@ -103,7 +127,21 @@ namespace Dump.API
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.MapControllers();
+            app.UseRouting();
+
+            using (var scope = app.ApplicationServices.CreateScope())
+            {
+                var runner = scope.ServiceProvider
+                    .GetRequiredService<MigrationRunner>();
+
+                runner.RunAsync().Wait();
+            }
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+                endpoints.MapGraphQL("/graphql");
+            });
         }
     }
 }

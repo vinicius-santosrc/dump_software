@@ -1,21 +1,27 @@
-import { Component, Input, Output, EventEmitter } from "@angular/core";
+import { Component, Output, EventEmitter, Injectable } from "@angular/core";
 import { MatIcon } from "@angular/material/icon";
 import { User } from "../../../../core/models/user/user.model";
 import { UserService } from "../../../../core/services/user/user.service";
 import { ConversationMessages } from "../../../../core/models/messages/messages.model";
 import { CreateConversationComponent } from "../../../../shared/components/create-conversation-component/create-conversation-component";
 import { MatDialog } from "@angular/material/dialog";
-import { MessagesStoreService } from "../../conversation.store.service";
+import { MessagesStoreService } from "../../../../store/conversation.store.service";
 import { CommonModule } from "@angular/common";
 import { ConversationItemComponent } from "../../../../shared/components/conversation-item/conversation-item.component";
+import { MatButton } from "@angular/material/button";
+import { TranslateModule } from "@ngx-translate/core";
+import { BasicInputComponent } from "../../../../shared/components/basic-input-component/basic-input.component";
+import { MatTabGroup, MatTab } from "@angular/material/tabs";
 
 @Component({
     selector: "app-messages-sidebar",
     templateUrl: "./messages-sidebar.component.html",
     styleUrls: ["./messages-sidebar.component.scss"],
-    imports: [MatIcon, CommonModule, ConversationItemComponent]
+    imports: [MatIcon, CommonModule, ConversationItemComponent, MatButton, TranslateModule, BasicInputComponent, MatTabGroup, MatTab]
 })
-
+@Injectable({
+    providedIn: 'root'
+})
 export class MessagesSidebarComponent {
     conversations$: any;
     typing$: any;
@@ -84,7 +90,7 @@ export class MessagesSidebarComponent {
         return '';
     }
 
-    clickCreateConversation() {
+    public clickCreateConversation() {
         this.dialog.open(CreateConversationComponent, {
             width: '650px',
             height: '75vh'

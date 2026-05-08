@@ -60,4 +60,64 @@ public class PostController : ControllerBase
         var post = await _postService.HandleLike(request.PostId, request.LikerId);
         return Ok(post);
     }
+
+
+    [HttpGet("dumps/getByUser/{id}")]
+    public async Task<IActionResult> GetDumpsById(string id)
+    {
+        var user = await _postService.GetDumpsById(id);
+
+        if (user == null)
+            return NotFound(new { message = "User not found" });
+
+        return Ok(user);
+    }
+
+    [HttpPatch("{id}/archive")]
+
+    public async Task<IActionResult> Archive(string id)
+
+    {
+
+        await _postService.ArchivePost(id);
+
+        return Ok();
+
+    }
+
+    [HttpPatch("{id}/unarchive")]
+
+    public async Task<IActionResult> Unarchive(string id)
+
+    {
+
+        await _postService.UnarchivePost(id);
+
+        return Ok();
+
+    }
+
+    [HttpDelete("{id}")]
+
+    public async Task<IActionResult> Delete(string id)
+
+    {
+
+        await _postService.DeletePost(id);
+
+        return Ok();
+
+    }
+
+    [HttpPatch("{id}/restore")]
+
+    public async Task<IActionResult> Restore(string id)
+
+    {
+
+        await _postService.RestorePost(id);
+
+        return Ok();
+
+    }
 }

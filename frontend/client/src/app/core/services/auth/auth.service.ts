@@ -6,11 +6,10 @@
  */
 
 import { HttpClient } from "@angular/common/http";
-import { inject, Injectable } from "@angular/core";
+import { Injectable } from "@angular/core";
 import { Observable, tap } from "rxjs";
 import { LoginDTO, RegisterDTO } from "../../models/auth/auth.dto";
 import { API_CONFIG } from "../../config/api.config";
-import { Router } from "@angular/router";
 
 @Injectable({
     providedIn: 'root'
@@ -37,6 +36,8 @@ export class AuthService {
     // 🚪 LOGOUT
     logout(): void {
         localStorage.removeItem('accessToken');
-        this.http.post(`${API_CONFIG.baseUrl}${this.API}/logout`, {}, { withCredentials: true }).subscribe();
+        this.http.post(`${API_CONFIG.baseUrl}${this.API}/logout`, {}, { withCredentials: true }).subscribe(() => {
+            globalThis.location.href = '/';
+        });
     }
 }

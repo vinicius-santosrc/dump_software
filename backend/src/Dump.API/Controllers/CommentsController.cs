@@ -21,4 +21,18 @@ public class CommentsController : ControllerBase
         var comments = await _commentsService.GetByPostId(id);
         return Ok(comments);
     }
+
+    [HttpPost("remove/{id}")]
+    public async Task<IActionResult> Remove(string id)
+    {
+        await _commentsService.RemoveComment(id);
+        return Ok();
+    }
+
+    [HttpPost("report/{id}")]
+    public async Task<IActionResult> Report(string id, [FromQuery] string userId)
+    {
+        await _commentsService.ReportComment(id, userId);
+        return Ok();
+    }
 }

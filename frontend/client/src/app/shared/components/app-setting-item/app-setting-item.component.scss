@@ -21,13 +21,13 @@
 
             mat-icon {
                 font-size: 20px;
-                color: rgb(0, 0, 0);
+                color: var(--color-text)
             }
         }
 
         .label {
             font-size: 14px;
-            color: rgb(0, 0, 0);
+            color: var(--color-text)
         }
     }
 
@@ -53,7 +53,7 @@
 
     &.disabled {
         opacity: 0.5;
-        cursor: default;
+        cursor: not-allowed;
     }
 }
 

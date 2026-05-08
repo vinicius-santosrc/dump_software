@@ -1,31 +1,35 @@
 <section class="share-post">
     <div class="share-post__inside">
         <div class="share-post__header">
-            <h1>Compartilhar</h1>
+            <h1>{{ 'FEED.POST.SHARE.HEADER' | translate }}</h1>
             <button (click)="close()">
                 <mat-icon>close</mat-icon>
             </button>
         </div>
-        <div class="share-post__content">
-            @for (convo of ((conversations$ | async) ?? []); track convo.id) {
-                <app-conversation-item 
-                    [convo]="convo" 
-                    [currentUser]="current_user" 
-                    [typingMap]="typing$ | async" 
-                    variant="circular"
-                    (clicked)="onSelect(convo)"
-                    [ngClass]="{ 'selected': selectedConversations.includes(convo.id) }"
-                ></app-conversation-item>
+        <div class="share-post__main">
+            <app-basic-input label="FEED.POST.SHARE.LABEL" (valueChange)="applyFilter($event)" />
+            @if(isLoading) {
+                <app-loader />
+            }
+            @else {
+                @if((filteredConversations?.length ?? 0) === 0) {
+                    <p>{{ 'FEED.POST.SHARE.NO_CONVERSATIONS' | translate }}</p>
+                }
+                <div class="share-post__content">
+                    @for (convo of (filteredConversations ?? []); track convo.id) {
+                    <div class="conversation-item">
+                        <app-conversation-item [convo]="convo" [currentUser]="current_user" [typingMap]="typing$ | async"
+                            variant="circular" (clicked)="onSelect(convo)"
+                            [ngClass]="{ 'selected': selectedConversations.includes(convo.id) }"></app-conversation-item>
+                        @if(selectedConversations.includes(convo.id)) {<div class="check"></div>}
+                    </div>
+                    }
+                </div>
             }
         </div>
         <div class="share-post__bottom">
-            <button 
-                class="send-btn"
-                *ngIf="selectedConversations.length > 0"
-                (click)="send()"
-            >
-                Enviar ({{ selectedConversations.length }})
-            </button>
+            <app-generic-button *ngIf="selectedConversations.length > 0" [label]="'FEED.POST.SHARE.SEND' | translate: { count: selectedConversations.length }"
+                (onClick)="send()" width="100%" padding="10px"></app-generic-button>
         </div>
     </div>
-</section> 
+</section>

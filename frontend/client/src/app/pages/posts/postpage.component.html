@@ -15,15 +15,25 @@
 <ng-template #content>
 
     <div class="media">
-       <app-post-media [media]="post.media" />
+        <app-post-media [media]="post.media" [postId]="post?.id" />
     </div>
 
     <div class="info">
-        <app-post-header [isModal]="isModal" [user]="post?.user" [caption]="post?.caption" [theme]="isModal ? 'dark' : 'light'" />
+        <app-post-header [isModal]="isModal" [post]="post" [user]="post?.user" [caption]="post?.caption"
+            [theme]="isModal ? 'dark' : 'light'" />
 
         <app-post-action-buttons [post]="post" [theme]="isModal ? 'dark' : 'light'" />
 
+        <mat-divider />
+
         <app-post-comments [comments]="comments" [theme]="isModal ? 'dark' : 'light'" />
+
+        <div class="info-comment">
+            <div class="comment-input">
+                <app-basic-input label="FEED.POST.COMMENTS.ADD" />
+                <app-generic-button iconName="send" />
+            </div>
+        </div>
 
     </div>
 

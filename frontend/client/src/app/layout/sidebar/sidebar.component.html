@@ -1,33 +1,80 @@
+@if(showSidebar) {
 <nav class="navigation-bar desktop" [class.closed]="!isSidebarOpen" [style.width]="isSidebarOpen ? '213px' : '140px'">
     <div class="navigation-bar-inside">
-        <div class="navigation-bar-title" [style.flexDirection]="!isSidebarOpen ? 'row-reverse' : 'row'">
+        <div class="navigation-bar-title section-nav" [style.flexDirection]="!isSidebarOpen ? 'row-reverse' : 'row'">
             <h1 [style.opacity]="isSidebarOpen ? 1 : 0">{{"HEADER.ACTIONS.SIDEBAR.TITLE" | translate}}</h1>
-            <button (click)="handleOpenSideBar()"><mat-icon>{{isSidebarOpen ? 'keyboard_arrow_left' : 'keyboard_arrow_right'}}</mat-icon></button>
+            <button (click)="handleOpenSideBar()"><mat-icon>{{isSidebarOpen ? 'keyboard_arrow_left' :
+                    'keyboard_arrow_right'}}</mat-icon></button>
         </div>
-        <div class="navigation-bar-actions">
+        <div class="navigation-bar-actions section-nav">
             @for(item of navigationLinks; track item.route) {
-            <div class="navigator-item" (click)="handleNavigation(item, $event)" [style.width]="isSidebarOpen ? '213px' : '140px'">
-                <a 
-                    routerLinkActive="active" 
-                    [routerLink]="item.isLink ? item.route : null" 
-                    class="navigator-item"
-                >
-                    <mat-icon fontSet="material-symbols-outlined">{{item.icon}}</mat-icon>
-                    <span>{{ item.label | translate }}</span>
-                </a>
+            <div class="navigator-item" [style.width]="isSidebarOpen ? '213px' : '140px'">
+
+                <!-- ITEM WITH MENU -->
+                <ng-container *ngIf="item.menuOptions; else defaultItem">
+                    <a mat-button [matMenuTriggerFor]="menu" class="navigator-item">
+                        @if(item.iconUrl && item.iconUrl != "") {
+                        <img [src]="item.iconUrl" alt="" [class.selected-svg]="isSelected(item)" />
+                        }
+                        @else {
+                        <mat-icon [fontSet]="'material-symbols-outlined'">{{item.icon}}</mat-icon>
+                        }
+                        <span>{{ item.label | translate }}</span>
+                    </a>
+
+                    <mat-menu #menu="matMenu">
+                        @for(option of item.menuOptions; track option.label) {
+                        <button mat-menu-item (click)="option.action()">
+                            @if(option.icon) {
+                            @if(option.iconUrl && option.iconUrl != "") {
+                            <img [src]="option.iconUrl" alt="" />
+                            }
+                            @else {
+                            <mat-icon fontSet="material-symbols-outlined">{{option.icon}}</mat-icon>
+                            }
+                            }
+                            <span>{{ option.label | translate }}</span>
+                        </button>
+                        }
+                    </mat-menu>
+                </ng-container>
+
+                <!-- DEFAULT ITEM -->
+                <ng-template #defaultItem>
+                    <a routerLinkActive="active" [routerLink]="item.isLink ? item.route : null" class="navigator-item"
+                        (click)="handleNavigation(item, $event); selected = item.icon">
+                        @if(item.iconUrl && item.iconUrl != "") {
+                        <img [src]="item.iconUrl" alt="" [class.selected-svg]="isSelected(item)" />
+                        }
+                        @else {
+                        <mat-icon [fontSet]="'material-symbols-outlined'">{{item.icon}}</mat-icon>
+                        }
+                        <span>{{ item.label | translate }}</span>
+                    </a>
+                </ng-template>
+
             </div>
             }
         </div>
+        <div class="navigation-bar-bottom section-nav"></div>
     </div>
 </nav>
-<app-search-sidebar *ngIf="isSearchOpen" (close)="closeSearch()" />
+<app-search-sidebar *ngIf="panels.search" (close)="closePanels()" />
+<app-notifications-sidebar *ngIf="panels.notifications" (close)="closePanels()" />
 @if(!isMessagePage) {
 <nav class="mobile-navigation mobile">
     @for(item of mobileNavigationLinks; track item.route) {
-        <a [routerLink]="item.route" routerLinkActive="active" class="mobile-item">
-            <mat-icon fontSet="material-symbols-outlined">{{item.icon}}</mat-icon>
-            <span>{{ item.label | translate }}</span>
-        </a>
+    <a (click)="item?.action(); selected = item.icon" [routerLink]="item.isLink ? item.route : null" routerLinkActive="active"
+        class="mobile-item">
+        @if(item.iconUrl && item.iconUrl != "") {
+        <img [src]="item.iconUrl" alt="" [class.selected-svg]="isSelected(item)" />
+        }
+        @else {
+        <mat-icon [fontSet]="'material-symbols-outlined'">{{item.icon}}</mat-icon>
+        }
+        <!-- <span>{{ item.label | translate }}</span> -->
+    </a>
     }
 </nav>
+}
 }

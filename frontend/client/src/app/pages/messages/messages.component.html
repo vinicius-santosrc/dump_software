@@ -1,14 +1,14 @@
 <div class="messages">
   @if(isMobile) {
-  @if(!selectedConversation) {
-  <!-- SIDEBAR -->
-  <app-messages-sidebar (onSelectUser)="selectedConversation = $event" />
-  }
+    @if(!selectedConversation) {
+    <!-- SIDEBAR -->
+    <app-messages-sidebar style="width: 100%;" (onSelectUser)="selectedConversation = $event" />
+    }
 
-  @if(selectedConversation) {
-  <!-- CHAT -->
-  <app-messages-chat [conversation]="selectedConversation" style="width: 100%;" />
-  }
+    @if(selectedConversation) {
+    <!-- CHAT -->
+    <app-messages-chat [conversation]="selectedConversation" style="width: 100%;" />
+    }
   }
   @else {
   <!-- SIDEBAR -->

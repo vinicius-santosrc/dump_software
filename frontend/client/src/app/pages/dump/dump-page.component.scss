@@ -1,0 +1,72 @@
+.reels-container {
+    height: 100vh;
+    width: 700px;
+    margin: auto;
+    overflow-y: scroll;
+    scrollbar-width: none;
+    scroll-snap-type: y mandatory;
+    -ms-overflow-style: none;
+    flex-direction: column;
+    display: flex;
+    align-items: center;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+/* cada item ocupa tela */
+app-dump-item-component {
+    scroll-snap-align: start;
+    height: 100vh;
+}
+
+/* desktop estilo instagram web (centralizado) */
+@media (min-width: 768px) {
+    .reels-container {
+        align-items: center;
+    }
+
+    app-dump-item-component {
+        width: 100%;
+        max-width: 450px;
+    }
+}
+
+@media (max-width: 768px) {
+    .reels-container {
+        width: 100%;
+        margin-top: -120px;
+        height: 90vh;
+    }
+
+    .action-button {
+        position: fixed;
+        z-index: 42;
+    }
+}
+
+.reels-actions-buttons {
+    position: fixed;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    z-index: 50;
+}
+
+.action-button {
+    background: white;
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    box-shadow: 1px 1px 5px lightgray;
+    color: black;
+    mat-icon {
+        font-size: 29px;
+        width: 29px;
+        height: 29px;
+    }
+}

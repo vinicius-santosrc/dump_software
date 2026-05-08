@@ -1,3 +1,4 @@
+import { Memorie } from "../feed/memorie.model";
 import { Post } from "../feed/post.model";
 import { User } from "../user/user.model";
 
@@ -30,5 +31,6 @@ export interface Message {
     text: string;
     createdAt: string;
     readyBy: string[];
-    post?: Post
+    post?: Post;
+    story?: Memorie;
 }

@@ -8,6 +8,7 @@ using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using Dump.Application.Features.Post;
 using Dump.Application.Features.User;
+using Dump.Domain.Entities;
 
 namespace Dump.API.Controllers;
 
@@ -28,10 +29,14 @@ public class UserController : ControllerBase
         public string TargetUserId { get; set; }
     }
 
-    [HttpPost("getById/{id}")]
+    [HttpGet("getById/{id}")]
     public async Task<IActionResult> GetById(string id)
     {
         var user = await _userService.GetById(id);
+
+        if (user == null)
+            return NotFound(new { message = "User not found" });
+
         return Ok(user);
     }
 
@@ -39,6 +44,10 @@ public class UserController : ControllerBase
     public async Task<IActionResult> GetByUsername(string username)
     {
         var user = await _userService.GetByUsername(username);
+
+        if (user == null)
+            return NotFound(new { message = "User not found" });
+
         return Ok(user);
     }
 
@@ -60,6 +69,30 @@ public class UserController : ControllerBase
             {
                 success = true,
                 message = "Follow/unfollow executed successfully"
+            });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new
+            {
+                success = false,
+                message = ex.Message
+            });
+        }
+    }
+
+
+    [HttpPost("update")]
+    public async Task<IActionResult> Update([FromBody] User user)
+    {
+        try
+        {
+            await _userService.Update(user);
+
+            return Ok(new
+            {
+                success = true,
+                message = "User updated sucessfuly"
             });
         }
         catch (Exception ex)

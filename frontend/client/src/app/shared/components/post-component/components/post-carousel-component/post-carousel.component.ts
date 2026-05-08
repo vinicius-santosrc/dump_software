@@ -12,6 +12,8 @@ import { VideoDumpComponent } from '../../../video-dump-component/video-dump.com
 export class PostCarouselComponent {
 
     @Input() media: any[] = [];
+    @Input() isPreview: boolean = false;
+    @Input() getPreview?: (file: File) => string;
 
     currentIndex: number = 0;
 

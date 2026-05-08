@@ -22,9 +22,13 @@
         text-overflow: ellipsis;
     }
 }
-.conversation-item {
+
+.conversation-item, .conversation-item-circular {
     display: flex;
     gap: 12px;
+    margin: auto;
+    width: 100%;
+    max-width: 100%;
     padding: 12px 16px;
     cursor: pointer;
     transition: 0.2s;
@@ -46,12 +50,14 @@
 
     &__content {
         flex: 1;
+        width: 100%;
     }
 
     .top {
         display: flex;
         position: relative;
         justify-content: space-between;
+        width: 100%;
 
         .name {
             font-weight: 600;
@@ -71,21 +77,28 @@
     }
 }
 
+.conversation-item-circular {
+    width: 140px;
+}
+
 .conversation__top {
     position: relative;
 }
 
-.badge {
-    position: absolute;
-    right: 0;
-    top: -20px;
-    bottom: 50%;
-    background: #45b0b4;
-    width: 25px;
-    height: 25px;
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
+.bottom {
+    position: relative;
+    width: 100%;
+    .badge {
+        position: absolute;
+        top: -20px;
+        right: 0;
+        background: #45b0b4;
+        width: 25px;
+        height: 25px;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+    }
 }

@@ -8,24 +8,27 @@ import { TranslateModule } from '@ngx-translate/core';
 import { UserService } from './core/services/user/user.service';
 import { SidebarComponent } from "./layout/sidebar/sidebar.component";
 import { HeaderComponent } from "./layout/header/header.component";
-import { WHITE_LIST_ROUTES } from './core/config/api.config';
-import { ChatService } from './core/services/messages/chat.service';
+import { WHITE_LIST_NAVIGATIONS, WHITE_LIST_ROUTES } from './core/config/api.config';
 import { NotificationComponent } from "./pages/notifications/notification.component";
 import { ChatRealtimeService } from './core/services/messages/chat-realtime.service';
-import { MessagesStoreService } from './pages/messages/conversation.store.service';
+import { MessagesStoreService } from './store/conversation.store.service';
+import { FooterAuthComponent } from "./shared/components/footer-auth-component/footer-auth-component";
+import { ProfileComponentService } from './pages/profile/profile.component.service';
+import { ThemeService } from './core/services/theme.service';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, TranslateModule, SidebarComponent, HeaderComponent, NotificationComponent],
+  imports: [RouterOutlet, TranslateModule, SidebarComponent, HeaderComponent, NotificationComponent, FooterAuthComponent],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit, AfterViewInit {
   title = 'Dump';
-  width: string = 'calc(100% - 280px)';
+  width: string = '850px';
   WHITE_LIST_ROUTES = WHITE_LIST_ROUTES;
   window = globalThis;
   routeLoading: boolean = false;
+  theme: any;
 
   @ViewChild('splashScreen', { read: ElementRef })
   splashScreen!: ElementRef;
@@ -36,23 +39,45 @@ export class AppComponent implements OnInit, AfterViewInit {
     private readonly userService: UserService,
     private readonly realtime: ChatRealtimeService,
     private readonly store: MessagesStoreService,
-    private readonly router: Router) {
+    private readonly router: Router,
+    private readonly profileService: ProfileComponentService,
+    private readonly themeService: ThemeService) {
     // register translations
     this.translationService.loadTranslations(ptLang, enLang, esLang);
+    this.themeService.loadTheme();
+
+    this.theme = this.themeService.getTheme();
+    this.splashScreenImage = this.theme === 'light' ? 'assets/app/media/anim/icon/splash-screen.svg' : 'assets/app/media/anim/icon/splash-screen-light.svg';
+
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        const url = this.router.url;
+        let showSidebar = !WHITE_LIST_NAVIGATIONS.some(route => url.startsWith(route));
+        if (!showSidebar) this.width = '100%'
+        else {
+          if (this.isMobile) {
+            this.width = '100%'
+          }
+          else this.width = '850px';
+        }
+
+      }
+    });
   }
 
   get isMobile(): boolean {
     return window.innerWidth <= 768;
   }
 
-  ngOnInit(): void {
+    ngOnInit(): void {
     const token = localStorage.getItem('accessToken');
-
     if (token) {
       this.userService.loadUser().subscribe(user => {
         if (!user) return;
 
         this.realtime.init();
+
+        this.store.refreshTrigger();
       });
     }
 
@@ -62,8 +87,13 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationStart) {
         this.routeLoading = true;
+        // this.profileService.setBackgroundFromImage("white");
       }
 
+      if (event instanceof NavigationEnd && event.url.includes('/messages')) {
+        this.store.refreshTrigger();
+      }
+      
       if (
         event instanceof NavigationEnd ||
         event instanceof NavigationCancel ||
@@ -96,11 +126,7 @@ export class AppComponent implements OnInit, AfterViewInit {
         this.width = '100%';
         return;
       }
-
-      this.width = isOpen
-        ? 'calc(100% - 588px)'
-        : 'calc(100% - 588px)';
-    };
+    }
 
     // estado inicial
     const initial = localStorage.getItem('sidebar') === 'true';

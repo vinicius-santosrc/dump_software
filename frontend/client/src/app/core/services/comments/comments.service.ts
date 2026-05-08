@@ -13,4 +13,12 @@ export class CommentsService {
     public getByPostId(id: string) {
         return this.http.get(`${API_CONFIG.baseUrl}${this.API}/getByPost/${id}`, {});
     }
+
+    public removeComment(id: string) {
+        return this.http.post(`${API_CONFIG.baseUrl}${this.API}/remove/${id}`, {});
+    }
+
+    public reportComment(id: string, userId: string) {
+        return this.http.post(`${API_CONFIG.baseUrl}${this.API}/report/${id}?userId=${userId}`, {});
+    }
 }

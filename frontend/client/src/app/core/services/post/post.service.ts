@@ -17,6 +17,10 @@ export class PostsService {
         return this.http.post(`${API_CONFIG.baseUrl}${this.API}/getByUser`, { id: id });
     }
 
+    public getDumpsByCurrentUser(id: string) {
+        return this.http.get(`${API_CONFIG.baseUrl}${this.API}/dumps/getByUser/${id}`);
+    }
+
     public getById(id: string) {
         return this.http.post(`${API_CONFIG.baseUrl}${this.API}/getById`, { id: id });
     }
@@ -31,5 +35,21 @@ export class PostsService {
 
     public createPost(post: Post) {
         return this.http.post(`${API_CONFIG.baseUrl}${this.API}`, post);
+    }
+
+    public archivePost(postId: string) {
+        return this.http.patch(`${API_CONFIG.baseUrl}${this.API}/${postId}/archive`, {});
+    }
+
+    public unarchivePost(postId: string) {
+        return this.http.patch(`${API_CONFIG.baseUrl}${this.API}/${postId}/unarchive`, {});
+    }
+
+    public deletePost(postId: string) {
+        return this.http.delete(`${API_CONFIG.baseUrl}${this.API}/${postId}`);
+    }
+
+    public restorePost(postId: string) {
+        return this.http.patch(`${API_CONFIG.baseUrl}${this.API}/${postId}/restore`, {});
     }
 }

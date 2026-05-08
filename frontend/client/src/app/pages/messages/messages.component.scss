@@ -1,7 +1,12 @@
 .messages {
     display: flex;
     height: 90vh;
-    margin: auto;
-    margin-top: 30px;
-    background: #f0f2f5;
+    padding-top: 30px;
+    width: 100%;
+}
+
+@media (max-width: 1024px) {
+    .messages {
+        width: 100%;
+    }
 }
