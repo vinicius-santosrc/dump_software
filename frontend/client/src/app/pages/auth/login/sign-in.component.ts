@@ -12,11 +12,12 @@ import { FooterAuthComponent } from "../../../shared/components/footer-auth-comp
 import { FormsModule } from '@angular/forms';
 import { Router } from "@angular/router";
 import { AuthService } from "../../../core/services/auth/auth.service";
+import { GenericButtonComponent } from "../../../shared/components/generic-button-component/generic-button.component";
 
 @Component({
     selector: "app-sign-in",
     templateUrl: "./sign-in.component.html",
-    imports: [BasicInputComponent, TranslateModule, FooterAuthComponent, FormsModule],
+    imports: [BasicInputComponent, TranslateModule, FooterAuthComponent, FormsModule, GenericButtonComponent],
     styleUrl: "./sign-in.component.scss"
 })
 

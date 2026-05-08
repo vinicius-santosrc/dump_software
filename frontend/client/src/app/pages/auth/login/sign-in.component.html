@@ -34,13 +34,15 @@
                 </div>
             </div>
             <div class="btn-container">
-                <button [disabled]="isButtonDisabled()" (click)="handlePressSign()" id="sign-in-button">{{ pageType ===
+                <!-- <button [disabled]="isButtonDisabled()" (click)="handlePressSign()" id="sign-in-button">{{ pageType ===
                     'signin' ? ('AUTH.BUTTONS.SIGN_IN' | translate) : (
                         pageType == "forgotpassword" ? 
                         ('AUTH.BUTTONS.CONTINUE' | translate)
                         :
                         ('AUTH.BUTTONS.SIGN_UP' | translate)
-                    ) }}</button>
+                    ) }}</button> -->
+
+                <app-generic-button [width]="'100%'" [padding]="'12px'" [disabled]="isButtonDisabled()" (click)="handlePressSign()" [label]="pageType === 'signin' ? 'AUTH.BUTTONS.SIGN_IN' : (pageType === 'forgotpassword' ? 'AUTH.BUTTONS.CONTINUE' : 'AUTH.BUTTONS.SIGN_UP')"></app-generic-button>
                 <div class="btn-container-secondary">
                     @if(pageType === 'signin') {
                     <button (click)="redirectPage(true)">{{ 'AUTH.BUTTONS.FORGOT_PASSWORD' | translate }}</button>
