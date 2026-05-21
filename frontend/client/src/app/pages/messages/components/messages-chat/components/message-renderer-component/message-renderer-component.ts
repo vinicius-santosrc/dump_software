@@ -8,18 +8,20 @@ import { PostPageComponent } from '../../../../../posts/postpage.component';
 import { MatDialog } from '@angular/material/dialog';
 import { MemoriesService } from '../../../../../../core/services/memories/memories.service';
 import { TranslateModule } from '@ngx-translate/core';
+import { GenericTextComponent } from "../../../../../../shared/components/generic-text/generic-text.component";
 
 @Component({
     selector: 'app-message-renderer',
     templateUrl: './message-renderer-component.html',
     styleUrls: ['./message-renderer-component.scss'],
-    imports: [CommonModule, PostMediaComponent, TranslateModule]
+    imports: [CommonModule, PostMediaComponent, TranslateModule, GenericTextComponent]
 })
 export class MessageRendererComponent implements OnChanges {
     @Input() message: Message | undefined;
     @Input() isMine: boolean = false;
     type: 'text' | 'post' | 'story' | 'image' = 'text'
     postId?: string;
+    public contentUnavailable: boolean = false;
 
     constructor(
         private readonly postService: PostsService,
@@ -31,8 +33,11 @@ export class MessageRendererComponent implements OnChanges {
     ngOnChanges() {
         if (!this.message?.text) {
             this.type = 'text';
+            this.contentUnavailable = true;
             return;
         }
+
+        this.contentUnavailable = false;
 
         // POST
         const postMatch = this.message.text.match(/\/p\/([a-zA-Z0-9-]+)/);
@@ -44,9 +49,19 @@ export class MessageRendererComponent implements OnChanges {
             this.type = 'post';
             this.postId = postMatch[1];
 
-            this.postService.getById(this.postId).subscribe((post: Post | any) => {
-                if (this.message) {
-                    this.message.post = post;
+            this.postService.getById(this.postId).subscribe({
+                next: (post: Post | any) => {
+                    if (!post) {
+                        this.contentUnavailable = true;
+                        return;
+                    }
+
+                    if (this.message) {
+                        this.message.post = post;
+                    }
+                },
+                error: () => {
+                    this.contentUnavailable = true;
                 }
             });
 
@@ -64,11 +79,16 @@ export class MessageRendererComponent implements OnChanges {
 
                 // 🔥 igual post: busca preview do story
                 this.memoriesService.getById(storyId).then((story: any) => {
+                    if (!story) {
+                        this.contentUnavailable = true;
+                        return;
+                    }
+
                     if (this.message) {
                         this.message.story = story;
                     }
                 }).catch(() => {
-                    // fallback silencioso
+                    this.contentUnavailable = true;
                 });
             }
 
@@ -77,6 +97,9 @@ export class MessageRendererComponent implements OnChanges {
         }
     }
     goToStory(story: any) {
+        if (this.contentUnavailable) {
+            return;
+        }
         if (!story?.username) return;
 
         this.location.go(`/memories/${story.username}/${story.id}`);
@@ -86,6 +109,9 @@ export class MessageRendererComponent implements OnChanges {
     }
 
     goToPost(post: Post | undefined) {
+        if (this.contentUnavailable || !post) {
+            return;
+        }
         // change URL WITHOUT triggering route
         this.location.go(`/p/${post?.id}`);
 

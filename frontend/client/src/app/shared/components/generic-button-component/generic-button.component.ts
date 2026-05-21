@@ -3,7 +3,6 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { LoaderComponent } from "../loader-component/loader.component";
 import { MatIconModule } from '@angular/material/icon';
 import { TranslateModule } from '@ngx-translate/core';
-
 @Component({
     selector: 'app-generic-button',
     standalone: true,
@@ -25,8 +24,9 @@ export class GenericButtonComponent {
     @Input() type: 'button' | 'submit' | 'reset' = 'button';
     @Input() marginY: string = '0px';
 
+    @Input() logoIcon?: string;
     @Input() iconName?: string;
-    @Input() variant: 'default' | 'ghost' = 'default';
+    @Input() variant: 'default' | 'secondary' | 'ghost' = 'default';
 
     @Input() isFile: boolean = false;
     @Input() accept: string = 'image/*';

@@ -7,9 +7,10 @@
 
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Observable, tap } from "rxjs";
+import { catchError, Observable, tap, throwError } from "rxjs";
 import { LoginDTO, RegisterDTO } from "../../models/auth/auth.dto";
 import { API_CONFIG } from "../../config/api.config";
+import { ErrorUtils } from "../../utils/error.utils";
 
 @Injectable({
     providedIn: 'root'
@@ -19,23 +20,29 @@ export class AuthService {
     
     constructor(private readonly http: HttpClient) { }
 
-    // 🔐 LOGIN
     login(data: LoginDTO): Observable<any> {
-        return this.http.post(`${API_CONFIG.baseUrl}${this.API}/login`, data, { withCredentials: true }).pipe(
+        return this.http.post(`${API_CONFIG.baseUrl}${this.API}/login`, data, {
+            withCredentials: true
+        }).pipe(
             tap((response: any) => {
                 localStorage.setItem('accessToken', response.accessToken);
+            }),
+            catchError((error) => {
+                return throwError(() => ErrorUtils.parse(error));
             })
         );
     }
 
-    // 📝 REGISTER
     register(data: RegisterDTO): Observable<any> {
-        return this.http.post(`${API_CONFIG.baseUrl}${this.API}/register`, data);
+        return this.http.post(`${API_CONFIG.baseUrl}${this.API}/register`, data).pipe(
+            catchError((error) => {
+                return throwError(() => ErrorUtils.parse(error));
+            })
+        );
     }
 
-    // 🚪 LOGOUT
     logout(): void {
-        localStorage.removeItem('accessToken');
+        localStorage.clear();
         this.http.post(`${API_CONFIG.baseUrl}${this.API}/logout`, {}, { withCredentials: true }).subscribe(() => {
             globalThis.location.href = '/';
         });

@@ -1,0 +1,130 @@
+<section class="pre-call">
+
+    <div class="pre-call-component">
+
+        <div class="pre-call-component__left">
+
+            <div class="pre-call-component__preview">
+
+                <div class="pre-call-component__preview__camera">
+
+                    <video
+                        class="pre-call-component__preview__video"
+                        autoplay
+                        muted
+                        playsinline>
+                    </video>
+
+                    <div class="pre-call-component__preview__camera__overlay"></div>
+
+                    <div class="pre-call-component__preview__camera__status">
+                        <span class="status-dot"></span>
+                        Pré-visualização da câmera
+                    </div>
+
+                </div>
+
+                <div class="pre-call-component__preview__controls">
+
+                    <button class="control-button">
+                        <span class="material-symbols-rounded">videocam</span>
+                    </button>
+
+                    <button class="control-button">
+                        <span class="material-symbols-rounded">mic</span>
+                    </button>
+
+                    <button class="control-button">
+                        <span class="material-symbols-rounded">volume_up</span>
+                    </button>
+
+                    <button class="control-button control-button--active">
+                        <span class="material-symbols-rounded">settings</span>
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="pre-call-component__right">
+
+            <div class="pre-call-component__right__content">
+
+                <app-avatar-item [src]="avatar" />
+
+                <h1 class="pre-call-component__right__content__title">
+                    {{ callTitle }}
+                </h1>
+
+                <p class="pre-call-component__right__content__description">
+
+                    @if(callStatus === 'calling') {
+                        Ligando...
+                    }
+                    @else if(callStatus === 'ringing') {
+                        Chamando...
+                    }
+                    @else if(callStatus === 'connected') {
+                        Conectado
+                    }
+                    @else if(callStatus === 'rejected') {
+                        Ligação recusada
+                    }
+                    @else if(callStatus === 'unavailable') {
+                        Usuário indisponível
+                    }
+                    @else if(callStatus === 'ended') {
+                        Ligação encerrada
+                    }
+                    @else {
+                        {{ data?.type === 'video'
+                            ? 'Tudo pronto para a videochamada?'
+                            : 'Tudo pronto para ligar?'
+                        }}
+                    }
+
+                </p>
+
+                @if(callStatus === 'calling' || callStatus === 'ringing') {
+
+                    <app-generic-button
+                        class="pre-call-component__right__content__button"
+                        [disabled]="true"
+                        [padding]="'12px 24px'"
+                        [borderRadius]="'999px'"
+                        [label]="'Ligando...'">
+                    </app-generic-button>
+
+                }
+                @else if(callStatus === 'rejected') {
+
+                    <app-generic-button
+                        class="pre-call-component__right__content__button"
+                        [disabled]="true"
+                        [padding]="'12px 24px'"
+                        [borderRadius]="'999px'"
+                        [label]="'Recusada'">
+                    </app-generic-button>
+
+                }
+                @else {
+
+                    <app-generic-button
+                        class="pre-call-component__right__content__button"
+                        (onClick)="call()"
+                        [padding]="'12px 24px'"
+                        [borderRadius]="'999px'"
+                        [label]="'Iniciar ligação'">
+                    </app-generic-button>
+
+                }
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>

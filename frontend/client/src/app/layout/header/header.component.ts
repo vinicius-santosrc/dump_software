@@ -12,12 +12,14 @@ import { Router, NavigationEnd, RouterLink } from "@angular/router";
 import { CommonModule, NgStyle } from "@angular/common";
 import { WHITE_LIST_NAVIGATIONS } from "../../core/config/api.config";
 import { ThemeService } from "../../core/services/theme.service";
+import { GenericButtonComponent } from "../../shared/components/generic-button-component/generic-button.component";
+import { AvatarItem } from "../../shared/components/avatar-item/avatar-item.component";
 
 @Component({
     selector: "app-header",
     templateUrl: "./header.component.html",
     styleUrl: "./header.component.scss",
-    imports: [TranslateModule, NgStyle, CommonModule, RouterLink]
+    imports: [TranslateModule, NgStyle, CommonModule, RouterLink, GenericButtonComponent, AvatarItem]
 })
 
 export class HeaderComponent implements OnInit {
@@ -30,6 +32,7 @@ export class HeaderComponent implements OnInit {
     showHeader: boolean = true;
     showDumpLogo: boolean = false;
     theme: 'light' | 'dark' = 'light';
+    isMessagePage: boolean = globalThis.location.pathname.startsWith('/messages');
     constructor(
         public userService: UserService,
         public router: Router,
@@ -40,7 +43,7 @@ export class HeaderComponent implements OnInit {
         window.addEventListener('scroll', () => {
             const currentScroll = window.scrollY || document.documentElement.scrollTop;
 
-            if (currentScroll > 150) {
+            if (currentScroll > 60) {
                 this.showDumpLogo = false;
             }
             else {
@@ -64,6 +67,7 @@ export class HeaderComponent implements OnInit {
         this.router.events.subscribe(event => {
             if (event instanceof NavigationEnd) {
                 // força atualização do template
+                this.isMessagePage = globalThis.location.pathname.startsWith('/messages');
                 const url = this.router.url;
                 this.showHeader = !WHITE_LIST_NAVIGATIONS.some(route => url.startsWith(route));
                 this.isHome = this.router.url === '/';
@@ -79,6 +83,14 @@ export class HeaderComponent implements OnInit {
 
         this.listenSidebar();
         this.isHome = this.router.url === '/';
+
+        if (WHITE_LIST_NAVIGATIONS.some(route => globalThis.location.pathname.startsWith(route))) {
+            this.showHeader = false;
+        }
+    }
+
+    get isMobile(): boolean {
+        return window.innerWidth <= 768;
     }
 
     listenSidebar() {

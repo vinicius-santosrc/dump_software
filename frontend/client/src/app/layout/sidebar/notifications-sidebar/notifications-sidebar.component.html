@@ -17,7 +17,7 @@
 
             @for(n of notifications; track n.id) {
             <div class="notification-item">
-                <app-avatar-item [width]="'52px'" [height]="'52px'" [src]="n?.fromUser?.profilePictureUrl" />
+                <app-avatar-item [user]="n?.fromUser" [width]="'52px'" [height]="'52px'" [src]="n?.fromUser?.profilePictureUrl" />
             
                 <div>
                     <span>

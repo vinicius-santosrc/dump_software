@@ -1,0 +1,33 @@
+<app-generic-modal-component [title]="'USER_PROFILE.EDIT_PROFILE.ARCHIVED.TITLE'" [height]="'95vh'"
+    [subtitle]="`USER_PROFILE.EDIT_PROFILE.ARCHIVED.SUBTITLE`" [actionButtons]="[]">
+    <section class="archived-page">
+        <div class="archived-posts">
+            @if(isLoading) {
+            <div class="loading-state">
+                <app-loader></app-loader>
+            </div>
+            }
+            @else if(archivedPosts && archivedPosts.length === 0) {
+            <div class="empty">
+                <p>{{ 'USER_PROFILE.EDIT_PROFILE.ARCHIVED.EMPTY' | translate }}</p>
+            </div>
+            }
+            @else {
+            <!-- GRID IG (substitui masonry) -->
+            <div class="posts-grid">
+                @for (post of archivedPosts; track post.id) {
+                <div class="post-card" (click)="navigateToPost(post)" >
+                    @if(post.media[0].type === "image") {
+                    <img [src]="post.media[0]?.url" />
+                    } @else {
+                    <video [src]="post.media[0]?.url"></video>
+                    }
+                    <div class="overlay">
+                    </div>
+                </div>
+                }
+            </div>
+            }
+        </div>
+    </section>
+</app-generic-modal-component>

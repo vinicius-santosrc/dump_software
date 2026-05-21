@@ -34,7 +34,38 @@ public class MemoriesService
 
         foreach (var story in stories)
         {
-            story.User = user;
+            story.User = new Domain.Entities.User
+            {
+                Id = user.Id,
+                Username = user.Username,
+                FullName = user.FullName,
+                Verified = user.Verified,
+                Thumbnail = user.Thumbnail
+            };
+        }
+
+        return stories
+            .OrderBy(story => story.CreatedAt)
+            .ToList();
+    }
+
+    public async Task<List<Memorie>> GetStoryByUsername(string username)
+    {
+        var user = await _userRepository.GetByUsernameAsync(username)
+            ?? throw new Exception("User not found.");
+
+        var stories = await _repository.GetActiveByUserId(user.Id);
+
+        foreach (var story in stories)
+        {
+            story.User = new Domain.Entities.User
+            {
+                Id = user.Id,
+                Username = user.Username,
+                FullName = user.FullName,
+                Verified = user.Verified,
+                ProfilePictureUrl = user.ProfilePictureUrl
+            };
         }
 
         return stories
@@ -75,7 +106,23 @@ public class MemoriesService
         {
             if (usersMap.TryGetValue(story.UserId, out var user))
             {
-                story.User = user;
+                story.User = new Domain.Entities.User
+                {
+                    Id = user.Id,
+                    Username = user.Username,
+                    FullName = user.FullName,
+                    Verified = user.Verified,
+                    ProfilePictureUrl = user.ProfilePictureUrl
+                };
+            }
+        }
+
+        foreach (var story in activeStories)
+        {
+            if (!string.IsNullOrWhiteSpace(story.PhotoUrl) &&
+                story.PhotoUrl.Length > 500)
+            {
+                story.PhotoUrl = string.Empty;
             }
         }
 

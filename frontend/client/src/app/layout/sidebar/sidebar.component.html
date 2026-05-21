@@ -1,5 +1,5 @@
 @if(showSidebar) {
-<nav class="navigation-bar desktop" [class.closed]="!isSidebarOpen" [style.width]="isSidebarOpen ? '213px' : '140px'">
+<nav class="navigation-bar desktop" [class.conversationsPage]="isInConversations" [class.closed]="!isSidebarOpen" [style.width]="isSidebarOpen ? '213px' : '140px'">
     <div class="navigation-bar-inside">
         <div class="navigation-bar-title section-nav" [style.flexDirection]="!isSidebarOpen ? 'row-reverse' : 'row'">
             <h1 [style.opacity]="isSidebarOpen ? 1 : 0">{{"HEADER.ACTIONS.SIDEBAR.TITLE" | translate}}</h1>
@@ -17,7 +17,7 @@
                         <img [src]="item.iconUrl" alt="" [class.selected-svg]="isSelected(item)" />
                         }
                         @else {
-                        <mat-icon [fontSet]="'material-symbols-outlined'">{{item.icon}}</mat-icon>
+                        <mat-icon [fontSet]="'material-symbols-rounded'">{{item.icon}}</mat-icon>
                         }
                         <span>{{ item.label | translate }}</span>
                     </a>
@@ -30,7 +30,7 @@
                             <img [src]="option.iconUrl" alt="" />
                             }
                             @else {
-                            <mat-icon fontSet="material-symbols-outlined">{{option.icon}}</mat-icon>
+                            <mat-icon [fontSet]="'material-symbols-rounded'">{{option.icon}}</mat-icon>
                             }
                             }
                             <span>{{ option.label | translate }}</span>
@@ -47,7 +47,7 @@
                         <img [src]="item.iconUrl" alt="" [class.selected-svg]="isSelected(item)" />
                         }
                         @else {
-                        <mat-icon [fontSet]="'material-symbols-outlined'">{{item.icon}}</mat-icon>
+                        <mat-icon [fontSet]="'material-symbols-rounded'">{{item.icon}}</mat-icon>
                         }
                         <span>{{ item.label | translate }}</span>
                     </a>
@@ -70,7 +70,7 @@
         <img [src]="item.iconUrl" alt="" [class.selected-svg]="isSelected(item)" />
         }
         @else {
-        <mat-icon [fontSet]="'material-symbols-outlined'">{{item.icon}}</mat-icon>
+        <mat-icon [fontSet]="'material-symbols-rounded'">{{item.icon}}</mat-icon>
         }
         <!-- <span>{{ item.label | translate }}</span> -->
     </a>

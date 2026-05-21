@@ -11,6 +11,7 @@ import { TranslationService } from "../../../core/services/translate.service";
 
 export class FooterAuthComponent {
     @Input() showBorder = true;
+    year: number = new Date().getFullYear();
     constructor(
         public translateService: TranslationService
     ) { }

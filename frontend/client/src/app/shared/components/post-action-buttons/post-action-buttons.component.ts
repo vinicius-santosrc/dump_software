@@ -26,6 +26,8 @@ export class PostActionButtonsComponent implements DoCheck {
     liked = false;
     current_user: any;
     router: any;
+    saved: boolean = false;
+
 
     constructor(
         private readonly postService: PostComponentService,
@@ -109,7 +111,7 @@ export class PostActionButtonsComponent implements DoCheck {
     options() {
         const dialogRef = this.dialog.open(GenericActionsModal, {
             data: {
-                actions: this.current_user.id === this.post?.user.id ? OWNER_POST_ACTIONS : VISITOR_POST_ACTIONS
+                actions: this.current_user.id === this.post?.user.id ? OWNER_POST_ACTIONS(this.post?.archived) : VISITOR_POST_ACTIONS
             },
             width: '400px'
 

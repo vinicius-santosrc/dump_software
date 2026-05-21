@@ -96,6 +96,17 @@ export const locale = {
             MIN_LENGTH: "Este campo deve conter no mínimo {{minLength}} caracteres.",
             MAX_LENGTH: "Este campo deve conter no máximo {{maxLength}} caracteres."
         },
+        ERRORS: {
+            DEFAULT: 'Ocorreu um erro inesperado.',
+            NETWORK: 'Erro de conexão. Verifique sua internet.',
+            OFFLINE: 'Você está offline.',
+            BAD_REQUEST: 'Requisição inválida.',
+            FORBIDDEN: 'Você não possui permissão para esta ação.',
+            NOT_FOUND: 'Recurso não encontrado.',
+            SERVER_ERROR: 'Erro interno do servidor.',
+            CONFLICT: 'Conflito ao processar a solicitação.',
+            CLOSE: 'Fechar'
+        },
         FEED: {
             HEADER: {
                 FOR_YOU: "Para você",
@@ -135,12 +146,16 @@ export const locale = {
                     OPTIONS: "Opções",
                     CANCEL: "Cancelar",
                     ARCHIVE: "Arquivar",
+                    UNARCHIVE: "Desarquivar",
                     DELETE: "Excluir",
                     ABOUT: "Sobre essa conta",
                     WHY: "Por que você está vendo esse post",
                     HIDE: "Ocultar",
                     REPORT: "Denunciar"
-                }
+                },
+                POST_ARCHIVED: "Publicação arquivada.",
+                POST_DELETED: "Publicação excluída.",
+                POST_UNARCHIVED: "Publicação desarquivada."
             },
             CARD: {
                 WHO_FOLLOW: "quem seguir",
@@ -244,6 +259,10 @@ export const locale = {
                         REMOVE: "Remover foto do perfil"
                     },
                     WARNING_GENDER: "Isso não fará parte do seu perfil público."
+                },
+                ARCHIVED: {
+                    TITLE: "Arquivados",
+                    SUBTITLE: "Aqui estão os posts que você arquivou. Eles não são visíveis para outras pessoas.",
                 },
                 BUTTON: {
                     UPDATE: "Atualizar"

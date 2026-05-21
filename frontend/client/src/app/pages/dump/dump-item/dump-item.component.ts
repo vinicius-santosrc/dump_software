@@ -20,6 +20,7 @@ export class DumpItemComponent implements OnChanges {
     @Input() reel: any;
 
     theme: 'light' | 'dark' = 'light';
+    isHorizontalVideo = false;
 
     static isMuted = false;
 
@@ -28,6 +29,8 @@ export class DumpItemComponent implements OnChanges {
     }
 
     ngOnChanges() {
+        this.checkVideoOrientation();
+
         if (!this.video) return;
 
         const videoEl = this.video.nativeElement;
@@ -39,6 +42,21 @@ export class DumpItemComponent implements OnChanges {
         } else {
             videoEl.pause();
         }
+    }
+
+    checkVideoOrientation(): void {
+
+        const media = this.reel?.media?.[0];
+
+        if (!media) {
+            this.isHorizontalVideo = false;
+            return;
+        }
+
+        const width = Number(media.width || 0);
+        const height = Number(media.height || 0);
+
+        this.isHorizontalVideo = width > height;
     }
 
     togglePlay() {

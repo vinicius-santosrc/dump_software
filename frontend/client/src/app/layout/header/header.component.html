@@ -5,20 +5,19 @@
         <div class="header-component-center">
             <a routerLinkActive="active" [routerLink]="'/'">
                 @if(showDumpLogo) {
-                     <img [src]="logo" alt="Dump Logo" />
+                    <img [src]="logo" alt="Dump Logo" />
                 }
             </a>
         </div>
         <div class="header-component-right">
-            <button class="message_btn" (click)="openMessages()">
-                <img class="message-icon" width="32" height="32"
-                    src="https://img.icons8.com/windows/32/telegram-app.png" alt="telegram-app" />
-                <span>{{"HEADER.ACTIONS.CONVERSATIONS" | translate}}</span>
-            </button>
+            @if(!isMessagePage) {
+                <app-generic-button (onClick)="openMessages()" [label]="!isMobile ? 'HEADER.ACTIONS.CONVERSATIONS' : ''"
+                    [iconName]="'send'" variant="ghost"
+                    padding="8px 12px"></app-generic-button>
+            }
             <div class="account-details">
                 <a routerLinkActive="active" [routerLink]="'/' + current_user.username">
-                    <img [src]="current_user?.thumbnail || current_user?.profilePictureUrl || 'assets/app/media/default-avatar.webp'"
-                        alt="Your account" />
+                    <app-avatar-item width="52px" height="52px" [redirectOnClick]="false" [user]="current_user" />
                 </a>
             </div>
         </div>

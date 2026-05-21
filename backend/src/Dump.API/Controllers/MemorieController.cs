@@ -28,6 +28,13 @@ public class MemorieController : ControllerBase
         return Ok(stories);
     }
 
+    [HttpGet("username/{username}")]
+    public async Task<IActionResult> GetStoryByUsername(string username)
+    {
+        var stories = await _memoriesService.GetStoryByUsername(username);
+        return Ok(stories);
+    }
+
     [HttpGet("feed/{currentUserId}")]
     public async Task<IActionResult> GetStoriesFeed(string currentUserId)
     {

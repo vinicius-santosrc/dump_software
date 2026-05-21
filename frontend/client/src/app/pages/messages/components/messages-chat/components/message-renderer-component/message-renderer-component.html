@@ -1,15 +1,39 @@
 <!-- TEXT MESSAGE -->
 @if(type != 'post' && type != 'story') {
-<div class="message__bubble" [class.message__bubble--mine]="isMine">
-    {{ message?.text }}
+<div class="message__bubble"
+    [class.message__bubble--mine]="isMine"
+    [class.message__bubble--deleted]="contentUnavailable">
+
+    @if(contentUnavailable) {
+        <span class="message-deleted">
+            {{ 'Mensagem apagada' }}
+        </span>
+    }
+    @else {
+        <app-generic-text
+            [text]="message?.text || ''"
+            [theme]="isMine ? 'dark' : 'light'"
+            [expandable]="true"
+            [maxCharacters]="220"
+            [clickableMentions]="true"
+            [clickableHashtags]="true"
+            [clickableLinks]="true"
+        />
+    }
 </div>
 }
+
 <!-- POST MESSAGE -->
 @if(type === 'post') {
 <div class="message__bubble message__bubble--post" [class.message__bubble--mine]="isMine">
     <div class="post-preview">
         <p class="post-label">{{'MESSAGES_INBOX.CHAT.POST.SHARED' | translate}}</p>
-
+        @if(contentUnavailable) {
+            <div class="message-unavailable">
+                Publicação não está mais disponível
+            </div>
+        }
+        @else {
         <div class="post-card" (click)="goToPost(message?.post)">
             <app-post-media class="media-post" [media]="message?.post?.media || []" />
             <div class="post-info">
@@ -17,6 +41,7 @@
                 <p>{{ message?.post?.caption }}</p>
             </div>
         </div>
+        }
     </div>
 </div>
 }
@@ -26,7 +51,12 @@
 <div class="message__bubble message__bubble--post" [class.message__bubble--mine]="isMine">
     <div class="post-preview">
         <p class="post-label">Story</p>
-
+        @if(contentUnavailable) {
+            <div class="message-unavailable">
+                Story não está mais disponível
+            </div>
+        }
+        @else {
         <div class="post-card" (click)="goToStory(message?.story)">
             @if(message?.story?.photoUrl) {
                 <img class="story-preview-image" [src]="message?.story?.thumbnail" />
@@ -37,6 +67,7 @@
                 <p>{{'MESSAGES_INBOX.CHAT.BUTTON.SEE_STORY' | translate}}</p>
             </div>
         </div>
+        }
     </div>
 </div>
 }

@@ -5,6 +5,7 @@ import { UserService } from "../../../core/services/user/user.service";
 import { CreateConversationService } from "../create-conversation-component/create-conversation.service";
 import { MatDialog } from "@angular/material/dialog";
 import { ProfileEditComponent } from "../../../pages/profile/edit/profile-edit.component";
+import { ArchivedComponent } from "../../../pages/profile/archived/archived.component";
 
 @Component({
     selector: "app-generic-actions-buttons",
@@ -50,7 +51,7 @@ export class GenericActionsButtonsComponent implements OnInit, OnChanges {
                 },
                 {
                     label: 'Arquivados',
-                    onClick: () => null,
+                    onClick: () => this.handleArchived(),
                     class: 'followingBtn'
                 },
             ];
@@ -93,6 +94,12 @@ export class GenericActionsButtonsComponent implements OnInit, OnChanges {
 
     handleEdit() {
         this.dialog.open(ProfileEditComponent, {
+            minWidth: this.isMobile ? '400px' : '1000px',
+        })
+    }
+
+    handleArchived() {
+        this.dialog.open(ArchivedComponent, {
             minWidth: this.isMobile ? '400px' : '1000px',
         })
     }

@@ -29,6 +29,29 @@ export class MediaProcessingService {
         });
     }
 
+    async getVideoDimensions(file: File): Promise<{ width: string, height: string }> {
+        return new Promise((resolve) => {
+
+            const video = document.createElement('video');
+
+            const url = URL.createObjectURL(file);
+
+            video.src = url;
+            video.muted = true;
+            video.playsInline = true;
+
+            video.onloadedmetadata = () => {
+
+                resolve({
+                    width: video.videoWidth.toString(),
+                    height: video.videoHeight.toString()
+                });
+
+                URL.revokeObjectURL(url);
+            };
+        });
+    }
+
     async compressImage(file: File, MAX_WD = 1080): Promise<File> {
         const img = new Image();
         const canvas = document.createElement('canvas');
@@ -248,6 +271,12 @@ export class MediaProcessingService {
         }
 
         if (file.type.startsWith('video')) {
+
+            const dimensions = await this.getVideoDimensions(file);
+
+            width = dimensions.width;
+            height = dimensions.height;
+
             thumbnail = await this.generateVideoThumbnail(file);
         }
 

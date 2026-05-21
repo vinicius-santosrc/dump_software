@@ -18,14 +18,14 @@
         </div>
 
         <div class="chat__actions">
-            <button id="call">
-                <mat-icon fontSet="material-symbols-outlined">phone</mat-icon>
+            <button id="call" (click)="openAudioCall()">
+                <mat-icon [fontSet]="'material-symbols-rounded'">phone</mat-icon>
             </button>
-            <button id="video-call">
-                <mat-icon fontSet="material-symbols-outlined">videocam</mat-icon>
+            <button id="video-call" (click)="openVideoCall()">
+                <mat-icon [fontSet]="'material-symbols-rounded'">videocam</mat-icon>
             </button>
             <button id="info">
-                <mat-icon fontSet="material-symbols-outlined">info</mat-icon>
+                <mat-icon [fontSet]="'material-symbols-rounded'">info</mat-icon>
             </button>
         </div>
     </header>
@@ -73,8 +73,8 @@
         <!-- <input (input)="onTyping()" (blur)="onStopTyping()" type="text" [(ngModel)]="input"
             placeholder="Escreva uma mensagem" /> -->
         <div class="input-content">
-            <app-basic-input type="textarea" (input)="onTyping()" (blur)="onStopTyping()" [value]="input" (valueChange)="input = $event"
-                label="MESSAGES_INBOX.CHAT.INPUT.PLACEHOLDER" />
+            <app-basic-input type="textarea" (input)="onTyping()" (blur)="onStopTyping()" [value]="input"
+                (valueChange)="input = $event" label="MESSAGES_INBOX.CHAT.INPUT.PLACEHOLDER" />
         </div>
 
         <app-generic-button *ngIf="input !== ''" label="" iconName="send" (onClick)="sendMessage()" padding="6px"
@@ -91,6 +91,7 @@
     <div class="no_chat__content">
         <h2>{{'MESSAGES_INBOX.NOT_SELECTED.TITLE' | translate}}</h2>
         <p>{{'MESSAGES_INBOX.NOT_SELECTED.SUBTITLE' | translate}}</p>
-        <app-generic-button label="{{'MESSAGES_INBOX.NOT_SELECTED.BUTTON' | translate}}" (onClick)="openCreateConversations()" marginY="12px" />
+        <app-generic-button label="{{'MESSAGES_INBOX.NOT_SELECTED.BUTTON' | translate}}"
+            (onClick)="openCreateConversations()" marginY="12px" />
     </div>
 </section>

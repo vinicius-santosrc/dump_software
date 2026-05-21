@@ -69,6 +69,33 @@ public class MessageService
 
     public async Task<Conversation> CreateConversation(List<string> participants)
     {
+        participants = participants
+            .Distinct()
+            .OrderBy(x => x)
+            .ToList();
+
+        var existingConversations = new List<Conversation>();
+
+        foreach (var participantId in participants)
+        {
+            var conversations = await _repository.GetConversationsByUserIdAsync(participantId);
+
+            existingConversations.AddRange(conversations);
+        }
+
+        var existingConversation = existingConversations
+            .FirstOrDefault(conversation =>
+                conversation.Participants
+                    .Distinct()
+                    .OrderBy(x => x)
+                    .SequenceEqual(participants)
+            );
+
+        if (existingConversation != null)
+        {
+            return existingConversation;
+        }
+
         var conversation = new Conversation
         {
             Id = Guid.NewGuid().ToString(),

@@ -26,7 +26,7 @@ export class MemorieCardComponent {
   }
 
   closeStory() {
-    this.router.navigate(['/']);
+    globalThis.history.back();
   }
 
   handleSend() {

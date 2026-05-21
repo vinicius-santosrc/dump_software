@@ -1,6 +1,6 @@
 .reels-container {
     height: 100vh;
-    width: 700px;
+    width: 100%;
     margin: auto;
     overflow-y: scroll;
     scrollbar-width: none;
@@ -15,6 +15,15 @@
     }
 }
 
+.reel-item {
+    width: 100%;
+}
+
+.reels-inside {
+    width: 100%;
+    position: relative;
+}
+
 /* cada item ocupa tela */
 app-dump-item-component {
     scroll-snap-align: start;
@@ -26,11 +35,6 @@ app-dump-item-component {
     .reels-container {
         align-items: center;
     }
-
-    app-dump-item-component {
-        width: 100%;
-        max-width: 450px;
-    }
 }
 
 @media (max-width: 768px) {
@@ -41,14 +45,13 @@ app-dump-item-component {
     }
 
     .action-button {
-        position: fixed;
         z-index: 42;
     }
 }
 
 .reels-actions-buttons {
     position: fixed;
-    right: 20px;
+    right: -260px;
     top: 50%;
     transform: translateY(-50%);
     display: flex;
@@ -64,6 +67,7 @@ app-dump-item-component {
     height: 48px;
     box-shadow: 1px 1px 5px lightgray;
     color: black;
+    position: relative;
     mat-icon {
         font-size: 29px;
         width: 29px;

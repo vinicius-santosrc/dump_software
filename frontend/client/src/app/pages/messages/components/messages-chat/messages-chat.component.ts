@@ -14,6 +14,8 @@ import { MatButtonModule } from "@angular/material/button";
 import { MessagesComponent } from "../../messages.component";
 import { BasicInputComponent } from "../../../../shared/components/basic-input-component/basic-input.component";
 import { TranslateModule } from "@ngx-translate/core";
+import { MatDialog } from '@angular/material/dialog';
+import { PreCallComponent } from "../../../call/pre-call/pre-call.component";
 
 @Component({
     selector: "app-messages-chat",
@@ -47,7 +49,8 @@ export class MessagesChatComponent implements OnInit, OnChanges {
         private readonly messagesService: MessagesService,
         private readonly messagesStore: MessagesStoreService,
         private readonly messagesSidebar: MessagesSidebarComponent,
-        private readonly messagesComponent: MessagesComponent
+        private readonly messagesComponent: MessagesComponent,
+        private readonly dialog: MatDialog
     ) {
         this.userService.user$.subscribe((user: any) => {
             this.current_user = user;
@@ -248,5 +251,39 @@ export class MessagesChatComponent implements OnInit, OnChanges {
         return window.innerWidth <= 768;
     }
 
-}
+    openAudioCall(): void {
+        const user = this.conversation?.participants
+            ?.find((participant: any) => participant?.id !== this.current_user?.id);
 
+        if (!user) {
+            return;
+        }
+
+        this.dialog.open(PreCallComponent, {
+            minWidth: '80vw',
+            data: {
+                type: 'audio',
+                user,
+                conversationId: this.conversation?.id
+            }
+        });
+    }
+
+    openVideoCall(): void {
+        const user = this.conversation?.participants
+            ?.find((participant: any) => participant?.id !== this.current_user?.id);
+
+        if (!user) {
+            return;
+        }
+
+        this.dialog.open(PreCallComponent, {
+            minWidth: '80vw',
+            data: {
+                type: 'video',
+                user,
+                conversationId: this.conversation?.id
+            }
+        });
+    }
+}

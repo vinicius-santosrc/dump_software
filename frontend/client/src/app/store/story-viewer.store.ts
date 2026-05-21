@@ -46,16 +46,29 @@ export class StoryViewerStore {
     }
 
     getActiveGroup(): StoryGroup | null {
-        return this.groups[this.activeGroupIndex] ?? null;
+        if (!Array.isArray(this.groups) || this.groups.length === 0) {
+            return null;
+        }
+
+        if (this.activeGroupIndex < 0 || this.activeGroupIndex >= this.groups.length) {
+            return null;
+        }
+
+        return this.groups?.[this.activeGroupIndex] ?? null;
     }
 
     getActiveStory(): any | null {
         const group = this.getActiveGroup();
-        if (!group) {
+
+        if (!group || !Array.isArray(group.stories) || group.stories.length === 0) {
             return null;
         }
 
-        return group.stories[this.activeStoryIndex] ?? null;
+        if (this.activeStoryIndex < 0 || this.activeStoryIndex >= group.stories.length) {
+            return null;
+        }
+
+        return group.stories?.[this.activeStoryIndex] ?? null;
     }
 
     setActiveGroupIndex(index: number): void {
@@ -141,11 +154,16 @@ export class StoryViewerStore {
     }
 
     findStoryIndexById(storyId: string): number {
-        const group = this.getActiveGroup();
-        if (!group) {
-            return -1;
+        for (const group of this.groups) {
+            const storyIndex = group.stories.findIndex(
+                story => story?.id === storyId
+            );
+
+            if (storyIndex !== -1) {
+                return storyIndex;
+            }
         }
 
-        return group.stories.findIndex(story => story?.id === storyId);
+        return -1;
     }
 }

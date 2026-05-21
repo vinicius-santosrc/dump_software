@@ -17,7 +17,20 @@ import { MatMenuModule } from "@angular/material/menu";
 import { WHITE_LIST_NAVIGATIONS } from "../../core/config/api.config";
 import { AuthService } from "../../core/services/auth/auth.service";
 import { NotificationsSidebarComponent } from "./notifications-sidebar/notifications-sidebar.component";
-
+interface NavigationLink {
+    icon: string;
+    iconUrl?: string
+    route: string;
+    isLink: boolean
+    label: string;
+    action?: (event: Event) => void;
+    menuOptions?: {
+        label: string;
+        icon: string;
+        iconUrl?: string;
+        action: () => void;
+    }[];
+}
 @Component({
     selector: "app-sidebar-component",
     templateUrl: "./sidebar.component.html",
@@ -33,7 +46,7 @@ export class SidebarComponent {
     showSidebar: boolean = true;
     isMessagePage: boolean = globalThis.location.pathname === "/messages/inbox";
     selected: string = 'home';
-    
+    isInConversations: boolean = globalThis.location.pathname.startsWith("/messages/inbox");
     constructor(private readonly dialog: MatDialog, private readonly router: Router, private readonly authService: AuthService) {
         if (WHITE_LIST_NAVIGATIONS.some(route => globalThis.location.pathname.startsWith(route))) {
             this.showSidebar = false;
@@ -55,31 +68,31 @@ export class SidebarComponent {
         return window.innerWidth <= 768;
     }
 
-    navigationLinks = [
+    navigationLinks: NavigationLink[] = [
         {
             icon: "home",
-            iconUrl: '/assets/app/media/icons/home.svg',
+            // iconUrl: '/assets/app/media/icons/home.svg',
             route: "/",
             isLink: true,
             label: "HEADER.ACTIONS.SIDEBAR.HOME"
         },
         {
             icon: "explore",
-            iconUrl: '/assets/app/media/icons/explore.svg',
+            // iconUrl: '/assets/app/media/icons/explore.svg',
             route: "/explore",
             isLink: true,
             label: "HEADER.ACTIONS.SIDEBAR.EXPLORE"
         },
         {
             icon: "movie",
-            iconUrl: '/assets/app/media/icons/reels.svg',
+            // iconUrl: '/assets/app/media/icons/reels.svg',
             route: "/dumps",
             isLink: true,
             label: "HEADER.ACTIONS.SIDEBAR.DUMPS"
         },
         {
             icon: "search",
-            iconUrl: '/assets/app/media/icons/search.svg',
+            // iconUrl: '/assets/app/media/icons/search.svg',
             route: "/search",
             isLink: false,
             label: "HEADER.ACTIONS.SIDEBAR.SEARCH",
@@ -104,7 +117,7 @@ export class SidebarComponent {
         },
         {
             icon: "add_circle",
-            iconUrl: '/assets/app/media/icons/create.svg',
+            // iconUrl: '/assets/app/media/icons/create.svg',
             route: "/create",
             isLink: false,
             label: "HEADER.ACTIONS.SIDEBAR.ADD_POST",

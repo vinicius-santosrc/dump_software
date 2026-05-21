@@ -6,7 +6,7 @@
 
         <!-- HEADER -->
         <div class="story-header">
-            <app-avatar-item [user]="memorie?.user" />
+            <app-avatar-item [user]="memorie?.user" [redirectOnClick]="false" />
 
             <div class="info">
                 <span class="username">{{ memorie?.user?.username }}</span>
@@ -23,7 +23,7 @@
 
         }
         @else {
-            <img class="story-image" [src]="memorie?.photoUrl" alt />
+        <img class="story-image" [src]="memorie?.photoUrl" alt />
         }
 
 
@@ -33,10 +33,10 @@
                 <app-basic-input style="width: 100%;" label="Enviar mensagem..." />
             </div>
             <button mat-icon-button>
-                <mat-icon class="sendicon" fontSet="material-symbols-outlined">favorite</mat-icon>
+                <mat-icon class="sendicon" [fontSet]="'material-symbols-rounded'">favorite</mat-icon>
             </button>
             <button mat-icon-button (click)="handleSend()">
-                <mat-icon class="sendicon" fontSet="material-symbols-outlined">send</mat-icon>
+                <mat-icon class="sendicon" [fontSet]="'material-symbols-rounded'">send</mat-icon>
             </button>
         </div>
 

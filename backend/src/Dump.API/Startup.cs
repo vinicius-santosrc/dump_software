@@ -8,6 +8,7 @@ using Dump.API.GraphQL;
 using Dump.Application.Features.Search;
 using Dump.Application.Features.Messages;
 using Dump.Infrastructure.Persistence.Mongo.Migrations;
+using Dump.Application.Features.TrendingTopic;
 
 namespace Dump.API
 {
@@ -60,6 +61,7 @@ namespace Dump.API
             services.AddScoped<ISearchRepository, SearchRepository>();
             services.AddScoped<INotificationRepository, NotificationRepository>();
 
+            services.AddScoped<ITrendingRepository, TrendingTopicRepository>();
             //Search service
             services.AddScoped<SearchService>();
 
@@ -93,6 +95,9 @@ namespace Dump.API
             services.AddScoped<IMigration, AddUserThumbnailGender>();
             services.AddScoped<MigrationRunner>();
 
+            //Topics
+            services.AddScoped<TrendingTopicService>();
+            
             // JWT authentication
             services.AddAuthentication(options =>
             {

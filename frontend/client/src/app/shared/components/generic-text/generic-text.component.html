@@ -1,0 +1,24 @@
+
+
+<div
+    class="generic-text"
+    [class.light]="theme === 'light'"
+    [class.dark]="theme === 'dark'">
+
+    <div
+        class="generic-text__content"
+        [innerHTML]="renderedHtml">
+    </div>
+
+    @if(expandable && isLongText) {
+
+        <button
+            class="generic-text__expand"
+            (click)="toggleExpanded()">
+
+            {{ expanded ? 'Ver menos' : 'Ver mais' }}
+
+        </button>
+    }
+
+</div>

@@ -1,13 +1,13 @@
 /Users/vinicius/Documents/GitHub/dump_software/backend/src/Dump.Domain/bin/Debug/net9.0/Dump.Domain.deps.json
 /Users/vinicius/Documents/GitHub/dump_software/backend/src/Dump.Domain/bin/Debug/net9.0/Dump.Domain.dll
 /Users/vinicius/Documents/GitHub/dump_software/backend/src/Dump.Domain/bin/Debug/net9.0/Dump.Domain.pdb
+/Users/vinicius/Documents/GitHub/dump_software/backend/src/Dump.Domain/obj/Debug/net9.0/Dump.Domain.csproj.AssemblyReference.cache
 /Users/vinicius/Documents/GitHub/dump_software/backend/src/Dump.Domain/obj/Debug/net9.0/Dump.Domain.GeneratedMSBuildEditorConfig.editorconfig
 /Users/vinicius/Documents/GitHub/dump_software/backend/src/Dump.Domain/obj/Debug/net9.0/Dump.Domain.AssemblyInfoInputs.cache
 /Users/vinicius/Documents/GitHub/dump_software/backend/src/Dump.Domain/obj/Debug/net9.0/Dump.Domain.AssemblyInfo.cs
 /Users/vinicius/Documents/GitHub/dump_software/backend/src/Dump.Domain/obj/Debug/net9.0/Dump.Domain.csproj.CoreCompileInputs.cache
+/Users/vinicius/Documents/GitHub/dump_software/backend/src/Dump.Domain/obj/Debug/net9.0/Dump.Domain.sourcelink.json
 /Users/vinicius/Documents/GitHub/dump_software/backend/src/Dump.Domain/obj/Debug/net9.0/Dump.Domain.dll
 /Users/vinicius/Documents/GitHub/dump_software/backend/src/Dump.Domain/obj/Debug/net9.0/refint/Dump.Domain.dll
 /Users/vinicius/Documents/GitHub/dump_software/backend/src/Dump.Domain/obj/Debug/net9.0/Dump.Domain.pdb
 /Users/vinicius/Documents/GitHub/dump_software/backend/src/Dump.Domain/obj/Debug/net9.0/ref/Dump.Domain.dll
-/Users/vinicius/Documents/GitHub/dump_software/backend/src/Dump.Domain/obj/Debug/net9.0/Dump.Domain.csproj.AssemblyReference.cache
-/Users/vinicius/Documents/GitHub/dump_software/backend/src/Dump.Domain/obj/Debug/net9.0/Dump.Domain.sourcelink.json

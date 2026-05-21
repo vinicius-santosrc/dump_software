@@ -82,25 +82,17 @@
 
         <!-- GRID IG (substitui masonry) -->
         <div class="posts-grid">
-
             @for (post of filteredPosts; track post.id) {
-
             <div class="post-card" (click)="navigateToPost(post)">
-
                 @if(post.media[0].type === "image") {
                 <img [src]="post.media[0]?.url" />
                 } @else {
                 <video [src]="post.media[0]?.url"></video>
                 }
-
                 <div class="overlay">
-
                 </div>
-
             </div>
-
             }
-
         </div>
 
     </div>

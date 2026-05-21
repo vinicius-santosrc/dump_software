@@ -1,7 +1,7 @@
 <div [class]="variant === 'default' ? 'conversation-item' : 'conversation-item-circular'" [ngClass]="[variant, selected ? 'selected' : '']" (click)="onClick()">
 
   <div class="avatar-wrapper">
-    <app-avatar-item [src]="getConversationAvatar()" [width]="'52px'" [height]="'52px'" />
+    <app-avatar-item [user]="getConversationUser()" [src]="getConversationAvatar()" [width]="'52px'" [height]="'52px'" />
 
     <div class="check" *ngIf="selected">
       ✓

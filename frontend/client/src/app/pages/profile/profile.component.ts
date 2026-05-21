@@ -33,7 +33,6 @@ import { TranslateModule } from "@ngx-translate/core";
     templateUrl: "./profile.component.html",
     styleUrl: "./profile.component.scss",
     imports: [CommonModule, RouterModule, MatIcon, GenericCardUserComponent, GenericActionsButtonsComponent, PostActionButtonsComponent, NotFoundComponent, SkeletonComponent, LoaderComponent, AvatarItem, TranslateModule]
-    ,
 })
 export class ProfileComponent implements OnInit {
     user: User | any;
@@ -154,6 +153,7 @@ export class ProfileComponent implements OnInit {
             data: {user: this.user, users: this.user.followers}
         })
     }
+
     openFollowing() {
         this.dialog.open(FollowingModalComponent, {
             width: '800px',

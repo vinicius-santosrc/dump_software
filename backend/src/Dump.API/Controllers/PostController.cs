@@ -20,13 +20,25 @@ public class PostController : ControllerBase
     public async Task<IActionResult> CreatePost([FromBody] Post post)
     {
         await _postService.CreatePost(post);
-        return Ok(true);
+        return Ok(post);
     }
 
-    [HttpPost("getByUser")]
-    public async Task<IActionResult> GetByUser(GenericId genericId)
+    public class FeedRequest
     {
-        var posts = await _postService.GetByUser(genericId.Id);
+        public string Id { get; set; }
+        public DateTime? Cursor { get; set; }
+        public int Limit { get; set; } = 10;
+    }
+
+    [HttpPost("feed")]
+    public async Task<IActionResult> GetByUser([FromBody] FeedRequest request)
+    {
+        var posts = await _postService.GetByUser(
+            request.Id,
+            request.Cursor,
+            request.Limit
+        );
+
         return Ok(posts);
     }
 
@@ -72,6 +84,18 @@ public class PostController : ControllerBase
 
         return Ok(user);
     }
+
+    [HttpGet("archived/getByUser/{id}")]
+    public async Task<IActionResult> GetArchivedPostsById(string id)
+    {
+        var user = await _postService.GetArchivedByUser(id);
+
+        if (user == null)
+            return NotFound(new { message = "User not found" });
+
+        return Ok(user);
+    }
+
 
     [HttpPatch("{id}/archive")]
 

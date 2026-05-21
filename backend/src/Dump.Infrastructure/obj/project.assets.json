@@ -212,12 +212,12 @@
           }
         }
       },
-      "MongoDB.Driver/3.7.0": {
+      "MongoDB.Driver/3.2.1": {
         "type": "package",
         "dependencies": {
           "DnsClient": "1.6.1",
           "Microsoft.Extensions.Logging.Abstractions": "2.0.0",
-          "MongoDB.Bson": "3.7.0",
+          "MongoDB.Bson": "3.2.1",
           "SharpCompress": "0.30.1",
           "Snappier": "1.0.0",
           "System.Buffers": "4.5.1",
@@ -793,10 +793,10 @@
         "packageIcon.png"
       ]
     },
-    "MongoDB.Driver/3.7.0": {
-      "sha512": "3Xr9Z6GzfewLbPNCtC+9Z8AvU9rtWzPG0Dl7BPYF2MiMxGMsrU/dp2cYOY39yxzOJAye/lWIWYX/lVmyQLQbYQ==",
+    "MongoDB.Driver/3.2.1": {
+      "sha512": "ynT4Mc0ilT+DSQBbobfORqCWqm5UdHIX3Nc59oQH3XbPi43jKiqf7SK8NLBmQsB6RJBJPR+WdIeNLtzyLj3U3g==",
       "type": "package",
-      "path": "mongodb.driver/3.7.0",
+      "path": "mongodb.driver/3.2.1",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -807,7 +807,7 @@
         "lib/net6.0/MongoDB.Driver.xml",
         "lib/netstandard2.1/MongoDB.Driver.dll",
         "lib/netstandard2.1/MongoDB.Driver.xml",
-        "mongodb.driver.3.7.0.nupkg.sha512",
+        "mongodb.driver.3.2.1.nupkg.sha512",
         "mongodb.driver.nuspec",
         "packageIcon.png"
       ]
@@ -1094,7 +1094,7 @@
   "projectFileDependencyGroups": {
     "net9.0": [
       "Dump.Application >= 1.0.0",
-      "MongoDB.Driver >= 3.7.0"
+      "MongoDB.Driver >= 3.2.1"
     ]
   },
   "packageFolders": {
@@ -1146,7 +1146,7 @@
         "dependencies": {
           "MongoDB.Driver": {
             "target": "Package",
-            "version": "[3.7.0, )"
+            "version": "[3.2.1, )"
           }
         },
         "imports": [

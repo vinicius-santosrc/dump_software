@@ -93,4 +93,50 @@ public class ChatHub : Hub
         await Clients.Group(conversationId)
             .SendAsync("StopTyping", new { conversationId, userId });
     }
+
+    // Call related methods
+
+    public async Task CallUser(CallUserDto dto)
+    {
+        await Clients.Group($"user:{dto.TargetUserId}")
+            .SendAsync("IncomingCall", dto);
+    }
+
+    public async Task AcceptCall(CallUserDto dto)
+    {
+        await Clients.Group($"user:{dto.CallerId}")
+            .SendAsync("CallAccepted", dto);
+    }
+
+    public async Task RejectCall(CallUserDto dto)
+    {
+        await Clients.Group($"user:{dto.CallerId}")
+            .SendAsync("CallRejected", dto);
+    }
+
+    public async Task EndCall(CallUserDto dto)
+    {
+        await Clients.Group($"user:{dto.TargetUserId}")
+            .SendAsync("CallEnded", dto);
+    }
+
+    //WebRTC signaling methods
+
+    public async Task SendOffer(WebRTCOfferDto dto)
+    {
+        await Clients.Group($"user:{dto.ToUserId}")
+            .SendAsync("ReceiveOffer", dto);
+    }
+
+    public async Task SendAnswer(WebRTCAnswerDto dto)
+    {
+        await Clients.Group($"user:{dto.ToUserId}")
+            .SendAsync("ReceiveAnswer", dto);
+    }
+
+    public async Task SendIceCandidate(ICECandidateDto dto)
+    {
+        await Clients.Group($"user:{dto.ToUserId}")
+            .SendAsync("ReceiveIceCandidate", dto);
+    }
 }

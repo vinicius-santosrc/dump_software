@@ -5,7 +5,7 @@
     <img [src]="splashScreenImage" alt="Splash" class="splash-logo" />
   </div>
 </div>
-@if(!WHITE_LIST_ROUTES.includes(window.location.pathname)) {
+@if(!shouldHideLayout) {
   <!-- LATERAL BARRA -->
 
   <div class="dump">
@@ -14,7 +14,7 @@
     <!-- HEADER -->
     <app-header />
     <main class="dump_content">
-      <aside class="dump_content_aside" [style.width]="width" [style.margin]="'auto'">
+      <aside class="dump_content_aside" [style.width]="contentWidth" [style.margin]="'auto'">
         <div class="page-container" [class.loading]="routeLoading">
           @if(!routeLoading) {
           <div class="page-content loaded">
@@ -36,6 +36,8 @@
     }
   </div>
 }
+
+<app-incoming-call-modal />
 
 <!-- <div class="page-bottom">
     <app-footer-auth [showBorder]="false" />

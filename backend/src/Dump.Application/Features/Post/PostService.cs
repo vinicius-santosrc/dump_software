@@ -2,6 +2,7 @@ using Dump.Application.Interfaces;
 using Dump.Domain.Entities;
 using MongoDB.Bson;
 using System.Linq;
+using Dump.Application.Features.TrendingTopic;
 
 namespace Dump.Application.Features.Post;
 
@@ -10,16 +11,19 @@ public class PostService
     private readonly IPostsRepository _postRepository;
     private readonly IUserRepository _userRepository;
     private readonly ICommentsRepository _commentsRepository;
+    private readonly TrendingTopicService _trendingTopicService;
 
     public PostService(
         IPostsRepository postRepository,
         IUserRepository userRepository,
-        ICommentsRepository commentsRepository
+        ICommentsRepository commentsRepository,
+        TrendingTopicService trendingTopicService
     )
     {
         _postRepository = postRepository;
         _userRepository = userRepository;
         _commentsRepository = commentsRepository;
+        _trendingTopicService = trendingTopicService;
     }
 
     public Task ArchivePost(string postId)
@@ -120,13 +124,42 @@ public class PostService
 
     public async Task<Dump.Domain.Entities.Post> CreatePost(Dump.Domain.Entities.Post post)
     {
+        post.ML ??= new PostML();
+
+        post.ML.Topics ??= new List<string>();
+        post.ML.Language ??= "pt";
+
+        post.ML.UserInteractionScore ??= new UserInteractionScore();
+        post.ML.ContentFeatures ??= new ContentFeatures();
+
+        post.Likes ??= new List<string>();
+        post.Saves ??= new List<string>();
+        post.Comments ??= new List<string>();
+        post.Hashtags ??= new List<string>();
+        post.Mentions ??= new List<string>();
+        post.Reports ??= new List<string>();
+
+        post.CreatedAt ??= DateTime.UtcNow;
+        post.UpdatedAt ??= DateTime.UtcNow;
+
         await _postRepository.CreateAsync(post);
+
+        await _trendingTopicService.ProcessPostAsync(post);
+
         return post;
     }
 
-    public async Task<Dump.Domain.Entities.PostResponse[]> GetByUser(string id)
+    public async Task<Dump.Domain.Entities.PostResponse[]> GetByUser(
+        string id,
+        DateTime? cursor = null,
+        int limit = 10
+    )
     {
-        var posts = await _postRepository.GetByUser(id);
+        var posts = await _postRepository.GetByUser(
+            id,
+            cursor,
+            limit
+        );
 
         var responses = await Task.WhenAll(posts.Select(MapToResponse));
 
@@ -172,18 +205,31 @@ public class PostService
                 .ToList();
 
             await _postRepository.UpdatePost(post);
+            await _trendingTopicService.ProcessPostAsync(post);
             return false; // removeu like
         }
 
         post.Likes.Add(likerId);
 
         await _postRepository.UpdatePost(post);
+        await _trendingTopicService.ProcessPostAsync(post);
         return true; // adicionou like
     }
 
     public async Task<Dump.Domain.Entities.PostResponse[]> GetDumpsById(string id)
     {
         var posts = await _postRepository.GetDumpsByUserProfile(id);
+
+        var responses = await Task.WhenAll(posts.Select(MapToResponse));
+
+        return responses
+            .OrderByDescending(r => r.CreatedAt)
+            .ToArray();
+    }
+
+    public async Task<Dump.Domain.Entities.PostResponse[]> GetArchivedByUser(string id)
+    {
+        var posts = await _postRepository.GetArchivedByUser(id);
 
         var responses = await Task.WhenAll(posts.Select(MapToResponse));
 

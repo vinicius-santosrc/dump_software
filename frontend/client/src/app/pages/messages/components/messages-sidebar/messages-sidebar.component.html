@@ -4,7 +4,7 @@
             <h2>{{ 'MESSAGES_INBOX.SIDEBAR.CONVERSATIONS' | translate }}</h2>
             <div class="messages__actions">
                 <button (click)="clickCreateConversation()">
-                    <mat-icon fontSet="material-symbols-outlined">new_window</mat-icon>
+                    <mat-icon [fontSet]="'material-symbols-rounded'">new_window</mat-icon>
                 </button>
             </div>
         </div>
@@ -19,7 +19,8 @@
                 <mat-tab [label]="'MESSAGES_INBOX.SIDEBAR.TABS.PRINCIPAL' | translate">
                     <div class="messages__list">
                         @for (convo of ((conversations$ | async) ?? []); track convo.id) {
-                        <app-conversation-item [convo]="convo" [currentUser]="current_user" [typingMap]="typing$ | async" variant="default"
+                        <app-conversation-item [convo]="convo" [currentUser]="current_user"
+                            [typingMap]="typing$ | async" variant="default"
                             (clicked)="onSelect(convo)"></app-conversation-item>
                         }
                     </div>

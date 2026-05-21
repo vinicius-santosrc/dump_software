@@ -3,17 +3,17 @@
     <!-- SIDEBAR -->
     <div class="profile-edit__sidebar">
         <div class="sidebar-item active">
-            <mat-icon fontSet="material-symbols-outlined">person</mat-icon>
+            <mat-icon [fontSet]="'material-symbols-rounded'">person</mat-icon>
             <span>{{'USER_PROFILE.EDIT_PROFILE.TABS.PROFILE' | translate}}</span>
         </div>
 
         <!-- <div class="sidebar-item">
-                    <mat-icon fontSet="material-symbols-outlined">notifications</mat-icon>
+                    <mat-icon [fontSet]="'material-symbols-rounded'">notifications</mat-icon>
                     <span>{{'USER_PROFILE.EDIT_PROFILE.FORM.NOTIFICATIONS' | translate}}</span>
                 </div>
 
                 <div class="sidebar-item">
-                    <mat-icon fontSet="material-symbols-outlined">lock</mat-icon>
+                    <mat-icon [fontSet]="'material-symbols-rounded'">lock</mat-icon>
                     <span>{{'USER_PROFILE.EDIT_PROFILE.FORM.PRIVACY' | translate}}</span>
                 </div> -->
     </div>
@@ -24,13 +24,15 @@
         <!-- AVATAR -->
         <div class="avatar-section">
             <div class="avatar">
-                <app-avatar-item [redirectOnClick]="false" [src]="current_user.profilePictureUrl" [seenMemorie]="true"
-                    redirectURL="" [width]="'100px'" [height]="'100px'" />
+                <app-avatar-item [redirectOnClick]="false" [user]="current_user" [src]="current_user.profilePictureUrl"
+                    [seenMemorie]="true" redirectURL="" [width]="'100px'" [height]="'100px'" />
             </div>
 
             <div class="avatar-actions">
-                <app-generic-button label="USER_PROFILE.EDIT_PROFILE.FORM.AVATAR.CHANGE" [isFile]="true" (fileSelected)="onFileSelected($event)" />
-                <app-generic-button label="USER_PROFILE.EDIT_PROFILE.FORM.AVATAR.REMOVE" variant="ghost" textColor="black" (onClick)="removeImage()" />
+                <app-generic-button label="USER_PROFILE.EDIT_PROFILE.FORM.AVATAR.CHANGE" [isFile]="true"
+                    (fileSelected)="onFileSelected($event)" />
+                <app-generic-button label="USER_PROFILE.EDIT_PROFILE.FORM.AVATAR.REMOVE" variant="ghost"
+                    textColor="black" (onClick)="removeImage()" />
             </div>
         </div>
 
@@ -38,26 +40,26 @@
         <div class="form">
             <div class="form-group">
                 <label>{{'USER_PROFILE.EDIT_PROFILE.FORM.NAME' | translate}}</label>
-                <app-basic-input label="USER_PROFILE.EDIT_PROFILE.FORM.NAME_PLACEHOLDER" [value]="current_user?.fullName || ''"
-                    (valueChange)="current_user.fullName = $event" />
+                <app-basic-input label="USER_PROFILE.EDIT_PROFILE.FORM.NAME_PLACEHOLDER"
+                    [value]="current_user?.fullName || ''" (valueChange)="current_user.fullName = $event" />
             </div>
 
             <div class="form-group">
                 <label>{{'USER_PROFILE.EDIT_PROFILE.FORM.USERNAME' | translate}}</label>
-                <app-basic-input label="USER_PROFILE.EDIT_PROFILE.FORM.USERNAME_PLACEHOLDER" [value]="current_user?.username || ''"
-                    (valueChange)="current_user.username = $event" />
+                <app-basic-input label="USER_PROFILE.EDIT_PROFILE.FORM.USERNAME_PLACEHOLDER"
+                    [value]="current_user?.username || ''" (valueChange)="current_user.username = $event" />
             </div>
 
             <div class="form-group">
                 <label>{{'USER_PROFILE.EDIT_PROFILE.FORM.BIO' | translate}}</label>
-                <app-basic-input label="USER_PROFILE.EDIT_PROFILE.FORM.BIO_PLACEHOLDER" type="textarea" [resizableY]="true"
-                    [value]="current_user?.bio || ''" (valueChange)="current_user.bio = $event" />
+                <app-basic-input label="USER_PROFILE.EDIT_PROFILE.FORM.BIO_PLACEHOLDER" type="textarea"
+                    [resizableY]="true" [value]="current_user?.bio || ''" (valueChange)="current_user.bio = $event" />
             </div>
 
             <div class="form-group">
                 <label>{{'USER_PROFILE.EDIT_PROFILE.FORM.WEBSITE' | translate}}</label>
-                <app-basic-input label="USER_PROFILE.EDIT_PROFILE.FORM.WEBSITE_PLACEHOLDER" [value]="current_user?.website || ''"
-                    (valueChange)="current_user.website = $event" />
+                <app-basic-input label="USER_PROFILE.EDIT_PROFILE.FORM.WEBSITE_PLACEHOLDER"
+                    [value]="current_user?.website || ''" (valueChange)="current_user.website = $event" />
             </div>
 
             <div class="form-group">
@@ -68,7 +70,8 @@
                                 { label: 'USER_PROFILE.EDIT_PROFILE.FORM.GENDER_OPTIONS.FEMALE', value: 'female' },
                                 { label: 'USER_PROFILE.EDIT_PROFILE.FORM.GENDER_OPTIONS.OTHER', value: 'other' },
                                 { label: 'USER_PROFILE.EDIT_PROFILE.FORM.GENDER_OPTIONS.PREFER_NOT_TO_SAY', value: 'prefer_not_to_say' }
-                            ]" [searchable]="false" [selected]="current_user.gender" [placeholder]="''" (valueChange)="current_user.gender = $event" />
+                            ]" [searchable]="false" [selected]="current_user.gender" [placeholder]="''"
+                    (valueChange)="current_user.gender = $event" />
 
                 <small>{{'USER_PROFILE.EDIT_PROFILE.FORM.WARNING_GENDER' | translate}}</small>
             </div>

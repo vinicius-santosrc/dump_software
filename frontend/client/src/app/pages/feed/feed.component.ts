@@ -5,7 +5,7 @@
  * This software is licensed under the MIT License. See the LICENSE file in the project root for more information.
  */
 
-import { Component, OnInit } from "@angular/core";
+import { Component, HostListener, OnInit } from "@angular/core";
 import { TranslateModule } from "@ngx-translate/core";
 import { Post } from "../../core/models/feed/post.model";
 import { PostsService } from "../../core/services/post/post.service";
@@ -21,6 +21,8 @@ import { SkeletonComponent } from "../../shared/components/skeleton/skeleton.com
 import { GenericButtonComponent } from "../../shared/components/generic-button-component/generic-button.component";
 import { MatTabsModule } from '@angular/material/tabs';
 import { FooterAuthComponent } from "../../shared/components/footer-auth-component/footer-auth-component";
+import { TopicService } from '../../core/services/topic/topic.service';
+
 @Component({
     selector: "app-feed-component",
     templateUrl: "./feed.component.html",
@@ -30,207 +32,21 @@ import { FooterAuthComponent } from "../../shared/components/footer-auth-compone
 export class FeedComponent implements OnInit {
     posts: Post[] = [];
     loading: boolean = true;
+    loadingMore: boolean = false;
+    hasMorePosts: boolean = true;
+    cursor?: string;
+    readonly limit: number = 5;
+    private readonly loadedPostIds = new Set<string>();
     public current_user: any;
     relatedUsers: User[] = [];
     router: any;
-    topics: Topic[] = [
-        {
-            id: '1',
-            title: 'bbb2026',
-            postsRelated: 10,
-            trendingScore: 98,
-            growthRate: 45,
-            lastActivityAt: new Date(),
-            createdAt: new Date('2026-01-10'),
-            engagement: {
-                likes: 540000,
-                comments: 210000,
-                shares: 80000
-            },
-            category: 'memes',
-            location: {
-                country: 'BR',
-                city: 'São Paulo'
-            },
-            topPosts: []
-        },
-        {
-            id: '2',
-            title: 'neymar',
-            postsRelated: 9,
-            trendingScore: 95,
-            growthRate: 30,
-            lastActivityAt: new Date(),
-            createdAt: new Date('2026-02-01'),
-            engagement: {
-                likes: 420000,
-                comments: 150000,
-                shares: 60000
-            },
-            category: 'sports',
-            location: {
-                country: 'BR'
-            },
-            topPosts: []
-        },
-        {
-            id: '3',
-            title: 'championsleague',
-            postsRelated: 7.5,
-            trendingScore: 97,
-            growthRate: 38,
-            lastActivityAt: new Date(),
-            createdAt: new Date('2026-02-15'),
-            engagement: {
-                likes: 600000,
-                comments: 200000,
-                shares: 90000
-            },
-            category: 'sports',
-            location: {
-                country: 'EU'
-            },
-            topPosts: []
-        },
-        {
-            id: '4',
-            title: 'ia',
-            postsRelated: 6,
-            trendingScore: 99,
-            growthRate: 60,
-            lastActivityAt: new Date(),
-            createdAt: new Date('2026-01-05'),
-            engagement: {
-                likes: 800000,
-                comments: 250000,
-                shares: 120000
-            },
-            category: 'tech',
-            location: {
-                country: 'US'
-            },
-            topPosts: []
-        },
-        {
-            id: '5',
-            title: 'chatgpt',
-            postsRelated: 4,
-            trendingScore: 96,
-            growthRate: 50,
-            lastActivityAt: new Date(),
-            createdAt: new Date('2026-01-20'),
-            engagement: {
-                likes: 720000,
-                comments: 210000,
-                shares: 100000
-            },
-            category: 'tech',
-            location: {
-                country: 'US'
-            },
-            topPosts: []
-        },
-        {
-            id: '6',
-            title: 'cs2',
-            postsRelated: 3,
-            trendingScore: 87,
-            growthRate: 19,
-            lastActivityAt: new Date(),
-            createdAt: new Date('2026-02-10'),
-            engagement: {
-                likes: 300000,
-                comments: 90000,
-                shares: 40000
-            },
-            category: 'sports',
-            location: {
-                country: 'BR'
-            },
-            topPosts: []
-        },
-        {
-            id: '7',
-            title: 'memesbr',
-            postsRelated: 2,
-            trendingScore: 100,
-            growthRate: 70,
-            lastActivityAt: new Date(),
-            createdAt: new Date('2026-01-01'),
-            engagement: {
-                likes: 1000000,
-                comments: 400000,
-                shares: 200000
-            },
-            category: 'memes',
-            location: {
-                country: 'BR'
-            },
-            topPosts: []
-        },
-        {
-            id: '8',
-            title: 'academia',
-            postsRelated: 1,
-            trendingScore: 92,
-            growthRate: 25,
-            lastActivityAt: new Date(),
-            createdAt: new Date('2026-02-05'),
-            engagement: {
-                likes: 500000,
-                comments: 180000,
-                shares: 70000
-            },
-            category: 'other',
-            location: {
-                country: 'BR'
-            },
-            topPosts: []
-        },
-        {
-            id: '9',
-            title: 'empreendedorismo',
-            postsRelated: 0.8,
-            trendingScore: 90,
-            growthRate: 27,
-            lastActivityAt: new Date(),
-            createdAt: new Date('2026-01-25'),
-            engagement: {
-                likes: 410000,
-                comments: 140000,
-                shares: 65000
-            },
-            category: 'business' as any,
-            location: {
-                country: 'BR'
-            },
-            topPosts: []
-        },
-        {
-            id: '10',
-            title: 'foryou',
-            postsRelated: 0.77,
-            trendingScore: 100,
-            growthRate: 80,
-            lastActivityAt: new Date(),
-            createdAt: new Date('2026-01-01'),
-            engagement: {
-                likes: 1500000,
-                comments: 500000,
-                shares: 300000
-            },
-            category: 'memes',
-            location: {
-                country: 'GLOBAL'
-            },
-            topPosts: []
-        }
-    ];
+    topics: Topic[] = [];
 
     constructor(
         public postsService: PostsService,
         public userService: UserService,
-        public _router: Router
+        public _router: Router,
+        private readonly topicService: TopicService
     ) {
         this.userService.user$.subscribe((user: any) => {
             this.current_user = user;
@@ -241,14 +57,76 @@ export class FeedComponent implements OnInit {
     ngOnInit(): void {
         this.getPosts();
         this.getRelatedUsers();
+        this.getTendingTopics();
     }
-    getPosts() {
-        this.loading = true;
-        this.postsService.getByCurrentUser(this.current_user.id).subscribe(posts => {
-            this.posts = (posts) as Post[];
-            this.posts = this.posts.reverse();
-            this.loading = false;
-        });
+    getPosts(reset: boolean = false) {
+        if (this.loadingMore || (!this.hasMorePosts && !reset)) {
+            return;
+        }
+
+        if (!this.current_user?.id) {
+            return;
+        }
+
+        if (reset) {
+            this.cursor = undefined;
+            this.posts = [];
+            this.hasMorePosts = true;
+            this.loadedPostIds.clear();
+            this.postsService.clearFeedCache();
+        }
+
+        if (!this.cursor) {
+            this.loading = true;
+        } else {
+            this.loadingMore = true;
+        }
+
+        this.postsService
+            .getByCurrentUser(this.current_user.id, this.cursor, this.limit)
+            .subscribe({
+                next: (posts) => {
+                    const parsedPosts = posts as Post[];
+
+                    parsedPosts.sort((a, b) => {
+                        return new Date(b.createdAt ?? '').getTime() - new Date(a.createdAt ?? '').getTime();
+                    });
+
+                    const uniquePosts = parsedPosts.filter(post => {
+                        if (this.loadedPostIds.has(post.id ?? "")) {
+                            return false;
+                        }
+
+                        this.loadedPostIds.add(post.id ?? "");
+                        return true;
+                    });
+
+                    this.posts = [...this.posts, ...uniquePosts]
+                        .sort((a, b) => {
+                            return new Date(b.createdAt ?? '').getTime() - new Date(a.createdAt ?? '').getTime();
+                        });
+
+                    this.hasMorePosts = parsedPosts.length >= this.limit;
+
+                    const lastPost = parsedPosts[parsedPosts.length - 1];
+
+                    if (lastPost?.createdAt) {
+                        this.cursor = lastPost.createdAt;
+                    }
+
+                    if (uniquePosts.length === 0) {
+                        this.hasMorePosts = false;
+                    }
+
+                    this.loading = false;
+                    this.loadingMore = false;
+                },
+                error: (error) => {
+                    console.error('[FEED] getPosts', error);
+                    this.loading = false;
+                    this.loadingMore = false;
+                }
+            });
     }
 
     getRelatedUsers() {
@@ -258,7 +136,34 @@ export class FeedComponent implements OnInit {
     }
 
     getTendingTopics() {
-        
+
+        this.topicService
+            .getTrending()
+            .subscribe({
+                next: (topics) => {
+                    this.topics = topics;
+                },
+                error: (error) => {
+                    console.error('[TRENDING] getTendingTopics', error);
+                }
+            });
+    }
+
+    @HostListener('window:scroll', [])
+    onWindowScroll(): void {
+        if (this.loading || this.loadingMore || !this.hasMorePosts) {
+            return;
+        }
+
+        const scrollTop = window.scrollY || document.documentElement.scrollTop;
+        const viewportHeight = window.innerHeight;
+        const fullHeight = document.documentElement.scrollHeight;
+
+        const distanceFromBottom = fullHeight - (scrollTop + viewportHeight);
+
+        if (distanceFromBottom <= 800) {
+            this.getPosts();
+        }
     }
 
     navigateToProfile(user: User) {

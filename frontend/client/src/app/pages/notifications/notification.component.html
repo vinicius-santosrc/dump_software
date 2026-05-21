@@ -3,7 +3,7 @@
         <section class="notification" (click)="handleClick(n)">
             <div class="notification__inside">
                 <div class="notification__user">
-                    <app-avatar-item [width]="'52px'" [height]="'52px'" [src]="n?.sender.profilePictureUrl" />
+                    <app-avatar-item [user]="n?.sender" [width]="'52px'" [height]="'52px'" [src]="n?.sender.profilePictureUrl" />
                 </div>
                 <div class="notification__content">
                     <h2>Mensagens</h2>

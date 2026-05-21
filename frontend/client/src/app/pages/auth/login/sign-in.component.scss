@@ -17,6 +17,13 @@
         flex-direction: column;
         justify-content: space-between;
         height: 99vh;
+
+        .sign-in-right-side-logo {
+            img {
+                width: 250px;
+            }
+            margin-bottom: 12px;
+        }
     }
 
     .sign-in-form-inputs {

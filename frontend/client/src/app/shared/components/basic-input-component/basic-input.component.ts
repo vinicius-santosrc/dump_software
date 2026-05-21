@@ -40,7 +40,6 @@ export class BasicInputComponent implements OnInit, AfterViewInit, ControlValueA
     @Output() typing = new EventEmitter<void>();
     @Output() blur = new EventEmitter<void>();
 
-
     focused: boolean = false;
     @Input() value: string = '';
     touched: boolean = false;
@@ -57,6 +56,7 @@ export class BasicInputComponent implements OnInit, AfterViewInit, ControlValueA
         if (this.type === 'date') {
             this.focused = true;
         }
+        this.cdr.detectChanges();
     }
 
     ngAfterViewInit(): void {

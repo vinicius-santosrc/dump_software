@@ -3,9 +3,10 @@
 
     <div class="generic-button"
         [class.generic-button--ghost]="variant === 'ghost'"
+        [class.generic-button--secondary]="variant === 'secondary'"
         type="button"
 
-        [style.backgroundColor]="variant === 'ghost' ? 'transparent' : backgroundColor"
+        [style.backgroundColor]="variant === 'ghost' || variant === 'secondary' ? 'transparent' : backgroundColor"
         [style.color]="textColor"
         [style.width]="width"
         [style.padding]="padding"
@@ -21,6 +22,9 @@
             <ng-container *ngIf="iconName">
                 <mat-icon class="generic-button__icon">{{ iconName }}</mat-icon>
             </ng-container>
+            <ng-container *ngIf="logoIcon">
+                <img [src]="logoIcon" alt="Button Icon" class="generic-button__icon" />
+            </ng-container>
             <ng-container *ngIf="label != ''">
                 <span class="generic-button__label">{{ label | translate }}</span>
             </ng-container>
@@ -31,10 +35,11 @@
 <button *ngIf="!isFile"
     class="generic-button"
     [class.generic-button--ghost]="variant === 'ghost'"
+    [class.generic-button--secondary]="variant === 'secondary'"
     [attr.type]="type"
     [disabled]="disabled || loading"
     (click)="handleClick()"
-    [style.backgroundColor]="variant === 'ghost' ? 'transparent' : backgroundColor"
+    [style.backgroundColor]="variant === 'ghost' || variant === 'secondary' ? 'transparent' : backgroundColor"
     [style.color]="textColor"
     [style.width]="width"
     [style.padding]="padding"
@@ -51,6 +56,9 @@
     <ng-template #notLoadingButton>
         <ng-container *ngIf="iconName">
             <mat-icon class="generic-button__icon">{{ iconName }}</mat-icon>
+        </ng-container>
+        <ng-container *ngIf="logoIcon">
+            <img [src]="logoIcon" alt="Button Icon" class="generic-button__icon" />
         </ng-container>
         <ng-container *ngIf="label != ''">
             <span class="generic-button__label">{{ label | translate }}</span>

@@ -59,6 +59,23 @@ export class ConversationItemComponent {
     return '/assets/app/media/default-avatar.webp';
   }
 
+  getConversationUser(): Object {
+    if (!this.convo || !this.convo.participants) {
+      return {};
+    }
+
+    if (this.convo.participants.length === 2) {
+      const otherUser = this.convo.participants.find(
+        (u: any) => u.id !== this.currentUser?.id
+      );
+      return (
+        otherUser
+      );
+    }
+
+    return {};
+  }
+
   isTyping(): boolean {
     if (!this.typingMap || !this.convo?.id) return false;
 

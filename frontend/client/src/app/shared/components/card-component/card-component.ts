@@ -9,5 +9,5 @@ import { TranslateModule } from "@ngx-translate/core";
 })
 export class CardComponent {
     @Input() width: string = ""
-    @Input() title: string = ""
+    @Input() mainText: string = ""
 }

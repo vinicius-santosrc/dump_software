@@ -12,11 +12,12 @@ import { PostsService } from '../../../../../core/services/post/post.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { PostActionHandlerService } from '../../../../../core/services/actions/post-action-handler.service';
 import { OWNER_POST_ACTIONS, VISITOR_POST_ACTIONS } from '../../../../../core/config/post-actions.config';
+import { GenericTextComponent } from "../../../generic-text/generic-text.component";
 
 @Component({
     selector: 'app-post-header',
     standalone: true,
-    imports: [CommonModule, GenericCardUserComponent, MatButtonModule, MatIcon],
+    imports: [CommonModule, GenericCardUserComponent, MatButtonModule, MatIcon, GenericTextComponent],
     templateUrl: './post-header.component.html',
     styleUrl: './post-header.component.scss'
 })
@@ -61,7 +62,7 @@ export class PostHeaderComponent {
     options() {
         const dialogRef = this.dialog.open(GenericActionsModal, {
             data: {
-                actions: this.current_user.id === this.post.user.id ? OWNER_POST_ACTIONS : VISITOR_POST_ACTIONS
+                actions: this.current_user.id === this.post.user.id ? OWNER_POST_ACTIONS(this.post?.archived) : VISITOR_POST_ACTIONS
             },
             width: '400px'
         

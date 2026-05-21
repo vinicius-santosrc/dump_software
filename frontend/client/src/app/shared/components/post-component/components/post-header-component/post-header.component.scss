@@ -4,6 +4,11 @@
 
 .post-media-caption {
     margin: 16px 0px;
+
+    span {
+        white-space: pre-line;
+        word-break: break-word;
+    }
 }
 
 .account-post-detail {
@@ -24,5 +29,10 @@
     .post-media-caption {
         margin: 10px 0;
         font-size: 14px;
+
+        span {
+            white-space: pre-line;
+            word-break: break-word;
+        }
     }
 }

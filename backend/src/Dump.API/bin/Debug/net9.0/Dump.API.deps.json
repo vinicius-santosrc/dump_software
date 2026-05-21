@@ -679,7 +679,7 @@
           }
         }
       },
-      "MongoDB.Driver/3.7.0": {
+      "MongoDB.Driver/3.2.1": {
         "dependencies": {
           "DnsClient": "1.6.1",
           "Microsoft.Extensions.Logging.Abstractions": "8.0.0",
@@ -691,8 +691,8 @@
         },
         "runtime": {
           "lib/net6.0/MongoDB.Driver.dll": {
-            "assemblyVersion": "3.7.0.0",
-            "fileVersion": "3.7.0.0"
+            "assemblyVersion": "3.2.1.0",
+            "fileVersion": "3.2.1.0"
           }
         }
       },
@@ -1498,7 +1498,7 @@
       "Dump.Infrastructure/1.0.0": {
         "dependencies": {
           "Dump.Application": "1.0.0",
-          "MongoDB.Driver": "3.7.0"
+          "MongoDB.Driver": "3.2.1"
         },
         "runtime": {
           "Dump.Infrastructure.dll": {
@@ -1942,12 +1942,12 @@
       "path": "mongodb.bson/3.7.1",
       "hashPath": "mongodb.bson.3.7.1.nupkg.sha512"
     },
-    "MongoDB.Driver/3.7.0": {
+    "MongoDB.Driver/3.2.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-3Xr9Z6GzfewLbPNCtC+9Z8AvU9rtWzPG0Dl7BPYF2MiMxGMsrU/dp2cYOY39yxzOJAye/lWIWYX/lVmyQLQbYQ==",
-      "path": "mongodb.driver/3.7.0",
-      "hashPath": "mongodb.driver.3.7.0.nupkg.sha512"
+      "sha512": "sha512-ynT4Mc0ilT+DSQBbobfORqCWqm5UdHIX3Nc59oQH3XbPi43jKiqf7SK8NLBmQsB6RJBJPR+WdIeNLtzyLj3U3g==",
+      "path": "mongodb.driver/3.2.1",
+      "hashPath": "mongodb.driver.3.2.1.nupkg.sha512"
     },
     "NETStandard.Library/1.6.1": {
       "type": "package",

@@ -6,8 +6,7 @@ import { PostsService } from "../../core/services/post/post.service";
 import { UserService } from "../../core/services/user/user.service";
 import { MatIcon } from "@angular/material/icon";
 import { MatButtonModule } from "@angular/material/button";
-import { ActivatedRoute, Router } from "@angular/router";
-import { ProfileComponentService } from "../profile/profile.component.service";
+import { ActivatedRoute } from "@angular/router";
 
 @Component({
     selector: "app-dump-page-component",

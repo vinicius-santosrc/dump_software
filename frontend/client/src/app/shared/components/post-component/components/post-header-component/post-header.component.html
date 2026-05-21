@@ -13,6 +13,14 @@
     </div>
 
     <div class="post-media-caption" [id]="isModal ? 'light' : 'dark'">
-        <span [style.color]="theme == 'dark' ? 'white' : 'black'">{{ caption }}</span>
+        <app-generic-text
+            [text]="caption || ''"
+            [theme]="theme"
+            [expandable]="true"
+            [maxCharacters]="180"
+            [clickableMentions]="true"
+            [clickableHashtags]="true"
+            [clickableLinks]="true"
+        />
     </div>
 </div>

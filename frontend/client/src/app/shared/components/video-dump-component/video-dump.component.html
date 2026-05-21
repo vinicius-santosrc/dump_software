@@ -11,6 +11,7 @@
     [attr.src]="hasLoaded ? src : null"
     loop
     preload="metadata"
+    autoplay
     playsinline
     (timeupdate)="onTimeUpdate()"
   ></video>

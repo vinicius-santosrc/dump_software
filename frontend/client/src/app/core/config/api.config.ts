@@ -9,11 +9,11 @@ export const WHITE_LIST_ROUTES = [
     "/accounts/signup",
     "/accounts/forgotpassword",
     "/memories",
-    "/messages/inbox"
+    // "/messages/inbox"
 ]
 
 export const WHITE_LIST_NAVIGATIONS = [
     '/memories',
-    "/messages/inbox"
+    // "/messages/inbox"
     
 ]

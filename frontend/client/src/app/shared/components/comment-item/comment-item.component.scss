@@ -43,10 +43,14 @@
 
 .text {
   line-height: 1.4;
+  white-space: pre-line;
+  word-break: break-word;
 }
 
 .simple-text {
   line-height: 1.4;
+  white-space: pre-line;
+  word-break: break-word;
 }
 
 .reply-btn {

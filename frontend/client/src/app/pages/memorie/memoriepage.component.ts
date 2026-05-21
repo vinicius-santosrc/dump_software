@@ -1,24 +1,28 @@
-import { Component, HostListener, OnInit } from "@angular/core";
+import { ChangeDetectorRef, Component, HostListener, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { MemoriesService } from "../../core/services/memories/memories.service";
 import { Memorie } from "../../core/models/feed/memorie.model";
 import { MemorieCardComponent } from "./memorie-card/memorie-card.component";
 import { StoryGroup, StoryViewerStore } from "../../store/story-viewer.store";
-import { MemoriesComponent } from "../../layout/header/memories-component/memories.component";
+import { Subject, takeUntil } from "rxjs";
+import { MatButtonModule } from "@angular/material/button";
+import { MatIcon } from "@angular/material/icon";
 
 @Component({
     selector: 'app-memories-page-component',
     templateUrl: './memoriepage.component.html',
     styleUrl: './memoriepage.component.scss',
-    imports: [MemorieCardComponent, MemoriesComponent]
+    imports: [MemorieCardComponent, MatButtonModule, MatIcon]
 })
-export class MemoriePageComponent implements OnInit {
+export class MemoriePageComponent implements OnInit, OnDestroy {
     memorieId: string = "";
     username: string = "";
     memorie: Memorie | null = null;
     groups: StoryGroup[] = [];
     activeGroupIndex: number = 0;
     activeStoryIndex: number = 0;
+    private readonly destroy$ = new Subject<void>();
+    public loading: boolean = true;
 
     get activeGroup(): StoryGroup | null {
         return this.groups[this.activeGroupIndex] ?? null;
@@ -44,58 +48,125 @@ export class MemoriePageComponent implements OnInit {
         private readonly route: ActivatedRoute,
         private readonly router: Router,
         private readonly memorieService: MemoriesService,
-        private readonly storyViewerStore: StoryViewerStore
+        private readonly storyViewerStore: StoryViewerStore,
+        private readonly cdr: ChangeDetectorRef
     ) { }
 
     ngOnInit(): void {
-        this.route.paramMap.subscribe(async (params: any) => {
-            const memorieId = params.get('memorieId') ?? '';
-            const username = params.get('username') ?? '';
+        this.route.paramMap
+            .pipe(takeUntil(this.destroy$))
+            .subscribe(async (params: any) => {
+                this.loading = true;
+                this.memorie = null;
 
-            this.memorieId = memorieId;
-            this.username = username;
+                const memorieId = params.get('memorieId') ?? '';
+                const username = params.get('username') ?? '';
 
-            await this.initializeViewer();
-        });
+                this.memorieId = memorieId;
+                this.username = username;
+
+                await this.initializeViewer();
+
+                this.syncFromStore();
+                this.loading = false;
+
+                this.cdr.markForCheck();
+                this.cdr.detectChanges();
+            });
+    }
+
+    ngOnDestroy(): void {
+        this.destroy$.next();
+        this.destroy$.complete();
     }
 
     async initializeViewer() {
+        const normalizedMemorieId =
+            this.memorieId === 'undefined' ||
+            this.memorieId === 'null'
+                ? ''
+                : this.memorieId;
+
+        this.memorieId = normalizedMemorieId;
+
         const hasStoreData = this.storyViewerStore.isOpened() && this.storyViewerStore.getGroups().length > 0;
 
         if (hasStoreData) {
             this.groups = this.storyViewerStore.getGroups();
 
-            const groupIndexFromUsername = this.username
+            const existingGroupIndex = this.username
                 ? this.storyViewerStore.findGroupIndexByUsername(this.username)
                 : this.storyViewerStore.getActiveGroupIndex();
 
-            if (groupIndexFromUsername >= 0) {
-                this.storyViewerStore.setActiveGroupIndex(groupIndexFromUsername);
-            }
+            if (existingGroupIndex >= 0) {
+                this.storyViewerStore.setActiveGroupIndex(existingGroupIndex);
 
-            if (this.memorieId) {
-                const storyIndex = this.storyViewerStore.findStoryIndexById(this.memorieId);
-                if (storyIndex >= 0) {
-                    this.storyViewerStore.setActiveStoryIndex(storyIndex);
+                if (this.memorieId) {
+                    const storyIndex = this.storyViewerStore.findStoryIndexById(this.memorieId);
+
+                    if (storyIndex >= 0) {
+                        this.storyViewerStore.setActiveStoryIndex(storyIndex);
+                    }
                 }
-            }
 
-            this.syncFromStore();
+                return;
+            }
+        }
+
+        if (this.username && !this.memorieId) {
+            const response = await this.memorieService.getByUsername(this.username);
+            const stories = Array.isArray(response) ? response : [];
+            
+            if (stories.length > 0) {
+                this.storyViewerStore.open(
+                    [{
+                        user: stories[0].user,
+                        stories,
+                        lastStoryAt: stories[0].createdAt
+                    }],
+                    0,
+                    0
+                );
+            }
             return;
         }
 
         if (this.memorieId) {
             const story = await this.getById(this.memorieId);
 
-            const hasGroups = this.storyViewerStore.getGroups().length > 0;
+            if (story) {
+                const existingGroups = this.storyViewerStore.getGroups();
+                const hasGroups = existingGroups.length > 0;
 
-            if (!hasGroups && story) {
-                this.storyViewerStore.setFromSingleStory(story);
-            } else if (this.memorieId) {
-                this.storyViewerStore.setActiveById(this.memorieId);
+                if (!hasGroups) {
+                    this.storyViewerStore.setFromSingleStory(story);
+                }
+                else {
+                    const existingGroupIndex = this.storyViewerStore
+                        .findGroupIndexByUsername(story.user?.username ?? '');
+
+                    if (existingGroupIndex === -1) {
+                        const mergedGroups: StoryGroup[] = [
+                            ...existingGroups,
+                            {
+                                user: story.user,
+                                stories: [story],
+                                lastStoryAt: story.createdAt
+                            }
+                        ];
+
+                        this.storyViewerStore.open(
+                            mergedGroups,
+                            mergedGroups.length - 1,
+                            0
+                        );
+                    }
+                    else {
+                        this.storyViewerStore.setActiveGroupIndex(existingGroupIndex);
+                        this.storyViewerStore.setActiveById(this.memorieId);
+                    }
+                }
             }
-
-            this.syncFromStore();
         }
     }
 
@@ -107,6 +178,7 @@ export class MemoriePageComponent implements OnInit {
         const activeStory = this.storyViewerStore.getActiveStory();
 
         this.memorie = activeStory ? { ...activeStory } as Memorie : null;
+        this.cdr.markForCheck();
     }
 
     async getById(memorieId: string): Promise<Memorie | null> {
@@ -205,7 +277,7 @@ export class MemoriePageComponent implements OnInit {
 
     closeViewer() {
         this.storyViewerStore.close();
-        this.router.navigate(['/']);
+        globalThis.history.back();
     }
 
     updateRoute() {
