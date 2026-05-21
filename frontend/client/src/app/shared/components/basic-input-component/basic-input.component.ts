@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { Component, Input, OnInit, AfterViewInit, Output, EventEmitter, forwardRef } from "@angular/core";
+import { Component, Input, OnInit, AfterViewInit, Output, EventEmitter, forwardRef, ChangeDetectorRef } from "@angular/core";
 import { TranslateModule } from "@ngx-translate/core";
 import { FormsModule, ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -28,21 +28,27 @@ import { MatButtonModule } from '@angular/material/button';
     }]
 })
 export class BasicInputComponent implements OnInit, AfterViewInit, ControlValueAccessor {
-    @Input() type: 'text' | 'email' | 'password' | 'date' | 'tel' = 'text';
-    @Input() label: string = '';
+    @Input() type: 'text' | 'email' | 'password' | 'date' | 'tel' | 'textarea' = 'text';
+    @Input() label: string = 'COMPONENTS.BASIC_INPUT.DEFAULT_SEARCH';
     @Input() maxLength?: number;
     @Input() minLength?: number;
     @Input() required: boolean = false;
+    @Input() resizableX: boolean = false;
+    @Input() resizableY: boolean = false;
+    @Input() iconName: string = '';
     @Output() valueChange = new EventEmitter<string>();
-
+    @Output() typing = new EventEmitter<void>();
+    @Output() blur = new EventEmitter<void>();
 
     focused: boolean = false;
-    value: string = '';
+    @Input() value: string = '';
     touched: boolean = false;
     currentType: string = this.type;
 
     private onChange: (value: string) => void = () => { };
     private onTouched: () => void = () => { };
+
+    constructor(private readonly cdr: ChangeDetectorRef) {}
 
     ngOnInit(): void {
         this.currentType = this.type;
@@ -50,11 +56,13 @@ export class BasicInputComponent implements OnInit, AfterViewInit, ControlValueA
         if (this.type === 'date') {
             this.focused = true;
         }
+        this.cdr.detectChanges();
     }
 
     ngAfterViewInit(): void {
         if (this.value || this.type === 'date') {
             this.focused = true;
+            this.cdr.detectChanges();
         }
     }
 
@@ -71,6 +79,7 @@ export class BasicInputComponent implements OnInit, AfterViewInit, ControlValueA
 
         if (this.value || this.type === 'date') {
             this.focused = true;
+            this.cdr.detectChanges();
         }
     }
 
@@ -83,14 +92,21 @@ export class BasicInputComponent implements OnInit, AfterViewInit, ControlValueA
     }
 
     onInput(event: Event): void {
-        const input = event.target as HTMLInputElement;
+        const input = event.target as HTMLInputElement | HTMLTextAreaElement;
         this.value = input.value;
+        if (this.type === 'textarea') {
+            const textarea = input as HTMLTextAreaElement;
+            textarea.style.height = 'auto';
+            textarea.style.height = textarea.scrollHeight + 'px';
+        }
         this.valueChange.emit(this.value);
+        this.typing.emit();
         this.onChange(this.value);
     }
 
     onBlur(): void {
         this.touched = true;
+        this.blur.emit();
         this.onTouched();
     }
 

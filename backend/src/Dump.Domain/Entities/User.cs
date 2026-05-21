@@ -31,7 +31,13 @@ public class User
     public string Bio { get; set; } = string.Empty;
 
     [BsonElement("profilePictureUrl")]
-    public string ProfilePictureUrl { get; set; } = string.Empty;
+    public string? ProfilePictureUrl { get; set; } = string.Empty;
+
+    [BsonElement("gender")]
+    public string? Gender { get; set; } = string.Empty;
+
+    [BsonElement("thumbnail")]
+    public string? Thumbnail { get; set; } = string.Empty;
 
     [BsonElement("birthDate")]
     public DateTime BirthDate { get; set; } = DateTime.Now;
@@ -59,4 +65,8 @@ public class User
 
     [BsonElement("updatedAt")]
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+
+    [BsonElement("coverPhotoUrl")]
+    public string CoverPhotoUrl { get; set; } = string.Empty;
+
 }

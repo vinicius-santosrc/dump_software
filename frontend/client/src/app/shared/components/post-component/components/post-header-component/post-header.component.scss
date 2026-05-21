@@ -1,0 +1,38 @@
+.post-title {
+    padding: 12px 20px;
+}
+
+.post-media-caption {
+    margin: 16px 0px;
+
+    span {
+        white-space: pre-line;
+        word-break: break-word;
+    }
+}
+
+.account-post-detail {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+#light span {
+    color: white;
+}
+
+@media (max-width: 768px) {
+    .post-title {
+        padding: 10px 12px;
+    }
+
+    .post-media-caption {
+        margin: 10px 0;
+        font-size: 14px;
+
+        span {
+            white-space: pre-line;
+            word-break: break-word;
+        }
+    }
+}

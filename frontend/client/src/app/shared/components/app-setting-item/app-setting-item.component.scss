@@ -1,0 +1,87 @@
+.setting-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 0;
+    cursor: pointer;
+    transition: 0.2s ease;
+
+    .left {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+
+        .icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            mat-icon {
+                font-size: 20px;
+                color: var(--color-text)
+            }
+        }
+
+        .label {
+            font-size: 14px;
+            color: var(--color-text)
+        }
+    }
+
+    .right {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+
+        .value {
+            font-size: 13px;
+            color: #aaa;
+        }
+
+        mat-icon {
+            font-size: 20px;
+            color: #aaa;
+        }
+    }
+
+    &:hover {
+        opacity: 0.7;
+    }
+
+    &.disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+}
+
+.toggle {
+    width: 40px;
+    height: 22px;
+    background: #ccc;
+    border-radius: 20px;
+    position: relative;
+    transition: 0.2s ease;
+    cursor: pointer;
+
+    .circle {
+        width: 18px;
+        height: 18px;
+        background: white;
+        border-radius: 50%;
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        transition: 0.2s ease;
+    }
+
+    &.active {
+        background: #0095f6;
+
+        .circle {
+            left: 20px;
+        }
+    }
+}

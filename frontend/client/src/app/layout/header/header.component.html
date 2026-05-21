@@ -1,0 +1,25 @@
+<header *ngIf="showHeader" class="header-component" [class.hidden]="isHidden">
+    <div class="header-component-top">
+        <div class="header-component-left">
+        </div>
+        <div class="header-component-center">
+            <a routerLinkActive="active" [routerLink]="'/'">
+                @if(showDumpLogo) {
+                    <img [src]="logo" alt="Dump Logo" />
+                }
+            </a>
+        </div>
+        <div class="header-component-right">
+            @if(!isMessagePage) {
+                <app-generic-button (onClick)="openMessages()" [label]="!isMobile ? 'HEADER.ACTIONS.CONVERSATIONS' : ''"
+                    [iconName]="'send'" variant="ghost"
+                    padding="8px 12px"></app-generic-button>
+            }
+            <div class="account-details">
+                <a routerLinkActive="active" [routerLink]="'/' + current_user.username">
+                    <app-avatar-item width="52px" height="52px" [redirectOnClick]="false" [user]="current_user" />
+                </a>
+            </div>
+        </div>
+    </div>
+</header>

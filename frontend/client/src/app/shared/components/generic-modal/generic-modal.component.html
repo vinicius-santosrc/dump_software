@@ -1,0 +1,29 @@
+<section class="modal" [style.height]="height">
+    <div class="modal__overlay"></div>
+
+    <div class="modal__modal">
+        <!-- HEADER -->
+        <div class="modal__header">
+            <div>
+                <h2>{{title | translate}}</h2>
+                <p *ngIf="subtitle">{{subtitle | translate}}</p>
+            </div>
+
+            <button (click)="close()" mat-icon-button class="close-btn">
+                <mat-icon>close</mat-icon>
+            </button>
+        </div>
+
+        <div class="modal__body">
+            <ng-content></ng-content>
+        </div>
+
+        <div class="modal__footer">
+            <div class="modal__btns">
+                <ng-container *ngIf="actionButtons.length > 0">
+                    <app-generic-button *ngFor="let btn of actionButtons" [label]="btn.label" (onClick)="btn.click()"></app-generic-button>
+                </ng-container>
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,8 +1,44 @@
+<div class="top-loader" [class.active]="routeLoading"></div>
 <!-- splash screen -->
 <div #splashScreen class="m-splash-screen">
   <div class="splash-container">
     <img [src]="splashScreenImage" alt="Splash" class="splash-logo" />
   </div>
 </div>
+@if(!shouldHideLayout) {
+  <!-- LATERAL BARRA -->
 
-<router-outlet />
+  <div class="dump">
+    <app-sidebar-component />
+    
+    <!-- HEADER -->
+    <app-header />
+    <main class="dump_content">
+      <aside class="dump_content_aside" [style.width]="contentWidth" [style.margin]="'auto'">
+        <div class="page-container" [class.loading]="routeLoading">
+          @if(!routeLoading) {
+          <div class="page-content loaded">
+            <router-outlet />
+          </div>
+          }
+        </div>
+      </aside>
+      <app-notification></app-notification>
+    </main>
+  </div>
+}
+@else {
+  <div class="page-container" [class.loading]="routeLoading">
+    @if(!routeLoading) {
+      <div class="page-content loaded">
+        <router-outlet />
+      </div>
+    }
+  </div>
+}
+
+<app-incoming-call-modal />
+
+<!-- <div class="page-bottom">
+    <app-footer-auth [showBorder]="false" />
+</div> -->

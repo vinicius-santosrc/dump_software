@@ -19,7 +19,10 @@ public class RegisterDto
 
 public class LoginDto
 {
-    public string UserOrCellphoneOrEmail { get; set; } = string.Empty;
+    [JsonPropertyName("user_or_cellphone_or_email")]
+    public string UserOrCellphoneOrEmail { get; set; } = string.Empty; 
+    
+    [JsonPropertyName("password")]
     public string Password { get; set; } = string.Empty;
 }
 

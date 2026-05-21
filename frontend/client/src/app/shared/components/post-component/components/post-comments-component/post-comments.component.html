@@ -1,0 +1,19 @@
+<div class="comments" [class]="theme">
+
+    <p *ngIf="!isLoading && comments.length === 0" class="empty">{{ 'FEED.POST.COMMENTS.EMPTY' | translate }}</p>
+
+    <app-loader *ngIf="isLoading"></app-loader>
+
+    <ng-container *ngIf="!isLoading">
+      <app-comment-item
+        *ngFor="let comment of structuredComments; trackBy: trackById"
+        [comment]="comment"
+        [level]="0"
+        [replyingToId]="replyingToId"
+        (reply)="startReply($event)"
+        (sendReply)="sendReply($event)"
+        (cancelReply)="cancelReply()"
+        [theme]="theme"
+      ></app-comment-item>
+    </ng-container>
+</div>

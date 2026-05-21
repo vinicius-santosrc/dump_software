@@ -1,0 +1,7 @@
+<div class="generic-actions-buttons">
+    @for(button of buttons; track button.label) {
+    <button (click)="button.onClick()" [class]="button.class" type="button" [ariaLabel]="button.label | translate">
+        {{ button.label | translate }}
+    </button>
+    }
+</div>

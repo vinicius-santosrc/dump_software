@@ -1,0 +1,85 @@
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { Component, Inject } from "@angular/core";
+import { GenericButtonComponent } from "../../../shared/components/generic-button-component/generic-button.component";
+import { AvatarItem } from "../../../shared/components/avatar-item/avatar-item.component";
+import { CommonModule } from '@angular/common';
+import { CallService } from '../../../core/services/messages/call/call.service';
+import { UserService } from '../../../core/services/user/user.service';
+import { CallModalComponent } from '../call-modal/call-modal.component';
+
+@Component({
+    selector: "app-pre-call",
+    standalone: true,
+    templateUrl: "./pre-call.component.html",
+    styleUrl: "./pre-call.component.scss",
+    imports: [CommonModule, GenericButtonComponent, AvatarItem]
+})
+
+export class PreCallComponent {
+
+    currentUser: any;
+
+    constructor(
+        @Inject(MAT_DIALOG_DATA) public data: any,
+        private readonly dialogRef: MatDialogRef<PreCallComponent>,
+        private readonly callService: CallService,
+        private readonly userService: UserService,
+        private readonly dialog: MatDialog
+    ) {
+        this.userService.user$.subscribe(user => {
+            this.currentUser = user;
+        });
+    }
+
+    get callTitle(): string {
+        return this.data?.user?.fullName || this.data?.user?.username || 'Usuário';
+    }
+
+    get avatar(): string {
+        return this.data?.user?.profilePictureUrl || 'assets/app/media/default-avatar.webp';
+    }
+
+    get callStatus(): string {
+        return this.callService.callStatus;
+    }
+
+    async call(): Promise<void> {
+
+        if (!this.currentUser?.id || !this.data?.user?.id) {
+            return;
+        }
+
+        if (this.data?.type === 'video') {
+            await this.callService.startVideoCall({
+                callerId: this.currentUser.id,
+                targetUserId: this.data.user.id,
+                conversationId: this.data.conversationId
+            });
+        }
+        else {
+            await this.callService.startAudioCall({
+                callerId: this.currentUser.id,
+                targetUserId: this.data.user.id,
+                conversationId: this.data.conversationId
+            });
+        }
+
+        this.callService.onCallConnected = (payload: any) => {
+
+            this.dialogRef.close();
+
+            this.dialog.open(CallModalComponent, {
+                width: '100vw',
+                height: '100vh',
+                maxWidth: '100vw',
+                panelClass: 'full-screen-dialog',
+                data: {
+                    type: this.data.type,
+                    user: this.data.user,
+                    conversationId: this.data.conversationId,
+                    payload
+                }
+            });
+        };
+    }
+}

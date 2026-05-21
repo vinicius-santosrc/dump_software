@@ -69,15 +69,16 @@ public class AuthController : ControllerBase
 
     [Authorize]
     [HttpGet("me")]
-    public IActionResult Me()
+    public async Task<IActionResult> Me()
     {
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        
+        if (string.IsNullOrEmpty(userId))
+            return Unauthorized();
+        
+        var user = await _authService.GetUserById(userId);
 
-        return Ok(new
-        {
-            id = userId,
-            email = User.FindFirst(ClaimTypes.Email)?.Value
-        });
+        return Ok(user);
     }
 
     [HttpPost("logout")]

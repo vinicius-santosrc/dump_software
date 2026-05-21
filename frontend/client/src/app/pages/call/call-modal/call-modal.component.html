@@ -1,0 +1,87 @@
+<section class="call-modal">
+
+    <div class="call-modal__background"></div>
+
+    @if(isVideoCall) {
+
+    <video #remoteVideo autoplay playsinline class="call-modal__remote-video">
+    </video>
+
+    }
+    @else {
+
+    <div class="call-modal__audio-background">
+
+        <div class="call-modal__audio-background__glow"></div>
+
+        <app-avatar-item [src]="user?.profilePictureUrl">
+        </app-avatar-item>
+
+    </div>
+
+    }
+
+    <div class="call-modal__overlay"></div>
+
+    <div class="call-modal__top">
+
+        <div class="call-modal__top__info">
+
+            <span class="call-modal__top__status">
+                {{ isVideoCall ? 'Videochamada' : 'Ligação de áudio' }}
+            </span>
+
+            <h1 class="call-modal__top__username">
+                {{ user?.fullName || user?.username }}
+            </h1>
+
+            <p class="call-modal__top__time">
+                {{ formattedDuration }}
+            </p>
+
+        </div>
+
+    </div>
+
+    @if(isVideoCall) {
+
+    <div class="call-modal__local-video-container">
+
+        <video #localVideo autoplay muted playsinline class="call-modal__local-video">
+        </video>
+
+    </div>
+
+    }
+
+    <div class="call-modal__controls">
+
+        <button class="call-control-button" (click)="toggleMute()">
+
+            <mat-icon>
+                {{ isMuted ? 'mic_off' : 'mic' }}
+            </mat-icon>
+
+        </button>
+
+        @if(isVideoCall) {
+
+        <button class="call-control-button" (click)="toggleCamera()">
+
+            <mat-icon>
+                {{ isCameraOff ? 'videocam_off' : 'videocam' }}
+            </mat-icon>
+
+        </button>
+
+        }
+
+        <button class="call-control-button call-control-button--end" (click)="endCall()">
+
+            <mat-icon>call_end</mat-icon>
+
+        </button>
+
+    </div>
+
+</section>

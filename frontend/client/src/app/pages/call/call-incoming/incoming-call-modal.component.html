@@ -1,0 +1,47 @@
+@if(incomingCall) {
+<div class="incoming-call-backdrop">
+
+    <div class="incoming-call-modal">
+
+        <div class="incoming-call-modal__pulse"></div>
+
+        <div class="incoming-call-modal__avatar-container">
+            <img class="incoming-call-modal__avatar"
+                [src]="incomingCall?.caller?.profilePictureUrl || 'assets/app/media/default-avatar.webp'"
+                alt="Caller avatar" />
+        </div>
+
+        <div class="incoming-call-modal__content">
+
+            <span class="incoming-call-modal__calling-text">
+                Chamada recebida
+            </span>
+
+            <h2 class="incoming-call-modal__username">
+                {{ incomingCall?.caller?.fullName || incomingCall?.caller?.username || 'Usuário' }}
+            </h2>
+
+            <p class="incoming-call-modal__type">
+                {{ incomingCall?.type === 'video' ? 'Ligação de vídeo' : 'Ligação de áudio' }}
+            </p>
+
+        </div>
+
+        <div class="incoming-call-modal__actions">
+
+            <button class="incoming-call-modal__action incoming-call-modal__action--reject" (click)="handleReject()">
+                <mat-icon>call_end</mat-icon>
+            </button>
+
+            <button class="incoming-call-modal__action incoming-call-modal__action--accept" (click)="handleAccept()">
+                <mat-icon>
+                    {{ incomingCall?.type === 'video' ? 'videocam' : 'call' }}
+                </mat-icon>
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+}

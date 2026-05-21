@@ -1,0 +1,66 @@
+<div class="select-input-component">
+    <div class="input-wrapper"
+         tabindex="0"
+         (keydown)="onKeyDown($event)"
+         [class.focused]="focused || value" [class.error]="showError" (click)="toggle()">
+        @if(multiple && value?.length) {
+          <div class="chips">
+            @for(v of value; track v) {
+              <span class="chip">
+                {{ getLabelByValue(v) | translate}}
+              </span>
+            }
+          </div>
+        }
+        <div class="select-display" [class.placeholder]="!selectedLabel">
+            {{ selectedLabel || placeholder }}
+        </div>
+
+        @if (label) {
+        <label class="basic-input-label">
+            {{ label | translate }}
+            @if (required) {
+            <span class="required">*</span>
+            }
+        </label>
+        }
+
+        <div class="arrow">
+            <mat-icon>expand_more</mat-icon>
+        </div>
+    </div>
+
+    @if (isOpen) {
+    <div class="dropdown">
+        @if(searchable) {
+            <div class="search-box">
+                <input
+                    type="text"
+                    placeholder="Buscar..."
+                    (input)="onSearch($any($event.target).value)"
+                />
+            </div>
+        }
+        @for (option of filteredOptions; track option.value) {
+        <div class="option"
+             (click)="select(option); $event.stopPropagation()"
+             [class.selected]="multiple && value?.includes(option.value)"
+             [class.active]="activeIndex === $index"
+             [innerHTML]="highlight(option.label)">
+        </div>
+        }
+    </div>
+    }
+
+    <div class="error-container">
+        @if (showError) {
+        <div class="error-message">
+            <p>* {{ 'VALIDATIONS.REQUIRED' | translate }}</p>
+        </div>
+        } @else {
+        <div class="error-message">
+            <p>&nbsp;</p>
+        </div>
+        }
+    </div>
+</div>

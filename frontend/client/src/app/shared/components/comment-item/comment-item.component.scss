@@ -1,0 +1,221 @@
+.comment {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+  font-size: 14px;
+}
+
+.avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #ccc;
+  flex-shrink: 0;
+
+  img {
+    width: 100%;
+    border-radius: 50%;
+  }
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.username {
+  font-weight: 600;
+
+  a {
+    text-decoration: none;
+    font-size: 14px;
+
+    &.light {
+      color: black;
+    }
+
+    &.dark {
+      color: white;
+    }
+  }
+}
+
+.text {
+  line-height: 1.4;
+  white-space: pre-line;
+  word-break: break-word;
+}
+
+.simple-text {
+  line-height: 1.4;
+  white-space: pre-line;
+  word-break: break-word;
+}
+
+.reply-btn {
+  font-size: 12px;
+  cursor: pointer;
+  opacity: 0.7;
+}
+
+.reply-btn:hover {
+  opacity: 1;
+}
+
+.reply-box {
+  margin-top: 6px;
+  display: flex;
+  gap: 6px;
+}
+
+.reply-box input {
+  flex: 1;
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.reply-box button {
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+
+.reply-box .cancel {
+  opacity: 0.7;
+}
+
+/* THEME */
+.comment.light {
+  color: #111;
+}
+
+.comment.dark {
+  color: #eee;
+}
+
+.comment.dark .reply-box input {
+  background: #222;
+  border: 1px solid #444;
+  color: #eee;
+}
+
+/* DEFAULT (instagram-like) */
+.comment.default .username {
+  margin-right: 6px;
+}
+
+.comment.default .text {
+  display: inline;
+}
+
+/* SIMPLE */
+.comment.simple .avatar {
+  display: none;
+}
+
+.comment.simple .reply-btn {
+  margin-left: 4px;
+}
+
+/* INSTAGRAM STYLE */
+.main-line {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.comment.default .username {
+  font-weight: 600;
+}
+
+.comment.default .text {
+  font-weight: 400;
+}
+
+.meta {
+  display: flex;
+  gap: 12px;
+  font-size: 12px;
+  opacity: 0.7;
+  margin-top: 2px;
+}
+
+.meta .reply-btn {
+  cursor: pointer;
+}
+
+.view-replies {
+  font-size: 12px;
+  margin-top: 6px;
+  cursor: pointer;
+  opacity: 0.8;
+}
+
+.view-replies:hover {
+  opacity: 1;
+}
+
+/* ANIMAÇÕES */
+.comment {
+  animation: fadeIn 0.25s ease;
+}
+
+.responses {
+  animation: slideDown 0.25s ease;
+  overflow: hidden;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+    max-height: 0;
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    max-height: 1000px;
+  }
+}
+
+/* PERFORMANCE (muitos comentários) */
+.comment {
+  contain: content;
+  will-change: transform, opacity;
+}
+
+.responses {
+  margin-top: 6px;
+  border-left: 2px solid rgba(0, 0, 0, 0.05);
+  padding-left: 8px;
+}
+
+.comment.dark .responses {
+  border-left: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+/* HOVER MELHOR */
+.view-replies {
+  transition: all 0.2s ease;
+}
+
+.view-replies:hover {
+  transform: translateX(2px);
+}

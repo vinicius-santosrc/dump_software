@@ -17,6 +17,13 @@
         flex-direction: column;
         justify-content: space-between;
         height: 99vh;
+
+        .sign-in-right-side-logo {
+            img {
+                width: 250px;
+            }
+            margin-bottom: 12px;
+        }
     }
 
     .sign-in-form-inputs {
@@ -31,7 +38,7 @@
             width: 100%;
             padding: 12px;
             border-radius: 12px;
-            background-color: variable.$principal-blue;
+            background-color: var(--color-primary);
             color: #ffffff;
             border: none;
             cursor: pointer;
@@ -46,6 +53,7 @@
             border: none;
             cursor: pointer;
         }
+
         .btn-container-secondary {
             display: flex;
             flex-direction: column;
@@ -55,7 +63,7 @@
             button {
                 background: transparent;
                 border: none;
-                color: variable.$principal-gray;
+                color: var(--color-gray);
                 cursor: pointer;
             }
         }

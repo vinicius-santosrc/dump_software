@@ -1,0 +1,79 @@
+@if(loading) {
+    <app-skeleton type="user"></app-skeleton>
+} @else {
+<section class="user-card user-card--interactive user-card--hoverable" [ngClass]="{
+    'user-card--light': theme === 'light',
+    'user-card--dark': theme !== 'light'
+  }" role="button" tabindex="0" aria-label="User profile card">
+
+    <div class="user-card__container user-card__container--flex user-card__container--row">
+
+        <!-- PROFILE IMAGE -->
+        <app-avatar-item [user]="user" [width]="imageWidth" [height]="imageWidth" />
+
+        <!-- USER INFO -->
+        <div class="user-card__info user-card__info--column" (click)="onClickCard()">
+
+            <div class="user-card__header">
+                <span class="user-card__name" [style.fontSize]="fontSize" [title]="user?.fullName">
+                    {{ user?.fullName }} 
+                    @if(user?.verified) {
+                        <mat-icon style="font-size: 14px; width: 14px; height: 14px;">verified</mat-icon>
+                    }
+                </span>
+            </div>
+
+            <div class="user-card__meta">
+                <span class="user-card__username" [style.fontSize]="fontSize" [title]="'@' + user?.username">
+                    {{ '@' + user?.username }}
+                </span>
+            </div>
+        </div>
+
+        <!-- ACTION BUTTON -->
+        @if(showActionButton) {
+        <div class="user-card__actions">
+            @if(actionBtnCheckBox) {
+                <label 
+                    class="checkbox" 
+                    [ngClass]="{ 'checkbox--active': isSelected }"
+                    (click)="onClickCard()">
+                </label>
+            }
+            @else {
+            @if(hasFollowButton) {
+            @if(isFollowing) {
+            <button (click)="handleFollowButtonClick()"
+                class="user-card__following-btn user-card__follow-btn--following" type="button"
+                aria-label="Unfollow user" [disabled]="isFollowLoading">
+                @if(isFollowLoading) {
+                    <app-loader width="16px" height="16px" theme="light"></app-loader>
+                } @else {
+                    {{ 'FEED.CARD.BUTTON.UNFOLLOW' | translate }}
+                }
+            </button>
+            }
+            @else {
+            <button (click)="handleFollowButtonClick()" class="user-card__follow-btn" type="button"
+                aria-label="Follow user" [disabled]="isFollowLoading">
+                @if(isFollowLoading) {
+                    <app-loader width="16px" height="16px" theme="light"></app-loader>
+                } @else {
+                    + {{ 'FEED.CARD.BUTTON.FOLLOW' | translate }}
+                }
+            </button>
+            }
+            }
+            @else {
+            <button (click)="onClickActionButton()" class="user-card__follow-btn" type="button"
+                aria-label="Follow user">
+                {{ buttonText | translate }}
+            </button>
+            }}
+        </div>
+        }
+
+    </div>
+
+</section>
+}

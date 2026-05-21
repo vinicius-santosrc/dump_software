@@ -1,0 +1,265 @@
+/* ===== MODAL WRAPPER ===== */
+.post-modal.overlay {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(12px);
+    z-index: 9999;
+}
+
+.post-modal {
+    .post-content {
+        display: flex;
+        height: 100%;
+        width: 100%;
+
+    }
+
+    display: flex;
+    width: 950px;
+    max-width: 95vw;
+    height: 85vh;
+    background: #fff;
+    border-radius: 20px;
+    overflow: hidden;
+    margin: auto;
+    justify-content: space-between;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    animation: scaleIn 0.2s ease;
+
+    .media {
+        width: 100%;
+    }
+
+    .info {
+        border-radius: 20px;
+        position: relative;
+        margin-top: 0px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        transform: scale(0.95);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* ===== PAGE VERSION ===== */
+.post-page {
+    max-width: 100%;
+    margin: 40px auto;
+    margin-top: 100px;
+    display: flex;
+    gap: 24px;
+    padding: 20px;
+
+    .media {
+        border-radius: 20px;
+        overflow: hidden;
+    }
+
+    .info {
+        background: #fff;
+        position: relative;
+        width: 50%;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+}
+
+/* ===== MEDIA ===== */
+.media {
+    flex: 1;
+    background: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+
+    img,
+    video {
+        width: 100%;
+        object-fit: cover;
+    }
+}
+
+/* ===== INFO ===== */
+.info {
+    width: 350px;
+    padding: 18px;
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.caption {
+    font-size: 14px;
+    line-height: 1.4;
+    color: white;
+}
+
+/* ===== ACTIONS ===== */
+.actions {
+    display: flex;
+    gap: 16px;
+    font-size: 14px;
+
+    span {
+        cursor: pointer;
+        transition: transform 0.2s ease;
+    }
+
+    span:hover {
+        transform: scale(1.1);
+    }
+}
+
+/* ===== COMMENTS ===== */
+.comments {
+    flex: 1;
+    overflow-y: auto;
+    font-size: 13px;
+    padding-right: 4px;
+
+    div {
+        padding: 6px 0;
+        border-bottom: 1px solid #eee;
+    }
+}
+
+.comment-input {
+    position: absolute;
+    width: 90%;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    app-generic-button {
+        margin-bottom: 14px;
+    }
+}
+
+/* ===== CLOSE BUTTON ===== */
+.close-btn {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: rgba(0, 0, 0, 0.6);
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 34px;
+    height: 34px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.close-btn:hover {
+    background: rgba(0, 0, 0, 0.8);
+}
+
+/* ===== SCROLLBAR ===== */
+.comments::-webkit-scrollbar {
+    width: 4px;
+}
+
+.comments::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+}
+
+/* ===== RESPONSIVE ===== */
+
+/* Tablet */
+@media (max-width: 1024px) {
+    .post-modal {
+        width: 90vw;
+        height: 90vh;
+    }
+
+    .post-page {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .post-page .info {
+        width: 100%;
+    }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+
+    .post-modal {
+        width: 100%;
+        height: 100vh;
+        border-radius: 0;
+    }
+
+    .post-modal .post-content {
+        flex-direction: column;
+    }
+
+    .post-page {
+        margin-top: 80px;
+        padding: 10px;
+    }
+
+    .media {
+        height: 50vh;
+    }
+
+    .media img,
+    .media video {
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .info {
+        width: 100%;
+        height: 50vh;
+        padding: 12px;
+        gap: 10px;
+    }
+
+    .comments {
+        font-size: 12px;
+    }
+
+    .close-btn {
+        top: 8px;
+        left: 8px;
+        width: 30px;
+        height: 30px;
+    }
+}
+
+/* Small Mobile */
+@media (max-width: 480px) {
+    .media {
+        height: 45vh;
+    }
+
+    .info {
+        height: 55vh;
+    }
+
+    .caption {
+        font-size: 13px;
+    }
+
+    .actions {
+        gap: 12px;
+    }
+}

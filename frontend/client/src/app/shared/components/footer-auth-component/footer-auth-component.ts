@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, Input } from "@angular/core";
 import { TranslateModule } from "@ngx-translate/core";
 import { TranslationService } from "../../../core/services/translate.service";
 
@@ -10,6 +10,8 @@ import { TranslationService } from "../../../core/services/translate.service";
 })
 
 export class FooterAuthComponent {
+    @Input() showBorder = true;
+    year: number = new Date().getFullYear();
     constructor(
         public translateService: TranslationService
     ) { }

@@ -1,0 +1,28 @@
+<section class="new-conversation">
+    <div class="new-conversation__inside">
+        <div class="new-conversation__header">
+            <h1>{{ 'MESSAGES_INBOX.SIDEBAR.ADD_CONVERSATION.HEADER' | translate }}</h1>
+            <button (click)="close()">
+                <mat-icon>close</mat-icon>
+            </button>
+        </div>
+        <div class="new-conversation__search-input">
+            <app-basic-input iconName="search" (valueChange)="onSearchChange($event)" type="text" label="MESSAGES_INBOX.SIDEBAR.ADD_CONVERSATION.LABEL" (valueChange)="input = $event" />
+        </div>
+        <div class="new-conversation__chats">
+            @if(loading) {
+                <app-loader />
+            }
+            @else {
+            @for(user of userList; track user.id) {
+            <app-generic-card-user [user]="user" [actionBtnCheckBox]="true" [redirectOnClick]="false"
+                (toggleSelection)="onToggleUser($event)" />
+            }
+            }
+        </div>
+        <div class="new-conversation__btn">
+            <app-generic-button [width]="'100%'" (onClick)="createConversation()"
+                [disabled]="selectedUserIds.length == 0" label="MESSAGES_INBOX.SIDEBAR.ADD_CONVERSATION.CREATE" />
+        </div>
+    </div>
+</section>

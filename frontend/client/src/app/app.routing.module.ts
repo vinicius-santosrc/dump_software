@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { NotFoundComponent } from './shared/components/404-page/404.component';
 
 export const routes: Routes = [
     {
@@ -7,9 +8,12 @@ export const routes: Routes = [
         loadChildren: () => import('./pages/pages-routing.module').then(m => m.PagesRoutingModule)
     },
     {
+        path: 'pages/404',
+        component: NotFoundComponent
+    },
+    {
         path: '**',
-        redirectTo: '404',
-        pathMatch: 'full'
+        redirectTo: 'pages/404'
     }
 ];
 

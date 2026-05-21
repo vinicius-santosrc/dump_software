@@ -1,0 +1,119 @@
+.header-component {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 30px 44px;
+    z-index: 0;
+    pointer-events: none;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    border-top: 4px solid rgb(18, 18, 18);
+
+    .header-component-top {
+        pointer-events: auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        .header-component-left {
+            width: 33%;
+        }
+
+        .header-component-center {
+            img {
+                width: 120px;
+            }
+        }
+
+        .header-component-right {
+            display: flex;
+            width: 33%;
+            justify-content: right;
+            align-items: center;
+            gap: 12px;
+
+            .message_btn {
+                background-color: white;
+                border-radius: 24px;
+                box-shadow: 1px 1px 4px lightgray;
+                padding: 6px 12px;
+            }
+
+            button {
+                display: flex;
+                align-items: center;
+                background-color: transparent;
+                border: none;
+                cursor: pointer;
+                gap: 8px;
+
+                mat-icon {
+                    transform: rotateZ(320deg);
+                }
+
+                span {
+                    font-family: 600;
+                    font-size: 16px;
+                }
+
+            }
+
+            .account-details {
+                img {
+                    border-radius: 48px;
+                    width: 48px;
+                    height: 48px;
+                    object-fit: cover;
+
+                }
+            }
+        }
+    }
+}
+
+.header-component.hidden {
+    transform: translateY(-100%);
+    opacity: 0;
+}
+
+@media (max-width: 768px) {
+    .header-component {
+        padding: 12px 16px;
+        border-top: none;
+
+        .header-component-top {
+            .header-component-left {
+                width: 33%;
+            }
+
+            .header-component-center {
+                img {
+                    width: 90px;
+                }
+            }
+
+            .header-component-right {
+                width: 33%;
+                gap: 8px;
+
+                button {
+                    span {
+                        display: none;
+                    }
+                }
+
+                .account-details {
+                    img {
+                        width: 36px;
+                        height: 36px;
+                    }
+                }
+            }
+        }
+    }
+
+    .message-icon {
+        width: 24px;
+        height: 24px;
+    }
+}

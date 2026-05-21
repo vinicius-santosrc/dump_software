@@ -1,0 +1,16 @@
+<div class="reels-inside">
+    <div class="reels-container" (scroll)="onScroll($event)">
+        @for (reel of reels; track reel.id) {
+        <app-dump-item-component class="reel-item" [attr.data-id]="reel.id" [reel]="reel" [isActive]="activeReelId === reel.id" />
+        }
+    </div>
+    <div class="reels-actions-buttons">
+        <button mat-icon-button class="action-button" (click)="scrollToTop()">
+            <mat-icon>keyboard_arrow_up</mat-icon>
+        </button>
+
+        <button mat-icon-button class="action-button" (click)="scrollToBottom()">
+            <mat-icon>keyboard_arrow_down</mat-icon>
+        </button>
+    </div>
+</div>

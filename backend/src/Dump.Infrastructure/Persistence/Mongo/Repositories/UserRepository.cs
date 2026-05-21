@@ -19,15 +19,13 @@ public class UserRepository : IUserRepository
 
     public async Task<User?> GetByEmailAsync(string email)
     {
-        var filter = Builders<User>.Filter.Eq("email", email);
-        var userfounded = await _users.Find(filter).FirstOrDefaultAsync();
+        var userfounded = await _users.Find(u => u.Email == email).FirstOrDefaultAsync();
         return userfounded;
     }
 
     public async Task<User?> GetByPhoneNumberAsync(string phoneNumber)
     {
-        var filter = Builders<User>.Filter.Eq("phoneNumber", phoneNumber);
-        var userfounded = await _users.Find(filter).FirstOrDefaultAsync();
+        var userfounded = await _users.Find(u => u.PhoneNumber == phoneNumber).FirstOrDefaultAsync();
         return userfounded;
     }
     public async Task<User?> GetByUsernameAsync(string username)
@@ -46,5 +44,43 @@ public class UserRepository : IUserRepository
     {
 
         await _users.DeleteOneAsync(u => u.Id == id);
+    }
+
+    public async Task<User[]> GetByIdsAsync(string[] ids)
+    {
+        if (ids == null || ids.Length == 0)
+            return Array.Empty<User>();
+
+        var filter = Builders<User>.Filter.In(u => u.Id, ids);
+        var users = await _users.Find(filter).ToListAsync();
+
+        return users.ToArray();
+    }
+
+    public async Task<User[]> GetRandomUsersAsync(int limit)
+    {
+        if (limit <= 0)
+            return Array.Empty<User>();
+
+        var pipeline = new[]
+        {
+            new BsonDocument("$sample", new BsonDocument("size", limit))
+        };
+
+        var users = await _users.Aggregate<User>(pipeline).ToListAsync();
+
+        return users.ToArray();
+    }
+
+    public async Task<User[]> GetRelatedByCurrentUser(string id)
+    {
+        var usersfounded = await _users.Find(u => u.Id != id).ToListAsync();
+        return usersfounded.ToArray();
+    }
+
+    public async Task UpdateUsers(User currentUser, User targetUser)
+    {
+        await _users.ReplaceOneAsync(u => u.Id == currentUser.Id, currentUser);
+        await _users.ReplaceOneAsync(u => u.Id == targetUser.Id, targetUser);
     }
 }

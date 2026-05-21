@@ -1,0 +1,12 @@
+<div class="user-card__avatar-wrapper user-card__avatar-wrapper--rounded user-card__avatar-wrapper--with-border"
+    [style.width]="width" [style.height]="height" (click)="onClickCard()" [ngClass]="{
+                'user-card__avatar-wrapper--verified': user?.verified,
+                'user-card__avatar-wrapper--default': !user?.profilePictureUrl
+            }" [ngClass]="{'user-card__avatar-wrapper--hasMemorie': seenMemorie}">
+    <img class="user-card__avatar-image" [src]="src && src != '' ? src : (user?.thumbnail || user?.profilePictureUrl || '/assets/app/media/default-avatar.webp')"
+        [alt]="user?.fullName" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false"
+        [style.width]="'100%'" [style.height]="'100%'" (error)="onImageError()" />
+
+    <!-- ONLINE INDICATOR -->
+    <!-- <span class="user-card__avatar-status user-card__avatar-status--online"></span> -->
+</div>

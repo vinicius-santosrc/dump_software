@@ -1,0 +1,44 @@
+<div class="setting-item" (click)="handleClick()" [class.disabled]="disabled">
+
+    <div class="left">
+        <div class="icon" *ngIf="icon">
+            <mat-icon>{{ icon }}</mat-icon>
+        </div>
+
+        <span class="label">
+            {{ label | translate }}
+        </span>
+    </div>
+
+    <div class="right">
+        @if(type == 'normal') {
+        <span class="value" *ngIf="!multiple && selectedItems">
+            {{ selectedItems[displayKey || 'name'] }}
+        </span>
+
+        <mat-icon>
+            chevron_right
+        </mat-icon>
+        }
+        @else {
+          <div 
+            class="toggle" 
+            [class.active]="value === 'true'" 
+            (click)="$event.stopPropagation(); toggle()"
+          >
+            <div class="circle"></div>
+          </div>
+        }
+    </div>
+
+</div>
+
+@if(enableDropdown && isOpen) {
+  <app-dropdown 
+    [items]="dropdownItems"
+    [displayKey]="displayKey || 'name'"
+    [multiple]="multiple"
+    [selectedItems]="selectedItems"
+    (select)="onSelect($event)"
+  />
+}

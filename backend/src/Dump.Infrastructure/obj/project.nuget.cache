@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "BtiH+T3nJzQ=",
+  "dgSpecHash": "vsgkdANVpYE=",
   "success": true,
   "projectFilePath": "/Users/vinicius/Documents/GitHub/dump_software/backend/src/Dump.Infrastructure/Dump.Infrastructure.csproj",
   "expectedPackageFiles": [
@@ -17,7 +17,7 @@
     "/Users/vinicius/.nuget/packages/microsoft.netcore.platforms/5.0.0/microsoft.netcore.platforms.5.0.0.nupkg.sha512",
     "/Users/vinicius/.nuget/packages/microsoft.win32.registry/5.0.0/microsoft.win32.registry.5.0.0.nupkg.sha512",
     "/Users/vinicius/.nuget/packages/mongodb.bson/3.7.1/mongodb.bson.3.7.1.nupkg.sha512",
-    "/Users/vinicius/.nuget/packages/mongodb.driver/3.7.0/mongodb.driver.3.7.0.nupkg.sha512",
+    "/Users/vinicius/.nuget/packages/mongodb.driver/3.2.1/mongodb.driver.3.2.1.nupkg.sha512",
     "/Users/vinicius/.nuget/packages/sharpcompress/0.30.1/sharpcompress.0.30.1.nupkg.sha512",
     "/Users/vinicius/.nuget/packages/snappier/1.0.0/snappier.1.0.0.nupkg.sha512",
     "/Users/vinicius/.nuget/packages/system.buffers/4.5.1/system.buffers.4.5.1.nupkg.sha512",

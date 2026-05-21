@@ -1,0 +1,10 @@
+<div class="card-component" [style.width]="width">
+    <div class="card-component-inside">
+        <div class="card-component-title">
+            <span>{{mainText | translate}}</span>
+        </div>
+        <div class="card-component-content">
+            <ng-content class="card-component-content"></ng-content>
+        </div>
+    </div>
+</div>

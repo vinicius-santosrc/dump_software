@@ -1,0 +1,45 @@
+.create-post {
+    padding: 16px;
+    background: var(--color-background);
+
+    &__header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: var(--color-text);
+
+            h1 {
+                font-size: 16px;
+            }
+    
+            button {
+                background-color: transparent;
+                border: none;
+                cursor: pointer;
+                color: var(--color-text);
+            }
+        }
+
+    &__drop-files {
+        margin: auto;
+        text-align: center;
+        color: var(--color-text);
+        img {
+            width: 328px;
+            margin: 24px 0px;
+        }
+
+        button {
+            background: var(--color-primary);
+            outline: none;
+            cursor: pointer;
+            border-radius: 12px;
+            width: 317px;
+            padding: 12px;
+            border: none;
+            margin: 12px 0px;
+        }
+    }
+
+
+}

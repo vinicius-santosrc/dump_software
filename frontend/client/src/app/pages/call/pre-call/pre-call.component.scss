@@ -1,0 +1,214 @@
+
+
+.pre-call {
+    width: 100%;
+    min-height: 100vh;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #000;
+
+    padding: 32px;
+
+    box-sizing: border-box;
+}
+
+.pre-call-component {
+    width: 100%;
+    max-width: 1180px;
+
+    display: flex;
+    align-items: stretch;
+    gap: 20px;
+}
+
+.pre-call-component__left {
+    flex: 1;
+}
+
+.pre-call-component__preview {
+    position: relative;
+
+    width: 100%;
+    height: 640px;
+
+    border-radius: 18px;
+
+    overflow: hidden;
+
+    background-color: white;
+
+    box-shadow:
+        0 20px 60px rgba(0,0,0,0.45);
+}
+
+.pre-call-component__preview__camera {
+    position: absolute;
+    inset: 0;
+}
+
+.pre-call-component__preview__camera__overlay {
+    position: absolute;
+    inset: 0;
+
+    background:
+        radial-gradient(circle at top, rgba(255,255,255,0.08), transparent 40%),
+        linear-gradient(to bottom, transparent 60%, rgba(0,0,0,0.3));
+}
+
+.pre-call-component__preview__controls {
+    position: absolute;
+
+    left: 50%;
+    bottom: 24px;
+
+    transform: translateX(-50%);
+
+    display: flex;
+    align-items: center;
+    gap: 16px;
+
+    padding: 14px 20px;
+
+    border-radius: 999px;
+
+    background: rgba(20,20,20,0.85);
+
+    backdrop-filter: blur(20px);
+
+    border: 1px solid rgba(255,255,255,0.06);
+}
+
+.control-button {
+    width: 52px;
+    height: 52px;
+
+    border: none;
+    border-radius: 50%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+
+    background: rgba(255,255,255,0.12);
+
+    transition: all 0.2s ease;
+
+    .material-symbols-rounded {
+        color: white;
+        font-size: 24px;
+    }
+
+    &:hover {
+        transform: scale(1.08);
+        background: rgba(255,255,255,0.18);
+    }
+}
+
+.control-button--active {
+    background: rgba(59,130,246,0.85);
+
+    box-shadow:
+        0 0 0 4px rgba(59,130,246,0.2);
+}
+
+.pre-call-component__right {
+    width: 340px;
+
+    border-radius: 18px;
+
+    background: #171717;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 40px 28px;
+
+    box-sizing: border-box;
+}
+
+.pre-call-component__right__content {
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    text-align: center;
+}
+
+.pre-call-component__right__content app-avatar-item {
+    margin-bottom: 22px;
+}
+
+.pre-call-component__right__content__title {
+    margin: 0;
+
+    color: white;
+
+    font-size: 34px;
+    font-weight: 700;
+
+    line-height: 1.1;
+}
+
+.pre-call-component__right__content__description {
+    margin-top: 10px;
+    margin-bottom: 28px;
+
+    color: rgba(255,255,255,0.68);
+
+    font-size: 16px;
+}
+
+.pre-call-component__right__content__button {
+    width: 100%;
+
+    display: flex;
+    justify-content: center;
+}
+
+@media (max-width: 1024px) {
+
+    .pre-call-component {
+        flex-direction: column;
+    }
+
+    .pre-call-component__right {
+        width: 100%;
+    }
+
+    .pre-call-component__preview {
+        height: 500px;
+    }
+}
+
+@media (max-width: 768px) {
+
+    .pre-call {
+        padding: 12px;
+    }
+
+    .pre-call-component__preview {
+        height: 360px;
+    }
+
+    .pre-call-component__right__content__title {
+        font-size: 28px;
+    }
+
+    .pre-call-component__preview__controls {
+        gap: 10px;
+        padding: 10px 14px;
+    }
+
+    .control-button {
+        width: 44px;
+        height: 44px;
+    }
+}

@@ -1,0 +1,12 @@
+.messages {
+    display: flex;
+    height: 90vh;
+    padding-top: 20px;
+    width: 100%;
+}
+
+@media (max-width: 1024px) {
+    .messages {
+        width: 100%;
+    }
+}

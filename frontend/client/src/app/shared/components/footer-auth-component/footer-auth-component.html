@@ -1,5 +1,7 @@
 <footer class="footer-auth">
+    @if(showBorder) {
     <div class="separator"></div>
+    }
     <section class="footer-top fast-links">
         @for (button of actionButtons; track button) {
         <button>{{ button.label | translate }}</button>
@@ -12,6 +14,6 @@
             <option value="en">English (US)</option>
             <option value="es">Español (España)</option>
         </select>
-        <span>&copy; 2024 Dump Software. All rights reserved.</span>
+        <span>&copy; {{year}} Dump Software. All rights reserved.</span>
     </section>
 </footer>

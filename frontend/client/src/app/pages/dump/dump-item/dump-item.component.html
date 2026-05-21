@@ -1,0 +1,47 @@
+<div
+    class="dump"
+    [class.horizontal-video]="isHorizontalVideo">
+
+    @if(!isHorizontalVideo) {
+
+        <div class="dump__header">
+            <app-post-header
+                [user]="reel.user"
+                [post]="reel"
+                [caption]="reel.caption"
+                [theme]="theme"
+                [showOptions]="false" />
+        </div>
+    }
+
+    <div class="dump__inside">
+
+        <div class="dump__content">
+
+            <div class="dump__media">
+                <app-post-media [media]="reel.media" />
+            </div>
+
+            @if(isHorizontalVideo) {
+
+                <div class="dump__bottom-header">
+                    <app-post-header
+                        [user]="reel.user"
+                        [post]="reel"
+                        [caption]="reel.caption"
+                        [theme]="theme"
+                        [showOptions]="false" />
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="dump__action-buttons" [class.actions-vertical-video]='!isHorizontalVideo'>
+        <div class="action-button">
+            <app-post-action-buttons
+                [post]="reel"
+                type="reel"
+                [showOptions]="true" />
+        </div>
+    </div>
+</div>

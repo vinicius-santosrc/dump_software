@@ -1,0 +1,32 @@
+.new-conversation {
+    padding: 16px;
+
+    &__header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        button {
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+        }
+    }
+
+    &__chats {
+        overflow-y: scroll;
+        max-height: 53.3vh;
+    }
+
+    &__search-input {
+        margin: 16px 0px;
+    }
+
+    &__btn {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+
+    }
+}

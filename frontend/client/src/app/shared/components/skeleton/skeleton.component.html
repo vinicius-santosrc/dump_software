@@ -1,0 +1,58 @@
+@if(type === 'post') {
+<div class="post">
+    <div class="header">
+        <div class="avatar"></div>
+        <div class="info">
+            <div class="line short"></div>
+            <div class="line smaller"></div>
+        </div>
+    </div>
+
+    <div class="media"></div>
+
+    <div class="actions">
+        <div class="line"></div>
+        <div class="line small"></div>
+    </div>
+</div>
+}
+
+<!-- USER -->
+@if(type === 'user') {
+<div class="user">
+    <div class="avatar"></div>
+    <div class="line short"></div>
+</div>
+}
+
+<!-- STORY -->
+@if(type === 'story') {
+<div class="story">
+    <div class="circle"></div>
+</div>
+}
+
+<!-- COMMENT (com avatar + 2 linhas) -->
+@if(type === 'comment') {
+<div class="comment">
+    <div class="avatar"></div>
+    <div class="content">
+        <div class="line short"></div>
+        <div class="line"></div>
+    </div>
+</div>
+}
+
+<!-- COMMENT SIMPLE (apenas linhas) -->
+@if(type === 'commentSimple') {
+<div class="comment-simple">
+    <div class="line short"></div>
+    <div class="line"></div>
+</div>
+}
+
+<!-- GENERIC -->
+@if(type === 'generic') {
+<div class="generic" [style.width]="width" [style.height]="height">
+</div>
+}

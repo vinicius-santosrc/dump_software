@@ -1,0 +1,26 @@
+<div class="post-title">
+    <div class="account-post-detail">
+        <app-generic-card-user 
+            [user]="user" 
+            [theme]="theme" 
+            [style.width]="'100%'"
+            imageWidth="42px"
+            fontSize="14px"
+        />
+        @if(showOptions) {
+        <button (click)="options()" mat-icon-button><mat-icon [style.color]="theme == 'dark' ? 'white' : 'black'">more_horiz</mat-icon></button>
+        }
+    </div>
+
+    <div class="post-media-caption" [id]="isModal ? 'light' : 'dark'">
+        <app-generic-text
+            [text]="caption || ''"
+            [theme]="theme"
+            [expandable]="true"
+            [maxCharacters]="180"
+            [clickableMentions]="true"
+            [clickableHashtags]="true"
+            [clickableLinks]="true"
+        />
+    </div>
+</div>

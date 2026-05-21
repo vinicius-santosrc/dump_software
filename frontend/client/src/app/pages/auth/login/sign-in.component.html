@@ -16,10 +16,7 @@
             </div>
             <div class="sign-in-right-side-join-google">
                 @if(pageType !== "forgotpassword") {
-                <button>
-                    <img [src]="googleIcon" alt="Google Icon" />
-                    {{ 'AUTH.GOOGLE_SIGN_IN' | translate }}
-                </button>
+                    <app-generic-button [disabled]="true" [width]="'100%'" [padding]="'12px'" [label]="'AUTH.GOOGLE_SIGN_IN'" variant="secondary" [logoIcon]="googleIcon" iconName="google" ></app-generic-button>
                 }
             </div>
             <div class="separator"></div>
@@ -34,20 +31,20 @@
                 </div>
             </div>
             <div class="btn-container">
-                <button [disabled]="isButtonDisabled()" (click)="handlePressSign()" id="sign-in-button">{{ pageType ===
-                    'signin' ? ('AUTH.BUTTONS.SIGN_IN' | translate) : (
-                        pageType == "forgotpassword" ? 
-                        ('AUTH.BUTTONS.CONTINUE' | translate)
-                        :
-                        ('AUTH.BUTTONS.SIGN_UP' | translate)
-                    ) }}</button>
+                <app-generic-button
+                    [width]="'100%'"
+                    [padding]="'12px'"
+                    [disabled]="isButtonDisabled()"
+                    [loading]="loading"
+                    (click)="handlePressSign()"
+                    [label]="pageType === 'signin' ? 'AUTH.BUTTONS.SIGN_IN' : (pageType === 'forgotpassword' ? 'AUTH.BUTTONS.CONTINUE' : 'AUTH.BUTTONS.SIGN_UP')">
+                </app-generic-button>
                 <div class="btn-container-secondary">
                     @if(pageType === 'signin') {
-                    <button (click)="redirectPage(true)">{{ 'AUTH.BUTTONS.FORGOT_PASSWORD' | translate }}</button>
-                    <button (click)="redirectPage()">{{ 'AUTH.BUTTONS.SIGN_UP' | translate }}</button>
+                    <app-generic-button [variant]="'ghost'" [padding]="'0px'" (click)="redirectPage(true)" [label]="'AUTH.BUTTONS.FORGOT_PASSWORD' | translate"></app-generic-button>
+                    <app-generic-button [variant]="'ghost'" [padding]="'0px'" (click)="redirectPage()" [label]="'AUTH.BUTTONS.SIGN_UP' | translate"></app-generic-button>
                     } @else {
-                    <button (click)="redirectPage()">{{ 'AUTH.BUTTONS.SIGN_IN_ALREADY_HAVE_ACCOUNT' | translate
-                        }}</button>
+                        <app-generic-button [variant]="'ghost'" [padding]="'0px'" (click)="redirectPage()" [label]="'AUTH.BUTTONS.SIGN_IN_ALREADY_HAVE_ACCOUNT' | translate" />
                     }
                 </div>
             </div>

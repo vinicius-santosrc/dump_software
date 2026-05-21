@@ -1,0 +1,134 @@
+.message__bubble--post {
+  padding: 8px;
+}
+
+.post-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.post-label {
+  font-size: 11px;
+  color: #65676b;
+  white-space: pre-line;
+  word-break: break-word;
+}
+
+.post-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border-radius: 10px;
+  max-width: 260px;
+  cursor: pointer;
+}
+
+.media-post {
+  width: 260px;
+  height: auto;
+}
+
+.post-image {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.post-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.post-info p {
+  font-size: 12px;
+  margin: 2px 0 0;
+  white-space: pre-line;
+  word-break: break-word;
+}
+
+
+.message {
+  display: flex;
+  width: 100%;
+
+  &.me {
+    justify-content: flex-end;
+  }
+
+  &:not(.me) {
+    justify-content: flex-start;
+  }
+
+  &__avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin: 0px 8px;
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__name {
+    font-size: 11px;
+    color: #65676b;
+    margin-left: 4px;
+    margin-bottom: 2px;
+  }
+
+  &__bubble {
+    max-width: 100%;
+    padding: 10px 14px;
+    border-radius: 20px;
+    background: #e4e6eb;
+    font-size: 14px;
+    line-height: 1.4;
+    animation: fadeInUp 0.25s ease;
+    transform-origin: left bottom;
+    white-space: pre-line;
+    word-break: break-word;
+  }
+
+  &__bubble--mine {
+    background: #2a2a2a;
+    color: #fff;
+    transform-origin: right bottom;
+    white-space: pre-line;
+    word-break: break-word;
+  }
+}
+
+.story-card {
+  padding: 12px;
+  border-radius: 12px;
+  background: #1f1f1f;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.message__bubble--deleted {
+  opacity: 0.7;
+  font-style: italic;
+}
+
+.message-deleted {
+  color: #9ca3af;
+}
+
+.message-unavailable {
+  padding: 16px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  font-size: 13px;
+  color: #9ca3af;
+  text-align: center;
+}

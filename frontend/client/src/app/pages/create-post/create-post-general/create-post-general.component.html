@@ -1,0 +1,30 @@
+<main class="create-new-post__inside">
+    <div class="create-new-post__photo-content">
+        <app-post-carousel [media]="files" [isPreview]="true" [getPreview]="getPreview.bind(this)"></app-post-carousel>
+        <app-generic-button [label]="'CREATE_POST.BUTTON.ADD_MEDIA'" iconName="image" (onClick)="addMoreFiles()" />
+    </div>
+
+    <div class="create-new-post__details">
+        <app-basic-input [resizableY]="true" [label]="'CREATE_POST.CAPTION'" type="textarea"
+            (valueChange)="post.caption = $event" />
+
+        <app-setting-item label="CREATE_POST.FIELDS.AUDIO" icon="music_note" [action]="openAudio" [disabled]="true" />
+
+        <app-setting-item label="CREATE_POST.FIELDS.TAG_PEOPLE" icon="person_add" [enableDropdown]="true" [dropdownItems]="users"
+            [displayKey]="'username'" [multiple]="true" [action]="tagPeople" [disabled]="true" />
+
+        <app-setting-item label="CREATE_POST.FIELDS.LOCATION" icon="location_on" [enableDropdown]="true"
+            [dropdownItems]="locations" [action]="tagPeople" [disabled]="true" />
+
+        <app-setting-item label="CREATE_POST.FIELDS.IA" icon="smart_toy" [disabled]="true" />
+
+        <app-setting-item label="CREATE_POST.FIELDS.PUBLIC" value="Todos" icon="public" [disabled]="true" />
+
+        <app-setting-item label="CREATE_POST.FIELDS.TOGGLE_COMMENTS" icon="comment" [disabled]="false" type="toggle" />
+
+        <app-setting-item label="CREATE_POST.FIELDS.HIDE_LIKES" icon="favorite" [disabled]="false" type="toggle" />
+
+        <app-generic-button label="CREATE_POST.BUTTON.SHARE" [loading]="loading" (onClick)="sharePost()" width="100%"
+            padding="10px"></app-generic-button>
+    </div>
+</main>

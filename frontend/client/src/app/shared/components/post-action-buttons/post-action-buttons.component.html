@@ -1,0 +1,39 @@
+<div class="post-actions" [ngClass]="{
+        'post-actions--light': theme === 'light',
+        'post-actions--dark': theme !== 'light',
+        'post-actions--reel': type === 'reel'
+     }">
+    <button (click)="handleLike(post?.id)">
+        <mat-icon class="heart" [class.liked]="liked"
+            [fontSet]="liked ? 'material-icons-outlined' : 'material-symbols-outlined'">favorite</mat-icon>
+        <span [class.like-up]="liked" [class.like-down]="!liked">{{post?.likes?.length}}</span>
+    </button>
+    <button (click)="handleComment(post)">
+        <!-- <img [src]="'/assets/app/media/icons/comment.svg'" alt="" /> -->
+        <mat-icon [fontSet]="'material-symbols-outlined'" class="commenticon"
+            [fontSet]="'material-symbols-rounded'">mode_comment</mat-icon>
+        <span>{{post?.comments?.length}}</span>
+    </button>
+    <button (click)="handleRepost()">
+        <mat-icon [fontSet]="'material-symbols-outlined'" class="reposticon"
+            [fontSet]="'material-symbols-rounded'">repeat</mat-icon>
+        <!-- <img [src]="'/assets/app/media/icons/repost.svg'" alt="" /> -->
+        <span>{{post?.saves?.length}}</span>
+    </button>
+    <button (click)="handleSend()">
+        <mat-icon [fontSet]="'material-symbols-outlined'" class="sendicon"
+            [fontSet]="'material-symbols-rounded'">send</mat-icon>
+        <!-- <img [src]="'/assets/app/media/icons/share.svg'" alt="" /> -->
+    </button>
+    <button (click)="handleSave()">
+        <!-- <img [src]="'/assets/app/media/icons/save.svg'" alt="" /> -->
+        <mat-icon [fontSet]="'material-symbols-outlined'" class="saveicon" [fontSet]="'material-symbols-rounded'">{{
+            saved
+            ? 'bookmark' : 'bookmark_border' }}</mat-icon>
+    </button>
+    @if(showOptions) {
+    <button (click)="options()">
+        <mat-icon class="optionsicon" [fontSet]="'material-symbols-rounded'">more_horiz</mat-icon>
+    </button>
+    }
+</div>

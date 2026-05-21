@@ -1,0 +1,174 @@
+.user-card {
+  width: 100%;
+  padding: 10px 0px;
+  border-radius: 14px;
+  transition: all 0.25s ease;
+  cursor: pointer;
+  // color: var(--color-text);
+}
+
+/* CONTAINER */
+.user-card__container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+/* ONLINE STATUS */
+.user-card__avatar-status {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  z-index: 1;
+  background: #00924e;
+}
+
+/* INFO */
+.user-card__info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 30%;
+}
+
+.user-card__header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.user-card__name {
+  font-weight: 600;
+  // color: var(--color-text);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.user-card__badge {
+  font-size: 12px;
+  color: var(--color-primary);
+}
+
+.user-card__meta {
+  display: flex;
+  gap: 6px;
+  font-size: 12px;
+}
+
+.user-card__username {
+  // color: #aaa;
+  color: var(--color-text-secondary);
+  font-size: 12px;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.user-card__followers {
+  // color: #666;
+  color: var(--color-text-secondary);
+}
+
+/* ACTIONS */
+.user-card__actions {
+  display: flex;
+  align-items: center;
+
+  .checkbox {
+    width: 30px;
+    height: 30px;
+    border: 1px solid #1881E2;
+    border-radius: 50%;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.2s ease;
+  }
+
+  .checkbox--active {
+    background: #1881E2;
+  }
+
+  .checkbox--active::after {
+    content: '✓';
+    position: absolute;
+    color: #fff;
+    font-size: 16px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
+
+.user-card__follow-btn {
+  background: var(--color-primary);
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  width: 100px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.user-card__following-btn {
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(12px);
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100px;
+  transition: all 0.2s ease;
+}
+
+/* DARK MODE BASE */
+:host {
+  display: block;
+}
+
+/* LIGHT THEME */
+.user-card--light {
+  .user-card__name {
+    color: var(--color-text);
+  }
+
+  .user-card__username {
+    color: var(--color-text-secondary);
+  }
+
+  .user-card__followers {
+    color: var(--color-text-secondary);
+  }
+}
+
+/* DARK THEME (default already applied, but explicit for consistency) */
+.user-card--dark {
+  .user-card__name {
+    color: var(--color-text);
+  }
+
+  .user-card__username {
+    color: var(--color-text-secondary);
+  }
+
+  .user-card__followers {
+    color: var(--color-text-secondary);
+  }
+}

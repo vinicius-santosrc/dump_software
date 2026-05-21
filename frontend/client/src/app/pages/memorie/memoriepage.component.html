@@ -1,0 +1,76 @@
+<section class="memorie-page">
+    <button class="memorie-page__close" type="button" aria-label="Fechar stories" (click)="closeViewer()">
+        <mat-icon>close</mat-icon>
+    </button>
+
+    <div class="memorie-page__inside">
+        <button type="button" class="memorie-page__side-card memorie-page__side-card--left"
+            (click)="goToPreviousGroup()" aria-label="Abrir stories anteriores">
+            @if (previousGroup && previousGroup.stories.length > 0) {
+            <div class="memorie-page__side-overlay"></div>
+            <img class="memorie-page__side-image"
+                [src]="previousGroup.stories?.[0]?.thumbnail || previousGroup.stories?.[0]?.photoUrl || 'assets/app/media/default-avatar.webp'"
+                [alt]="previousGroup.user?.username || 'story anterior'" />
+
+            <div class="memorie-page__side-user">
+                <img class="memorie-page__side-avatar"
+                    [src]="previousGroup.user?.profilePictureUrl || 'assets/app/media/default-avatar.webp'"
+                    [alt]="previousGroup.user?.username || 'avatar'" />
+                <div class="memorie-page__side-meta">
+                    <strong>{{ previousGroup.user?.username }}</strong>
+                    <span>{{ previousGroup.stories?.length || 0 }} stories</span>
+                </div>
+            </div>
+            }
+        </button>
+
+        <div class="action-page-controller">
+            <button mat-icon-button (click)="prevStory()"><mat-icon>arrow_back</mat-icon></button>
+        </div>
+
+        <div class="memorie-page__content">
+            @if (activeGroup && activeStory) {
+            <div class="memorie-page__progress">
+                @for (story of activeGroup.stories; track story.id; let index = $index) {
+                <div class="memorie-page__progress-item">
+                    <span class="memorie-page__progress-bar"
+                        [class.memorie-page__progress-bar--active]="index <= activeStoryIndex"></span>
+                </div>
+                }
+            </div>
+
+            <header class="memorie-page__header">
+
+            </header>
+
+            <div class="memorie-page__viewer">
+                <app-memorie-card [memorie]="activeStory" />
+            </div>
+            }
+        </div>
+
+        <div class="action-page-controller">
+            <button mat-icon-button (click)="nextStory()"><mat-icon>arrow_forward</mat-icon></button>
+        </div>
+
+        <button type="button" class="memorie-page__side-card memorie-page__side-card--right" (click)="goToNextGroup()"
+            aria-label="Abrir próximos stories">
+            @if (nextGroup && nextGroup.stories.length > 0) {
+            <div class="memorie-page__side-overlay"></div>
+            <img class="memorie-page__side-image"
+                [src]="nextGroup.stories?.[0]?.thumbnail || nextGroup.stories?.[0]?.photoUrl || 'assets/app/media/default-avatar.webp'"
+                [alt]="nextGroup.user?.username || 'próximo story'" />
+
+            <div class="memorie-page__side-user">
+                <img class="memorie-page__side-avatar"
+                    [src]="nextGroup.user?.profilePictureUrl || 'assets/app/media/default-avatar.webp'"
+                    [alt]="nextGroup.user?.username || 'avatar'" />
+                <div class="memorie-page__side-meta">
+                    <strong>{{ nextGroup.user?.username }}</strong>
+                    <span>{{ nextGroup.stories?.length || 0 }} stories</span>
+                </div>
+            </div>
+            }
+        </button>
+    </div>
+</section>

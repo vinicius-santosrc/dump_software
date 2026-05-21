@@ -1,0 +1,120 @@
+.post-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    button {
+        background-color: transparent;
+        border: none;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        cursor: pointer;
+        padding: 12px 12px;
+        color: inherit;
+        transition: 300ms;
+
+        mat-icon:hover {
+            transform: scale(1.1);
+        }
+    }
+}
+
+.heart {
+    transition: transform 0.2s ease, color 0.3s ease;
+    height: 44px !important;
+}
+
+.heart.liked {
+    color: #1881E2;
+    fill: #1881E2;
+    transform: scale(1.2);
+}
+
+.like-up {
+    animation: likeUp 0.3s ease;
+}
+
+.like-down {
+    animation: likeDown 0.3s ease;
+}
+
+@keyframes likeUp {
+    0% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+
+    50% {
+        transform: translateY(-6px);
+        opacity: 0.6;
+    }
+
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes likeDown {
+    0% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+
+    50% {
+        transform: translateY(6px);
+        opacity: 0.6;
+    }
+
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* LIGHT THEME */
+.post-actions--light {
+    button {
+        color: #111;
+    }
+
+    .heart {
+        color: #111;
+    }
+
+    span {
+        color: #333;
+    }
+}
+
+/* DARK THEME */
+.post-actions--dark {
+    button {
+        color: #fff;
+    }
+
+    .heart {
+        color: #fff;
+    }
+
+    span {
+        color: #ccc;
+    }
+}
+
+.post-actions--reel {
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+
+    button {
+        flex-direction: column;
+        gap: 2px;
+        padding: 8px;
+
+        span {
+            font-size: 12px;
+        }
+    }
+}

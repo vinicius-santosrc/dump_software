@@ -1,0 +1,38 @@
+/* GRID IG */
+.posts-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 3px;
+    margin-top: 10px;
+}
+
+.post-card {
+    position: relative;
+    aspect-ratio: 1/1;
+    overflow: hidden;
+
+    img,
+    video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .overlay {
+        position: absolute;
+        cursor: pointer;
+        inset: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 16px;
+        background: rgba(0, 0, 0, 0.4);
+        color: white;
+        opacity: 0;
+        transition: 0.2s;
+    }
+
+    &:hover .overlay {
+        opacity: 1;
+    }
+}

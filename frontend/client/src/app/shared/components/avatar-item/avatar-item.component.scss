@@ -1,0 +1,43 @@
+/* AVATAR */
+.user-card__avatar-wrapper {
+    position: relative;
+    width: 36px;
+    height: 36px;
+    border-radius: 00%;
+    overflow: hidden;
+    margin: auto;
+    cursor: pointer;
+}
+
+.user-card__avatar-image {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.user-card__avatar-wrapper--hasMemorie {
+    position: relative;
+    padding: 3px;
+    border-radius: 50%;
+    background: linear-gradient(45deg,
+            #feda75,
+            #fa7e1e,
+            #d62976,
+            #962fbf,
+            #4f5bd5)
+}
+
+.user-card__avatar-wrapper--hasMemorie::before {
+    content: '';
+    position: absolute;
+    inset: 2px;
+    background: var(--background, #fff);
+    border-radius: 50%;
+    z-index: 0;
+}
+
+.user-card__avatar-wrapper--hasMemorie .user-card__avatar-image {
+    position: relative;
+    z-index: 1;
+}

@@ -15,7 +15,6 @@ export const authGuard: CanActivateFn = () => {
         return false;
     }
 
-    // 🔥 aqui está o segredo
     return userService.loadUser().pipe(
         map(() => true),
         catchError(() => {

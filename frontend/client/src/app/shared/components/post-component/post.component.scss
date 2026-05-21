@@ -1,0 +1,121 @@
+article {
+    margin: auto;
+    width: 100%;
+    border-radius: 12px;
+    // border: 1px solid lightgray;
+    border: 1px solid var(--color-border);
+    transition: background-color 0.3s ease, color 0.3s ease;
+
+    img {
+        width: 100%;
+        object-fit: cover;
+    }
+
+    .post-title {
+        padding: 12px 20px;
+    }
+
+    .post-media-caption {
+        margin: 16px 0px;
+    }
+
+    .account-post-detail {
+        display: flex;
+        width: 100%;
+    }
+}
+
+.video-container {
+    position: relative;
+
+    video {
+        width: 100%;
+        object-fit: cover;
+        min-height: 200px;
+    }
+
+    .video-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(0, 0, 0, 0.2);
+
+        .center-icon {
+            scale: 3;
+            color: rgba(255, 255, 255, 0.638);
+        }
+    }
+
+    .volume-btn {
+        position: absolute;
+        bottom: 12px;
+        right: 12px;
+        background: rgba(0, 0, 0, 0.5);
+        border: none;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+
+        mat-icon {
+            color: white;
+        }
+    }
+}
+
+/* MOBILE RESPONSIVE */
+@media (max-width: 768px) {
+
+    article {
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+    }
+
+    .post-title {
+        padding: 10px 12px;
+    }
+
+    .post-media-caption {
+        margin: 10px 0;
+        font-size: 14px;
+    }
+
+    .video-container video {
+        min-height: 180px;
+    }
+
+    .carousel-btn {
+        width: 40px;
+    }
+
+    .carousel-btn span {
+        font-size: 22px;
+    }
+
+    .carousel-dots {
+        bottom: 6px;
+    }
+
+    .dot {
+        width: 6px;
+        height: 6px;
+    }
+
+    .volume-btn {
+        width: 32px;
+        height: 32px;
+    }
+
+    .video-overlay .center-icon {
+        scale: 2;
+    }
+}

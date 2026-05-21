@@ -12,11 +12,12 @@ import { FooterAuthComponent } from "../../../shared/components/footer-auth-comp
 import { FormsModule } from '@angular/forms';
 import { Router } from "@angular/router";
 import { AuthService } from "../../../core/services/auth/auth.service";
+import { GenericButtonComponent } from "../../../shared/components/generic-button-component/generic-button.component";
 
 @Component({
     selector: "app-sign-in",
     templateUrl: "./sign-in.component.html",
-    imports: [BasicInputComponent, TranslateModule, FooterAuthComponent, FormsModule],
+    imports: [BasicInputComponent, TranslateModule, FooterAuthComponent, FormsModule, GenericButtonComponent],
     styleUrl: "./sign-in.component.scss"
 })
 
@@ -35,6 +36,7 @@ export class SignInComponent implements OnInit {
     }
 
     public sideImage: string = '';
+    public loading: boolean = false;
 
     inputs: any = {
         user_or_cellphone_or_email: '',
@@ -169,21 +171,29 @@ export class SignInComponent implements OnInit {
     }
 
     handlePressSign(): void {
+        if (this.loading) {
+            return;
+        }
+
         if (this.pageType === 'signin') {
+            this.loading = true;
             // Lógica para login
             this.authService.login({
                 user_or_cellphone_or_email: this.inputs.user_or_cellphone_or_email,
                 password: this.inputs.password
             }).subscribe({
                 next: (res) => {
+                    this.loading = false;
                     // this.authService.setToken(res.token);
-                    console.log('Login sucesso', res);
+                    this.router.navigate(["/"])
                 },
                 error: (err) => {
+                    this.loading = false;
                     console.error('Erro', err);
                 }
             });
         } else if(this.pageType === 'signup') {
+            this.loading = true;
             this.authService.register({
                 email_or_cellphone: this.inputs.email_or_cellphone,
                 password: this.inputs.password,
@@ -191,9 +201,11 @@ export class SignInComponent implements OnInit {
                 dateOfBirth: this.inputs.date_of_birth
             }).subscribe({
                 next: (res) => {
+                    this.loading = false;
                     // this.authService.setToken(res.token);
                 },
                 error: (err) => {
+                    this.loading = false;
                     console.error('Erro', err);
                 }
             });
