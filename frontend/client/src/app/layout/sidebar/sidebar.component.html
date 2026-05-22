@@ -67,7 +67,7 @@
     <a (click)="item?.action(); selected = item.icon" [routerLink]="item.isLink ? item.route : null" routerLinkActive="active"
         class="mobile-item">
         @if(item.iconUrl && item.iconUrl != "") {
-        <img [src]="item.iconUrl" alt="" [class.selected-svg]="isSelected(item)" />
+        <img [src]="item.iconUrl" alt="" class="iconImage" [class.selected-svg]="isSelected(item)" />
         }
         @else {
         <mat-icon [fontSet]="'material-symbols-rounded'">{{item.icon}}</mat-icon>

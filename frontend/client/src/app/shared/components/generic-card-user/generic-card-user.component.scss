@@ -146,7 +146,7 @@
 /* LIGHT THEME */
 .user-card--light {
   .user-card__name {
-    color: var(--color-text);
+    color: black;
   }
 
   .user-card__username {
@@ -161,7 +161,7 @@
 /* DARK THEME (default already applied, but explicit for consistency) */
 .user-card--dark {
   .user-card__name {
-    color: var(--color-text);
+    color: white;
   }
 
   .user-card__username {

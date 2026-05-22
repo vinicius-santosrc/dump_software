@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { UserService } from '../../core/services/user/user.service';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable, shareReplay } from 'rxjs';
 import { PostsService } from '../../core/services/post/post.service';
 
 @Injectable({
@@ -10,14 +10,25 @@ export class ProfileComponentService {
 
   private readonly backgroundColorSubject = new BehaviorSubject<string>('#ffffff');
   backgroundColor$ = this.backgroundColorSubject.asObservable();
-
+  private readonly profileCache = new Map<string, Observable<any>>();
+  private readonly postsCache = new Map<string, Observable<any>>();
+  
     constructor(
         private readonly userService: UserService,
         private readonly postsService: PostsService
   ) {}
 
   getUserByUsername(username: string) {
-    return this.userService.getUserByUsername(username);
+
+    if (this.profileCache.has(username)) {
+      return this.profileCache.get(username)!;
+    }
+
+    const request = this.userService.getUserByUsername(username);
+
+    this.profileCache.set(username, request);
+
+    return request;
   }
 
   setBackgroundFromImage(imageUrl: string, username?: string) {
@@ -113,6 +124,17 @@ export class ProfileComponentService {
   }
     
     public getPostsByUser(userId: string): any {
-        return this.postsService.getByUser(userId);
+
+        if (this.postsCache.has(userId)) {
+            return this.postsCache.get(userId)!;
+        }
+
+        const request = this.postsService.getByUser(userId).pipe(
+            shareReplay(1)
+        );
+
+        this.postsCache.set(userId, request);
+
+        return request;
     }
 }

@@ -17,6 +17,7 @@ import { MatMenuModule } from "@angular/material/menu";
 import { WHITE_LIST_NAVIGATIONS } from "../../core/config/api.config";
 import { AuthService } from "../../core/services/auth/auth.service";
 import { NotificationsSidebarComponent } from "./notifications-sidebar/notifications-sidebar.component";
+import { UserService } from "../../core/services/user/user.service";
 interface NavigationLink {
     icon: string;
     iconUrl?: string
@@ -44,10 +45,11 @@ export class SidebarComponent {
         notifications: false
     };
     showSidebar: boolean = true;
+    current_user: any = {};
     isMessagePage: boolean = globalThis.location.pathname === "/messages/inbox";
     selected: string = 'home';
     isInConversations: boolean = globalThis.location.pathname.startsWith("/messages/inbox");
-    constructor(private readonly dialog: MatDialog, private readonly router: Router, private readonly authService: AuthService) {
+    constructor(private readonly dialog: MatDialog, private readonly router: Router, private readonly authService: AuthService, private readonly userService: UserService) {
         if (WHITE_LIST_NAVIGATIONS.some(route => globalThis.location.pathname.startsWith(route))) {
             this.showSidebar = false;
         }
@@ -58,6 +60,7 @@ export class SidebarComponent {
                 this.isMessagePage = url === "/messages/inbox";
             }
         });
+        this.current_user = this.userService.getUser();
     }
 
     isSelected(item: any): boolean {
@@ -211,52 +214,52 @@ export class SidebarComponent {
         }
     ]
 
-    mobileNavigationLinks = [
-        {
-            icon: "home",
-            route: "/",
-            isLink: true,
-            label: "HEADER.ACTIONS.SIDEBAR.HOME"
-        },
-        {
-            icon: "movie",
-            iconUrl: '/assets/app/media/icons/reels.svg',
-            route: "/dumps",
-            isLink: true,
-            label: "HEADER.ACTIONS.SIDEBAR.DUMPS"
-        },
-        {
-            icon: "add_circle",
-            iconUrl: '/assets/app/media/icons/create.svg',
-            route: "/create",
-            label: "HEADER.ACTIONS.SIDEBAR.ADD_POST",
-            isLink: false,
-            action: () => {
-                this.dialog.open(CreatePostComponent, {
-                    minWidth: this.isMobile ? '100%' : '1000px',
-                });
+    get mobileNavigationLinks() {
+        return [
+            {
+                icon: "home",
+                route: "/",
+                isLink: true,
+                label: "HEADER.ACTIONS.SIDEBAR.HOME"
             },
-        },
-        {
-            icon: "search",
-            iconUrl: '/assets/app/media/icons/search.svg',
-            route: "/search",
-            isLink: false,
-            label: "HEADER.ACTIONS.SIDEBAR.SEARCH",
-            action: () => {
-                this.handleSearchClick();
-            }
-        },
-        {
-            icon: "favorite",
-            route: "/alerts",
-            isLink: false,
-            label: "HEADER.ACTIONS.SIDEBAR.ALERTS",
-            action: () => {
-                this.handleNotificationsClick();
-            }
-        },
-    ];
+            {
+                icon: "movie",
+                // iconUrl: '/assets/app/media/icons/reels.svg',
+                route: "/dumps",
+                isLink: true,
+                label: "HEADER.ACTIONS.SIDEBAR.DUMPS"
+            },
+            {
+                icon: "add_circle",
+                // iconUrl: '/assets/app/media/icons/create.svg',
+                route: "/create",
+                label: "HEADER.ACTIONS.SIDEBAR.ADD_POST",
+                isLink: false,
+                action: () => {
+                    this.dialog.open(CreatePostComponent, {
+                        minWidth: this.isMobile ? '100%' : '1000px',
+                    });
+                },
+            },
+            {
+                icon: "search",
+                // iconUrl: '/assets/app/media/icons/search.svg',
+                route: "/search",
+                isLink: false,
+                label: "HEADER.ACTIONS.SIDEBAR.SEARCH",
+                action: () => {
+                    this.handleSearchClick();
+                }
+            },
+            {
+                icon: "person",
+                iconUrl: this.current_user?.thumbnail,
+                route: '/' + this.current_user?.username,
+                isLink: true,
+                label: "HEADER.ACTIONS.SIDEBAR.SEARCH",
+            },
+        ];
+    }
 
     handleOpenSideBar() {
         this.isSidebarOpen = !this.isSidebarOpen;

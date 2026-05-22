@@ -13,6 +13,7 @@ import { shareReplay } from 'rxjs/operators';
 export class PostsService {
     private readonly API = '/api/v1/posts';
     private readonly feedCache = new Map<string, Observable<any>>();
+    private readonly dumpsCache = new Map<string, Observable<any>>();
 
     constructor(private readonly http: HttpClient, private readonly commentsService: CommentsService, private readonly userService: UserService) { }
 
@@ -43,7 +44,20 @@ export class PostsService {
     }
 
     public getDumpsByCurrentUser(id: string) {
-        return this.http.get(`${API_CONFIG.baseUrl}${this.API}/dumps/getByUser/${id}`);
+
+        if (this.dumpsCache.has(id)) {
+            return this.dumpsCache.get(id)!;
+        }
+
+        const request = this.http.get(
+            `${API_CONFIG.baseUrl}${this.API}/dumps/getByUser/${id}`
+        ).pipe(
+            shareReplay(1)
+        );
+
+        this.dumpsCache.set(id, request);
+
+        return request;
     }
 
     public getById(id: string) {
@@ -84,5 +98,6 @@ export class PostsService {
 
     public clearFeedCache() {
         this.feedCache.clear();
+        this.dumpsCache.clear();
     }
 }

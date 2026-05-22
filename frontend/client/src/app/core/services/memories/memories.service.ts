@@ -9,13 +9,26 @@ import { API_CONFIG } from "../../config/api.config";
 export class MemoriesService {
     private readonly API = '/api/v1/memories';
     private readonly userStoriesCache = new Map<string, any[]>();
+    private readonly feedCache = new Map<string, any[]>();
 
     constructor(private readonly http: HttpClient) { }
 
     public async getFeed(currentUserId: string) {
-        return await firstValueFrom(
+
+        if (this.feedCache.has(currentUserId)) {
+            return this.feedCache.get(currentUserId);
+        }
+
+        const response = await firstValueFrom(
             this.http.get<any[]>(`${API_CONFIG.baseUrl}${this.API}/feed/${currentUserId}`)
         );
+
+        this.feedCache.set(
+            currentUserId,
+            response || []
+        );
+
+        return response;
     }
 
     public async getByUser(userId: string) {

@@ -49,11 +49,6 @@ export class PostComponent implements AfterViewInit, OnDestroy {
                     this.backgroundColor = colors.bg;
                     this.textColor = colors.text;
                 });
-            } else if (firstMedia.type === 'video') {
-                this.postService.extractColorFromVideo(firstMedia.url).then(colors => {
-                    this.backgroundColor = colors.bg;
-                    this.textColor = colors.text;
-                });
             }
         }
     }
