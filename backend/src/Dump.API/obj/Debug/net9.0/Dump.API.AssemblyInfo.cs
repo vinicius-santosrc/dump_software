@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Dump.API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+669d2e6464ea0c23521088342dfd4ecf5895456b")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d759d649a797df8c11b95608906a1c50246d3917")]
 [assembly: System.Reflection.AssemblyProductAttribute("Dump.API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Dump.API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

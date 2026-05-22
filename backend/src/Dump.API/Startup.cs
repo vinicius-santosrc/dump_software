@@ -129,6 +129,7 @@ namespace Dump.API
 
             app.UseHttpsRedirection();
 
+            app.UseCors("AllowFrontend");
             app.UseAuthentication();
             app.UseAuthorization();
 
