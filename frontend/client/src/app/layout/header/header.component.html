@@ -9,12 +9,25 @@
                 }
             </a>
         </div>
-        <div class="header-component-right">
+        <div class="header-component-right desktop">
             @if(!isMessagePage) {
                 <app-generic-button (onClick)="openMessages()" [label]="!isMobile ? 'HEADER.ACTIONS.CONVERSATIONS' : ''"
                     [iconName]="'send'" variant="ghost"
                     padding="8px 12px"></app-generic-button>
             }
+            <div class="account-details">
+                <a routerLinkActive="active" [routerLink]="'/' + current_user.username">
+                    <app-avatar-item width="52px" height="52px" [redirectOnClick]="false" [user]="current_user" />
+                </a>
+            </div>
+        </div>
+        <div class="header-component-right mobile">
+            @if(!isMessagePage) {
+            <app-generic-button (onClick)="openMessages()" [label]="!isMobile ? 'HEADER.ACTIONS.CONVERSATIONS' : ''"
+                [iconName]="'send'" variant="ghost" padding="8px 12px"></app-generic-button>
+            }
+            <app-generic-button (onClick)="openMessages()" [label]="''"
+                [iconName]="'heart'" variant="ghost" padding="8px 12px"></app-generic-button>
             <div class="account-details">
                 <a routerLinkActive="active" [routerLink]="'/' + current_user.username">
                     <app-avatar-item width="52px" height="52px" [redirectOnClick]="false" [user]="current_user" />

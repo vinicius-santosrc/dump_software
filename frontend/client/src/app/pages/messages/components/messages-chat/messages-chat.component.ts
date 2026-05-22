@@ -65,28 +65,51 @@ export class MessagesChatComponent implements OnInit, OnChanges {
         this.messagesStore.activeMessagesObs$
             .subscribe((msgs) => {
 
-                if (!msgs) return;
+                if (!msgs) {
+                    return;
+                }
 
                 this.messages = msgs;
+
+                setTimeout(() => {
+                    this.scrollToBottom();
+                }, 0);
             });
     }
 
     ngOnChanges() {
-        if (!this.conversation?.id) return;
 
-        this.messagesStore.setUsers(this.conversation.participants)
+        if (!this.conversation?.id) {
+            return;
+        }
+
+        this.messages = [];
+
+        this.messagesStore.setUsers(this.conversation.participants);
         this.messagesStore.setActiveConversation(this.conversation.id);
 
         this.isGroup = this.conversation.participants?.length > 2;
 
         this.chatService.joinConversation(this.conversation.id);
 
-        this.loadMessages();
+        this.messagesService
+            .getMessages(this.conversation.id)
+            .subscribe((msgs: any) => {
 
-        setTimeout(() => {
-            this.markMessagesAsRead();
-        }, 300);
+                this.messages = msgs ?? [];
 
+                this.messagesStore.setActiveMessages(this.messages);
+
+                this.messagesService.updateMessagesCache(
+                    this.conversation.id,
+                    this.messages
+                );
+
+                setTimeout(() => {
+                    this.scrollToBottom();
+                    this.markMessagesAsRead();
+                }, 100);
+            });
     }
 
     // =========================
@@ -107,6 +130,15 @@ export class MessagesChatComponent implements OnInit, OnChanges {
         };
 
         this.pendingMessages[tempId] = message;
+
+        this.messages = [...this.messages, message];
+
+        this.messagesStore.setActiveMessages(this.messages);
+
+        this.messagesService.addMessageToCache(
+            this.conversation.id,
+            message
+        );
 
         this.chatService.sendMessage({
             conversationId: message.conversationId,

@@ -3,37 +3,76 @@
 .sign-in-section {
     display: flex;
     align-items: center;
+    min-height: 100vh;
+    background: var(--background-color);
+    overflow: hidden;
+
+    .sign-in-left-side {
+        width: 50%;
+        height: 100vh;
+        position: relative;
+        overflow: hidden;
+
+        .sign-in-left-side-image-container {
+            width: 100%;
+            height: 100%;
+        }
+    }
 
     .sign-in-left-side-image {
-        height: 100vh;
-        width: 50vw;
+        height: 100%;
+        width: 100%;
         object-fit: cover;
+        display: block;
     }
 
     .sign-in-right-side {
+        width: 50%;
         margin: auto;
         text-align: center;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        height: 99vh;
+        min-height: 100vh;
+        padding: 32px;
+        box-sizing: border-box;
+        position: relative;
+        z-index: 2;
+
+        .sign-in-right-side-container {
+            width: 100%;
+            max-width: 420px;
+            margin: auto;
+        }
 
         .sign-in-right-side-logo {
+            margin-bottom: 16px;
+
             img {
                 width: 250px;
+                max-width: 100%;
+                object-fit: contain;
             }
-            margin-bottom: 12px;
+        }
+
+        .sign-in-right-side-message {
+            font-size: 15px;
+            line-height: 1.6;
+            color: var(--color-text);
+            margin-bottom: 8px;
         }
     }
 
     .sign-in-form-inputs {
         display: flex;
         flex-direction: column;
-        gap: 4px;
-        margin: 16px 0px;
+        gap: 8px;
+        margin: 20px 0px;
     }
 
     .btn-container {
+        width: 100%;
+
         #sign-in-button {
             width: 100%;
             padding: 12px;
@@ -51,26 +90,33 @@
             background-color: variable.$disabled-blue;
             color: #ffffff;
             border: none;
-            cursor: pointer;
+            cursor: not-allowed;
         }
 
         .btn-container-secondary {
             display: flex;
             flex-direction: column;
+            align-items: center;
             gap: 12px;
-            margin-top: 12px;
+            margin-top: 16px;
 
             button {
                 background: transparent;
                 border: none;
                 color: var(--color-gray);
                 cursor: pointer;
+                transition: opacity .2s ease;
+            }
+
+            button:hover {
+                opacity: .7;
             }
         }
     }
 
     .sign-in-right-side-join-google {
         margin: 20px 0px;
+        width: 100%;
 
         button {
             width: 100%;
@@ -86,14 +132,19 @@
         width: 100%;
         height: 1px;
         background-color: variable.$light-gray;
-        margin: 20px 0px;
+        margin: 24px 0px;
     }
 
     .sign-in-form-container {
         text-align: left;
+        width: 100%;
 
         .title-section {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--color-text);
             margin-bottom: 20px;
+            display: block;
         }
     }
 
@@ -102,6 +153,133 @@
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
+    }
+}
 
+@media screen and (max-width: 1200px) {
+    .sign-in-section {
+        .sign-in-left-side {
+            width: 45%;
+        }
+
+        .sign-in-right-side {
+            width: 55%;
+            padding: 24px;
+        }
+    }
+}
+
+@media screen and (max-width: 992px) {
+    .sign-in-section {
+        .sign-in-left-side {
+            width: 40%;
+        }
+
+        .sign-in-right-side {
+            width: 60%;
+
+            .sign-in-right-side-container {
+                max-width: 380px;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .sign-in-section {
+        flex-direction: column;
+        justify-content: center;
+        position: relative;
+        min-height: 100dvh;
+
+        .sign-in-left-side {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+
+            &::after {
+                content: '';
+                position: absolute;
+                inset: 0;
+                background: rgba(0, 0, 0, 0.45);
+                backdrop-filter: blur(4px);
+            }
+        }
+
+        .sign-in-left-side-image {
+            width: 100%;
+            height: 100%;
+            display: none;
+        }
+
+        .sign-in-right-side {
+            width: 100%;
+            min-height: 100dvh;
+            padding: 24px 20px;
+            justify-content: center;
+            backdrop-filter: blur(14px);
+            background-color: white;
+
+            .sign-in-right-side-container {
+                width: 100%;
+                max-width: 420px;
+                background: rgba(255, 255, 255, 0.08);
+                border: 1px solid rgba(255, 255, 255, 0.12);
+                backdrop-filter: blur(24px);
+                -webkit-backdrop-filter: blur(24px);
+                border-radius: 28px;
+                padding: 28px 22px;
+                box-sizing: border-box;
+                // box-shadow: 0px 10px 40px rgba(0, 0, 0, 0.2);
+            }
+
+            .sign-in-right-side-logo {
+                img {
+                    width: 200px;
+                }
+            }
+
+            .sign-in-right-side-message {
+                // color: #ffffff;
+            }
+        }
+
+        .separator {
+            background-color: rgba(255, 255, 255, 0.15);
+        }
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .sign-in-section {
+        .sign-in-right-side {
+            padding: 16px;
+
+            .sign-in-right-side-container {
+                padding: 24px 18px;
+                border-radius: 24px;
+            }
+
+            .sign-in-right-side-logo {
+                img {
+                    width: 170px;
+                }
+            }
+
+            .sign-in-right-side-message {
+                font-size: 14px;
+            }
+        }
+
+        .sign-in-form-container {
+            .title-section {
+                font-size: 18px;
+            }
+        }
+
+        .btn-container-secondary {
+            gap: 8px;
+        }
     }
 }

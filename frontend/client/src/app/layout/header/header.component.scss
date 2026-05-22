@@ -69,6 +69,14 @@
             }
         }
     }
+
+    .mobile {
+        display: none !important;
+    }
+
+    .desktop {
+        display: flex !important;
+    }
 }
 
 .header-component.hidden {
@@ -80,6 +88,8 @@
     .header-component {
         padding: 12px 16px;
         border-top: none;
+        background-color: var(--color-background);
+        z-index: 10;
 
         .header-component-top {
             .header-component-left {
@@ -109,6 +119,14 @@
                     }
                 }
             }
+        }
+
+        .desktop {
+            display: none !important;
+        }
+
+        .mobile {
+            display: flex !important;
         }
     }
 
