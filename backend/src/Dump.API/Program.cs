@@ -7,14 +7,17 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddScoped<IMessagesRepository, MessagesRepository>();
 builder.Services.AddCors(options =>
   {
-      options.AddPolicy("AllowFrontend",
-          policy =>
-          {
-              policy.WithOrigins("http://localhost:4200")
-                    .AllowAnyHeader()
-                    .AllowAnyMethod()
-                    .AllowCredentials();
-          });
+    options.AddPolicy("AllowFrontend",
+        policy =>
+        {
+          policy.WithOrigins(
+              "https://dump-software.vercel.app",
+              "http://localhost:4200"
+              )
+                  .AllowAnyHeader()
+                  .AllowAnyMethod()
+                  .AllowCredentials();
+        });
   });
 builder.Services.AddSignalR();
 
