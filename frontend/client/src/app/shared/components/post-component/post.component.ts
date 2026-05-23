@@ -10,6 +10,7 @@ import { PostActionButtonsComponent } from "../post-action-buttons/post-action-b
 import { PostHeaderComponent } from "./components/post-header-component/post-header.component";
 import { PostMediaComponent } from "./components/post-media-component/post-media.component";
 import { PostCommentsComponent } from "./components/post-comments-component/post-comments.component";
+import { ThemeService } from '../../../core/services/theme.service';
 
 @Component({
     selector: "app-post-component",
@@ -27,6 +28,7 @@ export class PostComponent implements AfterViewInit, OnDestroy {
     constructor(
         private readonly postService: PostComponentService,
         private readonly userService: UserService,
+        private readonly themeService: ThemeService,
         public angularRouter: Router,
     ) {
         this.userService.user$.subscribe((user: any) => {
@@ -47,8 +49,21 @@ export class PostComponent implements AfterViewInit, OnDestroy {
             if (firstMedia.type === 'image') {
                 this.postService.extractColorFromImage(firstMedia.url).then(colors => {
                     this.backgroundColor = colors.bg;
-                    this.textColor = colors.text;
+                    // this.textColor = colors.text;
+                    this.textColor = "#ffffff"
                 });
+            }
+            if (firstMedia.type == "video") {
+                switch (this.themeService.getTheme()) {
+                    case 'light':
+                        this.backgroundColor = '#ffffff'
+                        this.textColor = 'rgb(0,0,0)'
+                        break;
+                    case 'dark':
+                        this.backgroundColor = "rgb(12, 16, 20)"
+                        this.textColor = "#ffffff"
+                        break;
+                }
             }
         }
     }

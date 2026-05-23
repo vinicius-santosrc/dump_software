@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
 })
 export class WebrtcService {
 
-    private peer?: RTCPeerConnection;
+    public peer?: RTCPeerConnection;
 
     public localStream?: MediaStream;
     public remoteStream?: MediaStream;
@@ -19,14 +19,45 @@ export class WebrtcService {
             ]
         });
 
+        this.peer.onconnectionstatechange = () => {
+            console.warn(
+                '[WEBRTC] connection state',
+                this.peer?.connectionState
+            );
+        };
+
+        this.peer.oniceconnectionstatechange = () => {
+            console.warn(
+                '[WEBRTC] ice state',
+                this.peer?.iceConnectionState
+            );
+        };
+
         this.remoteStream = new MediaStream();
 
         this.peer.ontrack = (event) => {
-            event.streams[0]
-                .getTracks()
-                .forEach(track => {
-                    this.remoteStream?.addTrack(track);
-                });
+
+            console.warn('[WEBRTC] Remote track received', event);
+
+            if (!this.remoteStream) {
+                this.remoteStream = new MediaStream();
+            }
+
+            const track = event.track;
+
+            const alreadyExists =
+                this.remoteStream
+                    .getTracks()
+                    .some(existing => existing.id === track.id);
+
+            if (!alreadyExists) {
+                this.remoteStream.addTrack(track);
+            }
+
+            console.warn(
+                '[WEBRTC] remote tracks',
+                this.remoteStream.getTracks()
+            );
         };
 
         this.peer.onicecandidate = (event) => {
@@ -45,24 +76,22 @@ export class WebrtcService {
             video
         });
 
-        this.remoteStream = new MediaStream();
-
         if (this.peer) {
 
             this.localStream
                 .getTracks()
                 .forEach(track => {
-                    this.peer?.addTrack(track, this.localStream!);
+                    const senderAlreadyExists =
+                        this.peer
+                            ?.getSenders()
+                            .some(sender =>
+                                sender.track?.id === track.id
+                            );
+
+                    if (!senderAlreadyExists) {
+                        this.peer?.addTrack(track, this.localStream!);
+                    }
                 });
-
-            this.peer.ontrack = (event) => {
-
-                event.streams[0]
-                    .getTracks()
-                    .forEach(track => {
-                        this.remoteStream?.addTrack(track);
-                    });
-            };
         }
 
         return this.localStream;

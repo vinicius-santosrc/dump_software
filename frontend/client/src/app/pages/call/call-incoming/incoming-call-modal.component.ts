@@ -47,7 +47,8 @@ export class IncomingCallModalComponent {
                 type: callType,
                 user: incomingCall?.caller,
                 conversationId: incomingCall?.conversationId,
-                payload: incomingCall
+                payload: incomingCall,
+                isCaller: false
             }
         });
     }

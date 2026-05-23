@@ -4,7 +4,7 @@
     display: flex;
     align-items: center;
     min-height: 100vh;
-    background: var(--background-color);
+    background: var(--color-background);
     overflow: hidden;
 
     .sign-in-left-side {
@@ -38,11 +38,19 @@
         box-sizing: border-box;
         position: relative;
         z-index: 2;
-
+        transition:
+        background-color var(--transition-default),
+        color var(--transition-default);
+        
         .sign-in-right-side-container {
             width: 100%;
             max-width: 420px;
             margin: auto;
+            transition:
+                background var(--transition-default),
+                border-color var(--transition-default),
+                box-shadow var(--transition-default),
+                transform var(--transition-default);
         }
 
         .sign-in-right-side-logo {
@@ -81,6 +89,19 @@
             color: #ffffff;
             border: none;
             cursor: pointer;
+            transition:
+                background-color var(--transition-default),
+                transform var(--transition-fast),
+                box-shadow var(--transition-default),
+                opacity var(--transition-default);
+
+            box-shadow: var(--shadow-sm);
+
+            &:hover {
+                transform: translateY(-2px);
+                box-shadow: var(--shadow-md);
+                opacity: .95;
+            }
         }
 
         #sign-in-button:disabled {
@@ -121,17 +142,29 @@
         button {
             width: 100%;
             padding: 12px;
-            border-radius: 12px;
-            background-color: #ffffff;
-            border: 1px solid variable.$light-gray;
+            border-radius: var(--border-radius-md);
+            background-color: var(--color-surface);
+            border: 1px solid var(--color-border);
+            color: var(--color-text);
             cursor: pointer;
+            transition:
+                background-color var(--transition-default),
+                border-color var(--transition-default),
+                transform var(--transition-fast),
+                box-shadow var(--transition-default);
+
+            &:hover {
+                background-color: var(--color-hover);
+                transform: translateY(-2px);
+                box-shadow: var(--shadow-sm);
+            }
         }
     }
 
     .separator {
         width: 100%;
         height: 1px;
-        background-color: variable.$light-gray;
+        background-color: var(--color-border);
         margin: 24px 0px;
     }
 
@@ -145,6 +178,7 @@
             color: var(--color-text);
             margin-bottom: 20px;
             display: block;
+            transition: color var(--transition-default);
         }
     }
 
@@ -219,19 +253,28 @@
             padding: 24px 20px;
             justify-content: center;
             backdrop-filter: blur(14px);
-            background-color: white;
+            background-color: var(--color-background);
 
             .sign-in-right-side-container {
                 width: 100%;
                 max-width: 420px;
-                background: rgba(255, 255, 255, 0.08);
-                border: 1px solid rgba(255, 255, 255, 0.12);
+                background: var(--color-overlay);
+                border: 1px solid var(--color-border);
                 backdrop-filter: blur(24px);
                 -webkit-backdrop-filter: blur(24px);
-                border-radius: 28px;
+                border-radius: var(--border-radius-lg);
                 padding: 28px 22px;
                 box-sizing: border-box;
-                // box-shadow: 0px 10px 40px rgba(0, 0, 0, 0.2);
+                box-shadow: var(--shadow-lg);
+                transition:
+                    background var(--transition-default),
+                    border-color var(--transition-default),
+                    box-shadow var(--transition-default),
+                    transform var(--transition-default);
+
+                &:hover {
+                    transform: translateY(-3px);
+                }
             }
 
             .sign-in-right-side-logo {
@@ -246,7 +289,7 @@
         }
 
         .separator {
-            background-color: rgba(255, 255, 255, 0.15);
+            background-color: var(--color-border);
         }
     }
 }

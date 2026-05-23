@@ -1,5 +1,5 @@
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { Component, Inject } from "@angular/core";
+import { AfterViewInit, Component, ElementRef, Inject, ViewChild } from "@angular/core";
 import { GenericButtonComponent } from "../../../shared/components/generic-button-component/generic-button.component";
 import { AvatarItem } from "../../../shared/components/avatar-item/avatar-item.component";
 import { CommonModule } from '@angular/common';
@@ -15,9 +15,15 @@ import { CallModalComponent } from '../call-modal/call-modal.component';
     imports: [CommonModule, GenericButtonComponent, AvatarItem]
 })
 
-export class PreCallComponent {
+export class PreCallComponent implements AfterViewInit {
+
+    @ViewChild('previewVideo')
+    previewVideo?: ElementRef<HTMLVideoElement>;
 
     currentUser: any;
+
+    isMuted: boolean = false;
+    isCameraOff: boolean = false;
 
     constructor(
         @Inject(MAT_DIALOG_DATA) public data: any,
@@ -29,6 +35,67 @@ export class PreCallComponent {
         this.userService.user$.subscribe(user => {
             this.currentUser = user;
         });
+    }
+
+    async ngAfterViewInit(): Promise<void> {
+
+        if (this.data?.type !== 'video') {
+            return;
+        }
+
+        try {
+
+            const stream =
+                await navigator.mediaDevices.getUserMedia({
+                    video: true,
+                    audio: true
+                });
+
+            if (this.previewVideo?.nativeElement) {
+
+                this.previewVideo.nativeElement.srcObject =
+                    stream;
+            }
+
+        }
+        catch (error) {
+
+            console.error('[PRE CALL CAMERA]', error);
+        }
+    }
+
+    toggleCamera(): void {
+
+        const stream =
+            this.previewVideo?.nativeElement
+                ?.srcObject as MediaStream;
+
+        if (!stream) {
+            return;
+        }
+
+        stream.getVideoTracks().forEach(track => {
+            track.enabled = !track.enabled;
+        });
+
+        this.isCameraOff = !this.isCameraOff;
+    }
+
+    toggleMute(): void {
+
+        const stream =
+            this.previewVideo?.nativeElement
+                ?.srcObject as MediaStream;
+
+        if (!stream) {
+            return;
+        }
+
+        stream.getAudioTracks().forEach(track => {
+            track.enabled = !track.enabled;
+        });
+
+        this.isMuted = !this.isMuted;
     }
 
     get callTitle(): string {
@@ -49,22 +116,9 @@ export class PreCallComponent {
             return;
         }
 
-        if (this.data?.type === 'video') {
-            await this.callService.startVideoCall({
-                callerId: this.currentUser.id,
-                targetUserId: this.data.user.id,
-                conversationId: this.data.conversationId
-            });
-        }
-        else {
-            await this.callService.startAudioCall({
-                callerId: this.currentUser.id,
-                targetUserId: this.data.user.id,
-                conversationId: this.data.conversationId
-            });
-        }
-
         this.callService.onCallConnected = (payload: any) => {
+
+            console.warn('[PRE CALL] onCallConnected', payload);
 
             this.dialogRef.close();
 
@@ -77,9 +131,27 @@ export class PreCallComponent {
                     type: this.data.type,
                     user: this.data.user,
                     conversationId: this.data.conversationId,
-                    payload
+                    payload,
+                    isCaller: true
                 }
             });
         };
+
+        if (this.data?.type === 'video') {
+
+            await this.callService.startVideoCall({
+                callerId: this.currentUser.id,
+                targetUserId: this.data.user.id,
+                conversationId: this.data.conversationId
+            });
+        }
+        else {
+
+            await this.callService.startAudioCall({
+                callerId: this.currentUser.id,
+                targetUserId: this.data.user.id,
+                conversationId: this.data.conversationId
+            });
+        }
     }
 }

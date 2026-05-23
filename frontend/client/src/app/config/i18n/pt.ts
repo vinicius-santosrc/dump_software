@@ -29,7 +29,7 @@ export const locale = {
                 SIDEBAR: {
                     TITLE: "Ações rápidas",
                     EXPLORE: "Explorar",
-                    HOME: "Início",
+                    HOME: "Página inicial",
                     DUMPS: "Dumps",
                     SEARCH: "Buscar",
                     ALERTS: "Notificações",
@@ -263,6 +263,7 @@ export const locale = {
                 ARCHIVED: {
                     TITLE: "Arquivados",
                     SUBTITLE: "Aqui estão os posts que você arquivou. Eles não são visíveis para outras pessoas.",
+                    EMPTY: "Não há posts arquivados"
                 },
                 BUTTON: {
                     UPDATE: "Atualizar"

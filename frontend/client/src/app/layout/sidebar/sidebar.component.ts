@@ -14,29 +14,35 @@ import { CommonModule } from "@angular/common";
 import { CreatePostComponent } from "../../pages/create-post/create-post.component";
 import { MatDialog, MatDialogModule } from "@angular/material/dialog";
 import { MatMenuModule } from "@angular/material/menu";
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatButtonModule } from '@angular/material/button';
 import { WHITE_LIST_NAVIGATIONS } from "../../core/config/api.config";
 import { AuthService } from "../../core/services/auth/auth.service";
 import { NotificationsSidebarComponent } from "./notifications-sidebar/notifications-sidebar.component";
 import { UserService } from "../../core/services/user/user.service";
-interface NavigationLink {
-    icon: string;
-    iconUrl?: string
-    route: string;
-    isLink: boolean
-    label: string;
-    action?: (event: Event) => void;
-    menuOptions?: {
-        label: string;
-        icon: string;
-        iconUrl?: string;
-        action: () => void;
-    }[];
-}
+import { ThemeMenuComponent } from "../../shared/components/post-component/components/theme-menu/theme-menu.component";
+import { SIDEBAR_NAVIGATION } from "./config/sidebar-navigation.config";
+import { MOBILE_SIDEBAR_NAVIGATION } from "./config/mobile-sidebar-navigation.config";
+import { SidebarUtils } from "../../core/utils/sidebar.utils";
+import { User } from "../../core/models/user/user.model";
+import { NavigationLink, SidebarMenuOption } from "../../core/models/sidebar/navigation-link.interface";
 @Component({
     selector: "app-sidebar-component",
     templateUrl: "./sidebar.component.html",
     styleUrl: "./sidebar.component.scss",
-    imports: [TranslateModule, RouterModule, MatIcon, SearchSidebarComponent, CommonModule, MatDialogModule, MatMenuModule, NotificationsSidebarComponent]
+    imports: [
+    TranslateModule,
+    RouterModule,
+    MatIcon,
+    SearchSidebarComponent,
+    CommonModule,
+    MatDialogModule,
+    MatMenuModule,
+    NotificationsSidebarComponent,
+    MatSlideToggleModule,
+    MatButtonModule,
+    ThemeMenuComponent
+]
 })
 export class SidebarComponent {
     isSidebarOpen: boolean = localStorage.getItem("sidebar") === "true";
@@ -45,10 +51,12 @@ export class SidebarComponent {
         notifications: false
     };
     showSidebar: boolean = true;
-    current_user: any = {};
+    current_user!: User;
     isMessagePage: boolean = globalThis.location.pathname === "/messages/inbox";
     selected: string = 'home';
     isInConversations: boolean = globalThis.location.pathname.startsWith("/messages/inbox");
+    isDarkMode: boolean = localStorage.getItem('theme') === 'dark';
+    showDisplayMenu: boolean = false;
     constructor(private readonly dialog: MatDialog, private readonly router: Router, private readonly authService: AuthService, private readonly userService: UserService) {
         if (WHITE_LIST_NAVIGATIONS.some(route => globalThis.location.pathname.startsWith(route))) {
             this.showSidebar = false;
@@ -58,12 +66,18 @@ export class SidebarComponent {
                 const url = this.router.url;
                 this.showSidebar = !WHITE_LIST_NAVIGATIONS.some(route => url.startsWith(route));
                 this.isMessagePage = url === "/messages/inbox";
+                this.updateSelectedByRoute(url);
             }
         });
-        this.current_user = this.userService.getUser();
+        this.userService.user$.subscribe(user => {
+            if (!user) return;
+            this.current_user = user;
+            this.initializeNavigation();
+        });
+        this.updateSelectedByRoute(this.router.url);
     }
 
-    isSelected(item: any): boolean {
+    isSelected(item: NavigationLink): boolean {
         return this.selected == item.icon;
     }
 
@@ -71,194 +85,55 @@ export class SidebarComponent {
         return window.innerWidth <= 768;
     }
 
-    navigationLinks: NavigationLink[] = [
-        {
-            icon: "home",
-            // iconUrl: '/assets/app/media/icons/home.svg',
-            route: "/",
-            isLink: true,
-            label: "HEADER.ACTIONS.SIDEBAR.HOME"
-        },
-        {
-            icon: "explore",
-            // iconUrl: '/assets/app/media/icons/explore.svg',
-            route: "/explore",
-            isLink: true,
-            label: "HEADER.ACTIONS.SIDEBAR.EXPLORE"
-        },
-        {
-            icon: "movie",
-            // iconUrl: '/assets/app/media/icons/reels.svg',
-            route: "/dumps",
-            isLink: true,
-            label: "HEADER.ACTIONS.SIDEBAR.DUMPS"
-        },
-        {
-            icon: "search",
-            // iconUrl: '/assets/app/media/icons/search.svg',
-            route: "/search",
-            isLink: false,
-            label: "HEADER.ACTIONS.SIDEBAR.SEARCH",
-            action: () => {
-                this.handleSearchClick();
-            }
-        },
-        {
-            icon: "favorite",
-            route: "/",
-            isLink: false,
-            label: "HEADER.ACTIONS.SIDEBAR.ALERTS",
-            action: () => {
-                this.handleNotificationsClick();
-            }
-        },
-        {
-            icon: "bookmark_added",
-            route: "/saves",
-            isLink: true,
-            label: "HEADER.ACTIONS.SIDEBAR.SAVES"
-        },
-        {
-            icon: "add_circle",
-            // iconUrl: '/assets/app/media/icons/create.svg',
-            route: "/create",
-            isLink: false,
-            label: "HEADER.ACTIONS.SIDEBAR.ADD_POST",
-            action: () => null,
-            menuOptions: [
-                {
-                    label: 'HEADER.ACTIONS.SIDEBAR.ADD_POST_MENU.POST',
-                    icon: "edit",
-                    iconUrl: '',
-                    action: () => {
-                        this.dialog.open(CreatePostComponent, {
-                            minWidth: this.isMobile ? '400px' : '1000px',
-                        });
-                    },
-                },
-                {
-                    label: 'HEADER.ACTIONS.SIDEBAR.ADD_POST_MENU.LIVE',
-                    icon: "videocam",
-                    iconUrl: '',
-                    action: () => null,
-                },
-                {
-                    label: 'HEADER.ACTIONS.SIDEBAR.ADD_POST_MENU.AD',
-                    icon: "campaign",
-                    iconUrl: '',
-                    action: () => null,
-                },
-                {
-                    label: 'HEADER.ACTIONS.SIDEBAR.ADD_POST_MENU.IA',
-                    icon: "smart_toy",
-                    iconUrl: '',
-                    action: () => null,
-                }
-            ]
-        },
-        {
-            icon: "menu",
-            route: "/create",
-            isLink: false,
-            label: "HEADER.ACTIONS.SIDEBAR.MENU",
-            menuOptions: [
-                {
-                    label: 'HEADER.ACTIONS.SIDEBAR.MENU_OPTIONS.SETTINGS',
-                    icon: "settings",
-                    iconUrl: '',
-                    action: () => null,
-                },
-                {
-                    label: 'HEADER.ACTIONS.SIDEBAR.MENU_OPTIONS.ACTIVITY',
-                    icon: "analytics",
-                    iconUrl: '',
-                    action: () => null,
-                },
-                {
-                    label: 'HEADER.ACTIONS.SIDEBAR.MENU_OPTIONS.SAVES',
-                    icon: "flag",
-                    iconUrl: '',
-                    action: () => null,
-                },
-                {
-                    label: 'HEADER.ACTIONS.SIDEBAR.MENU_OPTIONS.DISPLAY',
-                    icon: "brightness_6",
-                    iconUrl: '',
-                    action: () => null,
-                },
-                {
-                    label: 'HEADER.ACTIONS.SIDEBAR.MENU_OPTIONS.REPORT',
-                    icon: "report",
-                    iconUrl: '',
-                    action: () => null,
-                },
-                {
-                    label: 'HEADER.ACTIONS.SIDEBAR.MENU_OPTIONS.CHANGE_ACCOUNT',
-                    icon: "",
-                    iconUrl: '',
-                    action: () => null,
-                },
-                {
-                    label: 'HEADER.ACTIONS.SIDEBAR.MENU_OPTIONS.DISCONNECT',
-                    icon: "",
-                    iconUrl: '',
-                    action: () => this.handleDisconnect(),
-                }
-            ]
-        },
-        {
-            icon: "settings",
-            route: "/settings",
-            isLink: false,
-            label: "HEADER.ACTIONS.SIDEBAR.SETTINGS"
-        }
-    ]
+    navigationLinks: NavigationLink[] = [];
+    mobileNavigationLinks: NavigationLink[] = [];
 
-    get mobileNavigationLinks() {
-        return [
-            {
-                icon: "home",
-                route: "/",
-                isLink: true,
-                label: "HEADER.ACTIONS.SIDEBAR.HOME"
-            },
-            {
-                icon: "movie",
-                // iconUrl: '/assets/app/media/icons/reels.svg',
-                route: "/dumps",
-                isLink: true,
-                label: "HEADER.ACTIONS.SIDEBAR.DUMPS"
-            },
-            {
-                icon: "add_circle",
-                // iconUrl: '/assets/app/media/icons/create.svg',
-                route: "/create",
-                label: "HEADER.ACTIONS.SIDEBAR.ADD_POST",
-                isLink: false,
-                action: () => {
-                    this.dialog.open(CreatePostComponent, {
-                        minWidth: this.isMobile ? '100%' : '1000px',
-                    });
-                },
-            },
-            {
-                icon: "search",
-                // iconUrl: '/assets/app/media/icons/search.svg',
-                route: "/search",
-                isLink: false,
-                label: "HEADER.ACTIONS.SIDEBAR.SEARCH",
-                action: () => {
-                    this.handleSearchClick();
-                }
-            },
-            {
-                icon: "person",
-                iconUrl: this.current_user?.thumbnail,
-                route: '/' + this.current_user?.username,
-                isLink: true,
-                label: "HEADER.ACTIONS.SIDEBAR.SEARCH",
-            },
-        ];
+    private initializeNavigation(): void {
+        this.navigationLinks =
+            SIDEBAR_NAVIGATION.map(item =>
+                SidebarUtils.resolveProfileNavigation(
+                    item,
+                    this.current_user
+                )
+            );
+
+        this.mobileNavigationLinks =
+            MOBILE_SIDEBAR_NAVIGATION.map(item =>
+                SidebarUtils.resolveProfileNavigation(
+                    item,
+                    this.current_user
+                )
+            );
+    }
+
+    updateSelectedByRoute(url: string) {
+
+        const matchedItem = this.navigationLinks.find((item) => {
+
+            if (!item.route || item.route === '/') {
+                return url === '/';
+            }
+
+            return url.startsWith(item.route);
+        });
+
+        if (matchedItem) {
+            this.selected = matchedItem.icon;
+            return;
+        }
+
+        const mobileMatchedItem = this.mobileNavigationLinks.find((item) => {
+
+            if (!item.route || item.route === '/') {
+                return url === '/';
+            }
+
+            return url.startsWith(item.route);
+        });
+
+        if (mobileMatchedItem) {
+            this.selected = mobileMatchedItem.icon;
+        }
     }
 
     handleOpenSideBar() {
@@ -294,11 +169,53 @@ export class SidebarComponent {
         Object.keys(this.panels).forEach(p => this.panels[p as keyof typeof this.panels] = false);
     }
 
-    handleNavigation(item: any, event: Event) {
-        if (!item.isLink && item.action) {
-            event.preventDefault();
-            event.stopPropagation();
-            item.action(event);
+
+    navigate(item: SidebarMenuOption): void {
+        switch (item.type) {
+            case 'route':
+                if (item.route) {
+                    this.router.navigate([item.route]);
+                }
+                break;
+
+            case 'panel':
+                this.handlePanel(item);
+                break;
+
+            case 'menu':
+                break;
+
+            case 'action':
+                this.handleAction(item);
+                break;
+        }
+    }
+
+    private handlePanel(item: any): void {
+        switch (item.id) {
+            case 'search':
+                this.handleSearchClick();
+                break;
+
+            case 'notifications':
+                this.handleNotificationsClick();
+                break;
+        }
+    }
+
+    private handleAction(item: any): void {
+        switch (item.id) {
+            case 'disconnect':
+                this.handleDisconnect();
+                break;
+
+            case 'post':
+                this.dialog.open(CreatePostComponent, {
+                    minWidth: this.isMobile
+                        ? '400px'
+                        : '1000px',
+                });
+                break;
         }
     }
 

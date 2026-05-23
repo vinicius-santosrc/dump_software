@@ -1,79 +1,191 @@
 @if(showSidebar) {
-<nav class="navigation-bar desktop" [class.conversationsPage]="isInConversations" [class.closed]="!isSidebarOpen" [style.width]="isSidebarOpen ? '213px' : '140px'">
+
+<nav
+    class="navigation-bar desktop"
+    [class.conversationsPage]="isInConversations"
+    [class.closed]="!isSidebarOpen"
+    [style.width]="isSidebarOpen ? '213px' : '213px'">
+
     <div class="navigation-bar-inside">
-        <div class="navigation-bar-title section-nav" [style.flexDirection]="!isSidebarOpen ? 'row-reverse' : 'row'">
-            <h1 [style.opacity]="isSidebarOpen ? 1 : 0">{{"HEADER.ACTIONS.SIDEBAR.TITLE" | translate}}</h1>
-            <button (click)="handleOpenSideBar()"><mat-icon>{{isSidebarOpen ? 'keyboard_arrow_left' :
-                    'keyboard_arrow_right'}}</mat-icon></button>
+
+        <div
+            class="navigation-bar-title section-nav"
+            [style.flexDirection]="!isSidebarOpen
+                ? 'row-reverse'
+                : 'row'">
+
+            <h1 [style.opacity]="isSidebarOpen ? 1 : 0">
+                {{ 'HEADER.ACTIONS.SIDEBAR.TITLE' | translate }}
+            </h1>
+
+            <button
+                class="sidebar-collapse-button"
+                (click)="handleOpenSideBar()">
+
+                <mat-icon>
+                    {{
+                        isSidebarOpen
+                            ? 'keyboard_arrow_left'
+                            : 'keyboard_arrow_right'
+                    }}
+                </mat-icon>
+            </button>
         </div>
+
         <div class="navigation-bar-actions section-nav">
-            @for(item of navigationLinks; track item.route) {
-            <div class="navigator-item" [style.width]="isSidebarOpen ? '213px' : '140px'">
 
-                <!-- ITEM WITH MENU -->
-                <ng-container *ngIf="item.menuOptions; else defaultItem">
-                    <a mat-button [matMenuTriggerFor]="menu" class="navigator-item">
-                        @if(item.iconUrl && item.iconUrl != "") {
-                        <img [src]="item.iconUrl" alt="" [class.selected-svg]="isSelected(item)" />
+            @for(item of navigationLinks; track item.id) {
+
+            <div
+                class="navigator-item"
+                [style.width]="isSidebarOpen
+                    ? '213px'
+                    : '213px'">
+
+                @if(item.menuOptions) {
+
+                <button
+                    class="sidebar-native-button"
+                    [matMenuTriggerFor]="menu">
+
+                    <div class="sidebar-button-content">
+
+                        @if(item.iconUrl && item.iconUrl != '') {
+                        <img
+                            [src]="item.iconUrl"
+                            alt=""
+                            [class.selected-svg]="isSelected(item)" />
                         }
                         @else {
-                        <mat-icon [fontSet]="'material-symbols-rounded'">{{item.icon}}</mat-icon>
+                        <mat-icon
+                            [fontSet]="isSelected(item)
+                                ? 'material-symbols-rounded'
+                                : 'material-symbols-outlined'">
+                            {{ item.icon }}
+                        </mat-icon>
                         }
-                        <span>{{ item.label | translate }}</span>
-                    </a>
 
-                    <mat-menu #menu="matMenu">
-                        @for(option of item.menuOptions; track option.label) {
-                        <button mat-menu-item (click)="option.action()">
-                            @if(option.icon) {
-                            @if(option.iconUrl && option.iconUrl != "") {
-                            <img [src]="option.iconUrl" alt="" />
-                            }
-                            @else {
-                            <mat-icon [fontSet]="'material-symbols-rounded'">{{option.icon}}</mat-icon>
-                            }
-                            }
-                            <span>{{ option.label | translate }}</span>
-                        </button>
-                        }
-                    </mat-menu>
-                </ng-container>
+                        <span>
+                            {{ item.label | translate }}
+                        </span>
+                    </div>
+                </button>
 
-                <!-- DEFAULT ITEM -->
-                <ng-template #defaultItem>
-                    <a routerLinkActive="active" [routerLink]="item.isLink ? item.route : null" class="navigator-item"
-                        (click)="handleNavigation(item, $event); selected = item.icon">
-                        @if(item.iconUrl && item.iconUrl != "") {
-                        <img [src]="item.iconUrl" alt="" [class.selected-svg]="isSelected(item)" />
+                <mat-menu #menu="matMenu" class="menu-content">
+
+                    @for(option of item.menuOptions; track option.id) {
+
+                    <button
+                        mat-menu-item
+                        [matMenuTriggerFor]="option.id === 'display'
+                            ? displayMenu
+                            : null"
+                        [matMenuTriggerRestoreFocus]="false"
+                        #displayTrigger="matMenuTrigger"
+                        (click)="option.id === 'display'
+                            ? displayTrigger.openMenu()
+                            : navigate(option)">
+
+                        @if(option.icon) {
+
+                        @if(option.iconUrl && option.iconUrl != '') {
+                        <img [src]="option.iconUrl" alt="" />
                         }
                         @else {
-                        <mat-icon [fontSet]="'material-symbols-rounded'">{{item.icon}}</mat-icon>
+                        <mat-icon [fontSet]="'material-symbols-rounded'">
+                            {{ option.icon }}
+                        </mat-icon>
                         }
-                        <span>{{ item.label | translate }}</span>
-                    </a>
-                </ng-template>
 
+                        }
+
+                        <span>
+                            {{ option.label | translate }}
+                        </span>
+                    </button>
+                    }
+                </mat-menu>
+
+                <mat-menu
+                    #displayMenu="matMenu"
+                    class="display-theme-menu">
+
+                    <app-theme-menu />
+                </mat-menu>
+
+                }
+                @else {
+
+                <button
+                    class="sidebar-native-button"
+                    (click)="navigate(item); selected = item.icon">
+
+                    <div class="sidebar-button-content">
+
+                        @if(item.iconUrl && item.iconUrl != '') {
+                        <img
+                            [src]="item.iconUrl"
+                            alt=""
+                            [class.selected-svg]="isSelected(item)" />
+                        }
+                        @else {
+                        <mat-icon
+                            [fontSet]="isSelected(item)
+                                ? 'material-symbols-rounded'
+                                : 'material-symbols-outlined'">
+                            {{ item.icon }}
+                        </mat-icon>
+                        }
+
+                        <span>
+                            {{ item.label | translate }}
+                        </span>
+                    </div>
+                </button>
+
+                }
             </div>
             }
         </div>
+
         <div class="navigation-bar-bottom section-nav"></div>
     </div>
 </nav>
-<app-search-sidebar *ngIf="panels.search" (close)="closePanels()" />
-<app-notifications-sidebar *ngIf="panels.notifications" (close)="closePanels()" />
+
+<app-search-sidebar
+    *ngIf="panels.search"
+    (close)="closePanels()" />
+
+<app-notifications-sidebar
+    *ngIf="panels.notifications"
+    (close)="closePanels()" />
+
 @if(!isMessagePage) {
+
 <nav class="mobile-navigation mobile">
-    @for(item of mobileNavigationLinks; track item.route) {
-    <a (click)="item?.action(); selected = item.icon" [routerLink]="item.isLink ? item.route : null" routerLinkActive="active"
-        class="mobile-item">
-        @if(item.iconUrl && item.iconUrl != "") {
-        <img [src]="item.iconUrl" alt="" class="iconImage" [class.selected-svg]="isSelected(item)" />
+
+    @for(item of mobileNavigationLinks; track item.id) {
+
+    <button
+        class="mobile-item"
+        (click)="navigate(item); selected = item.icon">
+
+        @if(item.iconUrl && item.iconUrl != '') {
+        <img
+            [src]="item.iconUrl"
+            alt=""
+            class="iconImage"
+            [class.selected-svg]="isSelected(item)" />
         }
         @else {
-        <mat-icon [fontSet]="'material-symbols-rounded'">{{item.icon}}</mat-icon>
+        <mat-icon
+            [fontSet]="isSelected(item)
+                ? 'material-symbols-rounded'
+                : 'material-symbols-outlined'">
+            {{ item.icon }}
+        </mat-icon>
         }
-        <!-- <span>{{ item.label | translate }}</span> -->
-    </a>
+    </button>
     }
 </nav>
 }

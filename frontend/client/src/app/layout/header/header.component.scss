@@ -8,8 +8,9 @@
     pointer-events: none;
     transition: transform 0.3s ease, opacity 0.3s ease;
     border-top: 4px solid rgb(18, 18, 18);
-
+    
     .header-component-top {
+        color: var(--color-text);
         pointer-events: auto;
         display: flex;
         align-items: center;

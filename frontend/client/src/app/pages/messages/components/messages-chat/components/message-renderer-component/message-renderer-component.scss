@@ -10,7 +10,7 @@
 
 .post-label {
   font-size: 11px;
-  color: #65676b;
+  color: var(--color-text-secondary);
   white-space: pre-line;
   word-break: break-word;
 }
@@ -77,7 +77,7 @@
 
   &__name {
     font-size: 11px;
-    color: #65676b;
+    background: var(--color-text-secondary);
     margin-left: 4px;
     margin-bottom: 2px;
   }
@@ -86,7 +86,7 @@
     max-width: 100%;
     padding: 10px 14px;
     border-radius: 20px;
-    background: #e4e6eb;
+    background: var(--color-skeleton-base);
     font-size: 14px;
     line-height: 1.4;
     animation: fadeInUp 0.25s ease;

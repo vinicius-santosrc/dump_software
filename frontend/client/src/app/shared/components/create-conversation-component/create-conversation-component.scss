@@ -1,5 +1,7 @@
 .new-conversation {
     padding: 16px;
+    color: var(--color-text);
+    background-color: var(--color-background);
 
     &__header {
         display: flex;
@@ -10,6 +12,7 @@
             background-color: transparent;
             border: none;
             cursor: pointer;
+            color: var(--color-text);
         }
     }
 

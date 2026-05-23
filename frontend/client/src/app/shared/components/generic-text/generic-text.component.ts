@@ -13,6 +13,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { ThemeService } from '../../../core/services/theme.service';
 
 interface ParsedToken {
     type:
@@ -44,7 +45,7 @@ export class GenericTextComponent implements OnChanges {
 
     @Input() expandable: boolean = true;
 
-    @Input() theme: 'light' | 'dark' = 'dark';
+    @Input() theme: 'light' | 'dark' | undefined = undefined;
 
     @Input() clickableMentions: boolean = true;
 
@@ -73,11 +74,13 @@ export class GenericTextComponent implements OnChanges {
     private parsedTokens: ParsedToken[] = [];
 
     constructor(
-        private readonly sanitizer: DomSanitizer
-    ) { }
+        private readonly sanitizer: DomSanitizer,
+        private readonly themeService: ThemeService
+    ) { 
+        if(!this.theme) this.theme = themeService.getTheme();
+    }
 
     ngOnChanges(changes: SimpleChanges): void {
-
         if (
             changes['text'] ||
             changes['translatedText'] ||

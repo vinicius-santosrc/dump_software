@@ -11,16 +11,14 @@ export interface RecentSearch {
 @Injectable({ providedIn: 'root' })
 export class RecentSearchService {
 
-    private STORAGE_KEY = 'recent_searches';
-    private LIMIT = 10;
+    private readonly STORAGE_KEY = 'recent_searches';
+    private readonly LIMIT = 10;
 
-    // 🔥 GET
     getAll(): RecentSearch[] {
         const data = localStorage.getItem(this.STORAGE_KEY);
         return data ? JSON.parse(data) : [];
     }
 
-    // 🔥 ADD (sem duplicar + move pro topo)
     add(item: Omit<RecentSearch, 'createdAt'>) {
         let list = this.getAll();
 
@@ -39,13 +37,11 @@ export class RecentSearchService {
         localStorage.setItem(this.STORAGE_KEY, JSON.stringify(list));
     }
 
-    // 🔥 REMOVE
     remove(id: string) {
         const list = this.getAll().filter(i => i.id !== id);
         localStorage.setItem(this.STORAGE_KEY, JSON.stringify(list));
     }
 
-    // 🔥 CLEAR ALL
     clear() {
         localStorage.removeItem(this.STORAGE_KEY);
     }

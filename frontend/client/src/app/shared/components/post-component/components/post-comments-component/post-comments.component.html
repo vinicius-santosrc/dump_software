@@ -1,6 +1,9 @@
 <div class="comments" [class]="theme">
 
-    <p *ngIf="!isLoading && comments.length === 0" class="empty">{{ 'FEED.POST.COMMENTS.EMPTY' | translate }}</p>
+    <!-- <p *ngIf="!isLoading && comments.length === 0" class="empty">{{ 'FEED.POST.COMMENTS.EMPTY' | translate }}</p> -->
+    @if(!isLoading && comments.length === 0) {
+      <app-generic-text class="empty" text="{{ 'FEED.POST.COMMENTS.EMPTY' | translate }}" />
+    }
 
     <app-loader *ngIf="isLoading"></app-loader>
 

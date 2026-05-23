@@ -4,11 +4,12 @@ import { CommentItemComponent } from "../../../comment-item/comment-item.compone
 import { LoaderComponent } from "../../../loader-component/loader.component";
 import { BasicInputComponent } from "../../../basic-input-component/basic-input.component";
 import { TranslateModule } from '@ngx-translate/core';
+import { GenericTextComponent } from "../../../generic-text/generic-text.component";
 
 @Component({
     selector: 'app-post-comments',
     standalone: true,
-    imports: [CommonModule, CommentItemComponent, LoaderComponent, BasicInputComponent, TranslateModule],
+    imports: [CommonModule, CommentItemComponent, LoaderComponent, BasicInputComponent, TranslateModule, GenericTextComponent],
     templateUrl: './post-comments.component.html',
     styleUrl: './post-comments.component.scss'
 })

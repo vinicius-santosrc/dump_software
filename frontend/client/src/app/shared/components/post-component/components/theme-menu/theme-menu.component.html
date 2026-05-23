@@ -1,0 +1,28 @@
+<div class="theme-menu">
+    <div class="theme-menu__header">
+        <button class="theme-menu__back" mat-icon-button (click)="goBack()">
+            <mat-icon>arrow_back_ios_new</mat-icon>
+        </button>
+
+        <span class="theme-menu__title">
+            Alternar exibição
+        </span>
+
+        <mat-icon class="theme-menu__icon">
+            dark_mode
+        </mat-icon>
+    </div>
+
+    <div class="theme-menu__divider"></div>
+
+    <div class="theme-menu__content">
+        <div class="theme-menu__item">
+            <span class="theme-menu__label">
+                Modo escuro
+            </span>
+
+            <mat-slide-toggle [checked]="isDarkMode" (change)="toggleDarkMode($event.checked)">
+            </mat-slide-toggle>
+        </div>
+    </div>
+</div>

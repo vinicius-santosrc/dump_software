@@ -12,6 +12,13 @@ export class CallService {
     public outgoingCall: any = null;
     public onCallConnected?: (payload: any) => void;
     public onCallEnded?: () => void;
+    public onCallDisconnected?: () => void;
+    public onReceiveOffer?: (payload: any) => void;
+    public onReceiveAnswer?: (payload: any) => void;
+    public onReceiveIceCandidate?: (payload: any) => void;
+
+    public onRemoteCameraToggled?: (payload: any) => void;
+    public onRemoteMicrophoneToggled?: (payload: any) => void;
 
     public callStatus:
         | 'idle'
@@ -39,20 +46,17 @@ export class CallService {
                 this.registerEvents();
                 this.eventsRegistered = true;
                 clearInterval(interval);
-                console.warn('[CALL] SignalR listeners registered');
             }
         }, 300);
     }
 
     registerEvents(): void {
         this.chatService.hubConnection?.on('IncomingCall', (payload) => {
-            console.warn('[CALL] IncomingCall', payload);
             this.incomingCall = payload;
             this.callStatus = 'ringing';
         });
 
         this.chatService.hubConnection?.on('CallAccepted', (payload) => {
-            console.warn('[CALL] CallAccepted', payload);
             this.activeCall = payload;
             this.callStatus = 'connected';
             if (this.onCallConnected) {
@@ -61,7 +65,6 @@ export class CallService {
         });
 
         this.chatService.hubConnection?.on('CallRejected', (payload) => {
-            console.warn('[CALL] CallRejected', payload);
 
             this.callStatus = 'rejected';
 
@@ -71,12 +74,14 @@ export class CallService {
         });
 
         this.chatService.hubConnection?.on('CallEnded', (payload) => {
-            console.warn('[CALL] CallEnded', payload);
-
             this.callStatus = 'ended';
 
             if (this.onCallEnded) {
                 this.onCallEnded();
+            }
+
+            if (this.onCallDisconnected) {
+                this.onCallDisconnected();
             }
 
             setTimeout(() => {
@@ -84,16 +89,38 @@ export class CallService {
             }, 300);
         });
 
+        this.chatService.hubConnection?.on('CallCameraToggled', (payload) => {
+            console.warn('[CALL] CallCameraToggled', payload);
+
+            if (this.onRemoteCameraToggled) {
+                this.onRemoteCameraToggled(payload);
+            }
+        });
+
+        this.chatService.hubConnection?.on('CallMicrophoneToggled', (payload) => {
+            console.warn('[CALL] CallMicrophoneToggled', payload);
+
+            if (this.onRemoteMicrophoneToggled) {
+                this.onRemoteMicrophoneToggled(payload);
+            }
+        });
+
         this.chatService.hubConnection?.on('ReceiveOffer', (payload) => {
-            console.warn('[WEBRTC] ReceiveOffer', payload);
+            if (this.onReceiveOffer) {
+                this.onReceiveOffer(payload);
+            }
         });
 
         this.chatService.hubConnection?.on('ReceiveAnswer', (payload) => {
-            console.warn('[WEBRTC] ReceiveAnswer', payload);
+            if (this.onReceiveAnswer) {
+                this.onReceiveAnswer(payload);
+            }
         });
 
         this.chatService.hubConnection?.on('ReceiveIceCandidate', (payload) => {
-            console.warn('[WEBRTC] ReceiveIceCandidate', payload);
+            if (this.onReceiveIceCandidate) {
+                this.onReceiveIceCandidate(payload);
+            }
         });
     }
 
@@ -103,7 +130,6 @@ export class CallService {
         conversationId: string;
     }): Promise<void> {
         if (!this.chatService.hubConnection) {
-            console.error('[CALL] hubConnection not initialized');
             return;
         }
         this.outgoingCall = data;
@@ -120,7 +146,6 @@ export class CallService {
         conversationId: string;
     }): Promise<void> {
         if (!this.chatService.hubConnection) {
-            console.error('[CALL] hubConnection not initialized');
             return;
         }
         this.outgoingCall = data;
@@ -132,7 +157,7 @@ export class CallService {
             });
         }
         catch(error: any) {
-            console.error('Error starting video call', error);
+            throw new Error(error);
         }
     }
 
@@ -179,12 +204,38 @@ export class CallService {
                 payload?.type ||
                 activePayload?.type
         };
-
-        console.warn('[CALL] EndCall payload', finalPayload);
-
         await this.chatService.hubConnection.invoke('EndCall', finalPayload);
-
         this.callStatus = 'ended';
+    }
+
+    async toggleCallCamera(payload: any): Promise<void> {
+
+        await this.chatService.hubConnection
+            ?.invoke('ToggleCallCamera', payload);
+    }
+
+    async toggleCallMicrophone(payload: any): Promise<void> {
+
+        await this.chatService.hubConnection
+            ?.invoke('ToggleCallMicrophone', payload);
+    }
+
+    async sendOffer(payload: any): Promise<void> {
+
+        await this.chatService.hubConnection
+            ?.invoke('SendOffer', payload);
+    }
+
+    async sendAnswer(payload: any): Promise<void> {
+
+        await this.chatService.hubConnection
+            ?.invoke('SendAnswer', payload);
+    }
+
+    async sendIceCandidate(payload: any): Promise<void> {
+
+        await this.chatService.hubConnection
+            ?.invoke('SendIceCandidate', payload);
     }
 
     resetCallState(): void {

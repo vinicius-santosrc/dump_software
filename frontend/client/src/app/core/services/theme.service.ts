@@ -8,7 +8,7 @@ export class ThemeService {
     setTheme(theme: 'light' | 'dark') {
         document.body.classList.remove('light-theme', 'dark-theme');
         document.body.classList.add(`${theme}-theme`);
-        if (theme == 'dark') document.body.style.background = "#121212";
+        if (theme == 'dark') document.body.style.background = "rgb(12, 16, 20)";
         else document.body.style.background = "#FAFAFAFA"
 
         localStorage.setItem('theme', theme);

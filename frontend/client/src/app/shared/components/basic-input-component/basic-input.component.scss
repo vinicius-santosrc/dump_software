@@ -16,10 +16,12 @@
   height: 48px;
   padding: 18px 44px 10px 16px;
   border-radius: 14px;
-  border: 1px solid variable.$light-gray;
+  border: 1px solid var(--color-border);
   font-size: 14px;
   outline: none;
-  background: #ffffff;
+  // background: #ffffff;
+  background: var(--color-background);
+  color: var(--color-text)
 }
 
 .form-basic-input {
@@ -48,6 +50,7 @@
     font-size: 18px;
     width: 18px;
     height: 18px;
+    color: var(--color-text);
   }
 }
 
@@ -67,6 +70,7 @@
   background: transparent;
   cursor: pointer;
   padding: 4px;
+  color: var(--color-text)
 }
 
 .eye-icon {
@@ -75,6 +79,7 @@
   display: inline-block;
   border-radius: 50%;
   border: 1px solid var(--color-gray);
+  color: var(--color-text)
 }
 
 .error {

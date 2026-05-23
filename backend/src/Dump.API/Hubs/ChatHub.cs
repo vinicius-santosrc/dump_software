@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.SignalR;
 using Dump.Application.DTOs;
 using Dump.Application.Features.Messages;
 using Dump.Application.Features.User;
+using System.Text.Json;
 
 namespace Dump.API.Hubs;
 
@@ -24,6 +25,11 @@ public class ChatHub : Hub
 
     public async Task JoinUserRoom(string userId)
     {
+        if (!string.IsNullOrWhiteSpace(userId))
+        {
+            _onlineUsers[userId] = Context.ConnectionId;
+        }
+
         await Groups.AddToGroupAsync(Context.ConnectionId, $"user:{userId}");
     }
 
@@ -98,45 +104,178 @@ public class ChatHub : Hub
 
     public async Task CallUser(CallUserDto dto)
     {
-        await Clients.Group($"user:{dto.TargetUserId}")
-            .SendAsync("IncomingCall", dto);
+        dto.Caller = await _userService.GetById(dto.CallerId);
+
+        if (_onlineUsers.TryGetValue(
+            dto.TargetUserId,
+            out var connectionId))
+        {
+            await Clients.Client(connectionId)
+                .SendAsync("IncomingCall", dto);
+        }
     }
 
     public async Task AcceptCall(CallUserDto dto)
     {
-        await Clients.Group($"user:{dto.CallerId}")
-            .SendAsync("CallAccepted", dto);
+        if (_onlineUsers.TryGetValue(
+            dto.CallerId,
+            out var connectionId))
+        {
+            await Clients.Client(connectionId)
+                .SendAsync("CallAccepted", dto);
+        }
     }
 
     public async Task RejectCall(CallUserDto dto)
     {
-        await Clients.Group($"user:{dto.CallerId}")
-            .SendAsync("CallRejected", dto);
+        if (_onlineUsers.TryGetValue(
+            dto.CallerId,
+            out var connectionId))
+        {
+            await Clients.Client(connectionId)
+                .SendAsync("CallRejected", dto);
+        }
     }
 
     public async Task EndCall(CallUserDto dto)
     {
-        await Clients.Group($"user:{dto.TargetUserId}")
-            .SendAsync("CallEnded", dto);
+        if (_onlineUsers.TryGetValue(
+            dto.TargetUserId,
+            out var connectionId))
+        {
+            await Clients.Client(connectionId)
+                .SendAsync("CallEnded", dto);
+        }
+    }
+
+    public async Task ToggleCallCamera(JsonElement dto)
+    {
+        var callerId = GetStringProperty(dto, "callerId", "CallerId");
+        var targetUserId = GetStringProperty(dto, "targetUserId", "TargetUserId");
+        var conversationId = GetStringProperty(dto, "conversationId", "ConversationId");
+        var cameraOff = GetBoolProperty(dto, "cameraOff", "CameraOff");
+
+        if (string.IsNullOrWhiteSpace(targetUserId))
+        {
+            return;
+        }
+
+        if (_onlineUsers.TryGetValue(targetUserId, out var connectionId))
+        {
+            await Clients.Client(connectionId)
+                .SendAsync("CallCameraToggled", new
+                {
+                    callerId,
+                    targetUserId,
+                    conversationId,
+                    cameraOff
+                });
+        }
+    }
+
+    public async Task ToggleCallMicrophone(JsonElement dto)
+    {
+        var callerId = GetStringProperty(dto, "callerId", "CallerId");
+        var targetUserId = GetStringProperty(dto, "targetUserId", "TargetUserId");
+        var conversationId = GetStringProperty(dto, "conversationId", "ConversationId");
+        var muted = GetBoolProperty(dto, "muted", "Muted");
+
+        if (string.IsNullOrWhiteSpace(targetUserId))
+        {
+            return;
+        }
+
+        if (_onlineUsers.TryGetValue(targetUserId, out var connectionId))
+        {
+            await Clients.Client(connectionId)
+                .SendAsync("CallMicrophoneToggled", new
+                {
+                    callerId,
+                    targetUserId,
+                    conversationId,
+                    muted
+                });
+        }
     }
 
     //WebRTC signaling methods
 
-    public async Task SendOffer(WebRTCOfferDto dto)
+    public async Task SendOffer(JsonElement dto)
     {
-        await Clients.Group($"user:{dto.ToUserId}")
-            .SendAsync("ReceiveOffer", dto);
+        var targetUserId = GetStringProperty(dto, "targetUserId", "TargetUserId");
+        if (string.IsNullOrWhiteSpace(targetUserId))
+        {
+            return;
+        }
+
+        if (_onlineUsers.TryGetValue(targetUserId, out var connectionId))
+        {
+            await Clients.Client(connectionId)
+                .SendAsync("ReceiveOffer", dto);
+        }
     }
 
-    public async Task SendAnswer(WebRTCAnswerDto dto)
+    public async Task SendAnswer(JsonElement dto)
     {
-        await Clients.Group($"user:{dto.ToUserId}")
-            .SendAsync("ReceiveAnswer", dto);
+        var targetUserId = GetStringProperty(dto, "targetUserId", "TargetUserId");
+        if (string.IsNullOrWhiteSpace(targetUserId))
+        {
+            return;
+        }
+
+        if (_onlineUsers.TryGetValue(targetUserId, out var connectionId))
+        {
+            await Clients.Client(connectionId)
+                .SendAsync("ReceiveAnswer", dto);
+        }
     }
 
-    public async Task SendIceCandidate(ICECandidateDto dto)
+    public async Task SendIceCandidate(JsonElement dto)
     {
-        await Clients.Group($"user:{dto.ToUserId}")
-            .SendAsync("ReceiveIceCandidate", dto);
+        var targetUserId = GetStringProperty(dto, "targetUserId", "TargetUserId");
+        if (string.IsNullOrWhiteSpace(targetUserId))
+        {
+            return;
+        }
+
+        if (_onlineUsers.TryGetValue(targetUserId, out var connectionId))
+        {
+            await Clients.Client(connectionId)
+                .SendAsync("ReceiveIceCandidate", dto);
+        }
+    }
+
+    private static string GetStringProperty(JsonElement element, params string[] propertyNames)
+    {
+        foreach (var propertyName in propertyNames)
+        {
+            if (element.TryGetProperty(propertyName, out var property) &&
+                property.ValueKind == JsonValueKind.String)
+            {
+                return property.GetString() ?? string.Empty;
+            }
+        }
+
+        return string.Empty;
+    }
+
+    private static bool GetBoolProperty(JsonElement element, params string[] propertyNames)
+    {
+        foreach (var propertyName in propertyNames)
+        {
+            if (element.TryGetProperty(propertyName, out var property) &&
+                property.ValueKind == JsonValueKind.True)
+            {
+                return true;
+            }
+
+            if (element.TryGetProperty(propertyName, out property) &&
+                property.ValueKind == JsonValueKind.False)
+            {
+                return false;
+            }
+        }
+
+        return false;
     }
 }

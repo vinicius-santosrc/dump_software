@@ -8,6 +8,7 @@ import { AvatarItem } from '../../../shared/components/avatar-item/avatar-item.c
 
 import { CallService } from '../../../core/services/messages/call/call.service';
 import { WebrtcService } from '../../../core/services/messages/call/webrtc.service';
+import { UserService } from '../../../core/services/user/user.service';
 
 @Component({
     selector: 'app-call-modal',
@@ -32,33 +33,87 @@ export class CallModalComponent implements OnInit, OnDestroy {
     elapsedSeconds: number = 0;
 
     private timer?: any;
+    private destroyed: boolean = false;
+    private mediaInitialized: boolean = false;
+    private remoteStreamAttached: boolean = false;
+    private pendingIceCandidates: RTCIceCandidateInit[] = [];
 
     isMuted: boolean = false;
     isCameraOff: boolean = false;
+
+    remoteMuted: boolean = false;
+    remoteCameraOff: boolean = false;
 
     constructor(
         @Inject(MAT_DIALOG_DATA) public data: any,
 
         private readonly dialogRef: MatDialogRef<CallModalComponent>,
         public readonly callService: CallService,
-        public readonly webrtcService: WebrtcService
+        public readonly webrtcService: WebrtcService,
+        private readonly userService: UserService
     ) { }
 
     async ngOnInit(): Promise<void> {
-
+        this.registerWebrtcEvents();
         await this.initializeMedia();
-
         this.startTimer();
 
         this.callService.onCallEnded = () => {
+
+            if (this.destroyed) {
+                return;
+            }
+
+            this.destroyed = true;
 
             this.webrtcService.destroy();
 
             this.dialogRef.close();
         };
+
+        this.callService.onCallDisconnected = () => {
+
+            if (this.destroyed) {
+                return;
+            }
+
+            this.destroyed = true;
+
+            this.webrtcService.destroy();
+
+            this.dialogRef.close();
+        };
+
+        this.callService.onRemoteCameraToggled = (payload) => {
+
+            console.warn('[CALL MODAL] remote camera toggled', payload);
+
+            if (payload?.conversationId !== this.signalingPayload.conversationId) {
+                return;
+            }
+
+            this.remoteCameraOff = !!payload?.cameraOff;
+        };
+
+        this.callService.onRemoteMicrophoneToggled = (payload) => {
+
+            console.warn('[CALL MODAL] remote microphone toggled', payload);
+
+            if (payload?.conversationId !== this.signalingPayload.conversationId) {
+                return;
+            }
+
+            this.remoteMuted = !!payload?.muted;
+        };
     }
 
     ngOnDestroy(): void {
+
+        if (this.destroyed) {
+            return;
+        }
+
+        this.destroyed = true;
 
         this.webrtcService.destroy();
 
@@ -71,6 +126,55 @@ export class CallModalComponent implements OnInit, OnDestroy {
 
     get user(): any {
         return this.data?.user;
+    }
+
+    private get signalingPayload(): any {
+
+        return {
+            callerId:
+                this.callService.activeCall?.callerId ||
+                this.data?.payload?.callerId ||
+                this.data?.callerId,
+
+            targetUserId:
+                this.callService.activeCall?.targetUserId ||
+                this.data?.payload?.targetUserId ||
+                this.data?.targetUserId,
+
+            conversationId:
+                this.callService.activeCall?.conversationId ||
+                this.data?.payload?.conversationId ||
+                this.data?.conversationId,
+
+            type:
+                this.callService.activeCall?.type ||
+                this.data?.payload?.type ||
+                this.data?.type
+        };
+    }
+
+    private get currentUserId(): string {
+
+        return this.userService.getUser()?.id || '';
+    }
+
+    private get isLocalCaller(): boolean {
+
+        const payload = this.signalingPayload;
+
+        return this.data?.isCaller === true ||
+            (!!this.currentUserId && payload?.callerId === this.currentUserId);
+    }
+
+    private get remoteUserId(): string {
+
+        const payload = this.signalingPayload;
+
+        if (this.isLocalCaller) {
+            return payload?.targetUserId;
+        }
+
+        return payload?.callerId;
     }
 
     get formattedDuration(): string {
@@ -86,32 +190,319 @@ export class CallModalComponent implements OnInit, OnDestroy {
         return `${minutes}:${seconds}`;
     }
 
+    private registerWebrtcEvents(): void {
+
+        this.callService.onReceiveOffer = async (payload) => {
+
+            console.warn('[CALL MODAL] onReceiveOffer', payload);
+
+            if (!payload?.offer) {
+                return;
+            }
+
+            await this.ensureMediaReady();
+
+            await this.webrtcService
+                .setRemoteDescription(payload.offer);
+
+            await this.flushPendingIceCandidates();
+
+            const answer =
+                await this.webrtcService.createAnswer();
+
+            if (!answer) {
+                return;
+            }
+
+            console.warn('[WEBRTC] sending answer', {
+                callerId: payload.targetUserId,
+                targetUserId: payload.callerId
+            });
+
+            try {
+                await this.callService.sendAnswer({
+                    targetUserId:
+                        payload.callerId,
+
+                    callerId:
+                        payload.targetUserId,
+
+                    answer: {
+                        type: answer.type,
+                        sdp: answer.sdp
+                    }
+                });
+            }
+            catch (error) {
+                console.error('[WEBRTC] failed to send answer', {
+                    error,
+                    payload,
+                    answer
+                });
+            }
+        };
+
+        this.callService.onReceiveAnswer = async (payload) => {
+
+            console.warn('[CALL MODAL] onReceiveAnswer', payload);
+
+            if (!this.webrtcService.peer) {
+                return;
+            }
+
+            await this.webrtcService
+                .setRemoteDescription(payload.answer);
+
+            await this.flushPendingIceCandidates();
+        };
+
+        this.callService.onReceiveIceCandidate = async (payload) => {
+
+            console.warn('[CALL MODAL] onReceiveIceCandidate', payload);
+
+            if (!payload?.candidate) {
+                return;
+            }
+
+            if (!this.webrtcService.peer?.remoteDescription) {
+
+                this.pendingIceCandidates.push(payload.candidate);
+
+                console.warn(
+                    '[WEBRTC] queued ICE candidate',
+                    this.pendingIceCandidates.length
+                );
+
+                return;
+            }
+
+            await this.webrtcService
+                .addIceCandidate(payload.candidate);
+        };
+    }
+
+    async toggleCallCamera(payload: any): Promise<void> {
+
+        await this.callService.toggleCallCamera(payload);
+    }
+
+    async toggleCallMicrophone(payload: any): Promise<void> {
+
+        await this.callService.toggleCallMicrophone(payload);
+    }
+
+    private async ensureMediaReady(): Promise<void> {
+
+        if (!this.webrtcService.peer) {
+            await this.webrtcService.createPeer();
+            this.registerPeerIceCandidateHandler();
+        }
+
+        if (this.mediaInitialized) {
+            return;
+        }
+
+        const stream = await this.webrtcService
+            .initializeLocalStream(this.isVideoCall);
+
+        this.mediaInitialized = true;
+
+        console.warn('[CALL] local stream ensured', stream);
+
+        if (this.localVideo?.nativeElement) {
+            this.localVideo.nativeElement.srcObject = stream;
+        }
+    }
+
+    private registerPeerIceCandidateHandler(): void {
+
+        this.webrtcService.peer?.addEventListener(
+            'icecandidate',
+            async (event) => {
+
+                if (!event.candidate) {
+                    return;
+                }
+
+                const payload = this.signalingPayload;
+
+                const candidate = {
+                    candidate: event.candidate.candidate,
+                    sdpMid: event.candidate.sdpMid,
+                    sdpMLineIndex: event.candidate.sdpMLineIndex,
+                    usernameFragment: event.candidate.usernameFragment
+                };
+
+                const targetUserId = this.remoteUserId;
+
+                console.warn('[WEBRTC] sending ice candidate', {
+                    callerId: this.currentUserId || payload?.callerId,
+                    targetUserId,
+                    candidate
+                });
+
+                if (!targetUserId) {
+                    console.warn('[WEBRTC] ICE candidate ignored: missing targetUserId', {
+                        payload,
+                        candidate
+                    });
+
+                    return;
+                }
+
+                try {
+                    await this.callService.sendIceCandidate({
+                        callerId:
+                            this.currentUserId || payload?.callerId,
+
+                        targetUserId,
+
+                        candidate
+                    });
+                }
+                catch (error) {
+                    console.error('[WEBRTC] failed to send ICE candidate', {
+                        error,
+                        callerId: this.currentUserId || payload?.callerId,
+                        targetUserId,
+                        candidate
+                    });
+                }
+            }
+        );
+    }
+
+    private async flushPendingIceCandidates(): Promise<void> {
+
+        if (!this.webrtcService.peer?.remoteDescription) {
+            return;
+        }
+
+        while (this.pendingIceCandidates.length > 0) {
+
+            const candidate = this.pendingIceCandidates.shift();
+
+            if (!candidate) {
+                continue;
+            }
+
+            await this.webrtcService.addIceCandidate(candidate);
+        }
+    }
+
+    private attachRemoteStreamWhenReady(): void {
+
+        if (this.remoteStreamAttached) {
+            return;
+        }
+
+        const tryAttach = () => {
+
+            if (
+                this.remoteVideo?.nativeElement &&
+                this.webrtcService.remoteStream &&
+                this.webrtcService.remoteStream.getTracks().length > 0
+            ) {
+                this.remoteStreamAttached = true;
+
+                console.warn(
+                    '[CALL] attaching remote stream',
+                    this.webrtcService.remoteStream
+                );
+
+                console.warn(
+                    '[CALL] remote tracks',
+                    this.webrtcService.remoteStream.getTracks()
+                );
+
+                this.remoteVideo.nativeElement.srcObject =
+                    this.webrtcService.remoteStream;
+
+                this.remoteVideo.nativeElement
+                    .play()
+                    .catch(() => {});
+
+                return true;
+            }
+
+            return false;
+        };
+
+        if (tryAttach()) {
+            return;
+        }
+
+        const interval = setInterval(() => {
+
+            if (this.destroyed || tryAttach()) {
+                clearInterval(interval);
+            }
+
+        }, 250);
+    }
+
     async initializeMedia(): Promise<void> {
 
         try {
 
-            await this.webrtcService.createPeer();
+            await this.ensureMediaReady();
 
-            const stream = await this.webrtcService
-                .initializeLocalStream(this.isVideoCall);
+            const payload = this.signalingPayload;
 
-            if (this.localVideo?.nativeElement) {
+            console.warn('[CALL] signaling payload', payload);
 
-                this.localVideo.nativeElement.srcObject = stream;
+            const shouldCreateOffer = this.isLocalCaller;
+
+            console.warn('[WEBRTC] shouldCreateOffer', shouldCreateOffer);
+            console.warn('[WEBRTC] modal data', this.data);
+            console.warn('[WEBRTC] call status', this.callService.callStatus);
+            console.warn('[WEBRTC] current user id', this.currentUserId);
+            console.warn('[WEBRTC] is local caller', this.isLocalCaller);
+            console.warn('[WEBRTC] remote user id', this.remoteUserId);
+
+            if (shouldCreateOffer) {
+
+                const offer =
+                    await this.webrtcService.createOffer();
+
+                console.warn('[WEBRTC] created offer', offer);
+
+                if (offer) {
+
+                    if (!this.remoteUserId) {
+                        console.warn('[WEBRTC] offer ignored: missing remoteUserId', {
+                            payload,
+                            data: this.data
+                        });
+
+                        return;
+                    }
+
+                    try {
+                        await this.callService.sendOffer({
+                            callerId:
+                                this.currentUserId || payload?.callerId,
+
+                            targetUserId:
+                                this.remoteUserId,
+
+                            offer: {
+                                type: offer.type,
+                                sdp: offer.sdp
+                            }
+                        });
+                    }
+                    catch (error) {
+                        console.error('[WEBRTC] failed to send offer', {
+                            error,
+                            payload,
+                            offer
+                        });
+                    }
+                }
             }
 
-            setTimeout(() => {
-
-                if (
-                    this.remoteVideo?.nativeElement &&
-                    this.webrtcService.remoteStream
-                ) {
-
-                    this.remoteVideo.nativeElement.srcObject =
-                        this.webrtcService.remoteStream;
-                }
-
-            }, 300);
+            this.attachRemoteStreamWhenReady();
 
         }
         catch (error) {
@@ -129,33 +520,49 @@ export class CallModalComponent implements OnInit, OnDestroy {
         }, 1000);
     }
 
-    toggleMute(): void {
+    async toggleMute(): Promise<void> {
 
         this.webrtcService.toggleMute();
 
         this.isMuted = !this.isMuted;
+
+        await this.callService.toggleCallMicrophone({
+            callerId: this.currentUserId || this.signalingPayload.callerId,
+            targetUserId: this.remoteUserId,
+            conversationId: this.signalingPayload.conversationId,
+            muted: this.isMuted
+        });
     }
 
-    toggleCamera(): void {
+    async toggleCamera(): Promise<void> {
 
         this.webrtcService.toggleCamera();
 
         this.isCameraOff = !this.isCameraOff;
+
+        await this.callService.toggleCallCamera({
+            callerId: this.currentUserId || this.signalingPayload.callerId,
+            targetUserId: this.remoteUserId,
+            conversationId: this.signalingPayload.conversationId,
+            cameraOff: this.isCameraOff
+        });
     }
 
     async endCall(): Promise<void> {
 
-        const payload =
-            this.callService.activeCall ||
-            this.data?.payload ||
-            {};
+        const payload = this.signalingPayload;
 
         await this.callService.endCall({
-            callerId: payload?.callerId,
-            targetUserId: payload?.targetUserId,
+            callerId:
+                this.currentUserId || payload?.callerId,
+
+            targetUserId:
+                this.remoteUserId,
+
             conversationId:
                 payload?.conversationId ||
                 this.data?.conversationId,
+
             type:
                 payload?.type ||
                 this.data?.type

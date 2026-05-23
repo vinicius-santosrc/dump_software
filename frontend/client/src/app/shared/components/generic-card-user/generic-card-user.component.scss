@@ -4,7 +4,7 @@
   border-radius: 14px;
   transition: all 0.25s ease;
   cursor: pointer;
-  // color: var(--color-text);
+  color: var(--color-text);
 }
 
 /* CONTAINER */
@@ -146,7 +146,7 @@
 /* LIGHT THEME */
 .user-card--light {
   .user-card__name {
-    color: black;
+    color: var(--color-text);
   }
 
   .user-card__username {
@@ -161,7 +161,7 @@
 /* DARK THEME (default already applied, but explicit for consistency) */
 .user-card--dark {
   .user-card__name {
-    color: white;
+    color: var(--color-text);
   }
 
   .user-card__username {
