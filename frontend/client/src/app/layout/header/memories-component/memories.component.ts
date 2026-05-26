@@ -17,6 +17,7 @@ import {AvatarItem} from "../../../shared/components/avatar-item/avatar-item.com
 export class MemoriesComponent implements OnInit {
     @Input() user: User | null = null;
     @Input() width: string = "";
+    @Input() showMyMemorie: boolean = true;
     hasMyMemorie: StoryGroup[] = [];
     
     constructor(

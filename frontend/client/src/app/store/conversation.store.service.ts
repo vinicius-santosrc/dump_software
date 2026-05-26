@@ -27,16 +27,41 @@ export class MessagesStoreService {
     refresh$ = this._refresh$.asObservable();
 
     setActiveMessages(messages: any[]) {
-        this.activeMessages$.next(messages ?? []);
+        this.activeMessages$.next(this.normalizeMessages(messages ?? []));
     }
 
     appendMessage(message: any) {
+        if (!message) {
+            return;
+        }
+
         const current = this.activeMessages$.value ?? [];
+        const next = this.normalizeMessages([...current, message]);
 
-        const exists = current.some(m => m.id === message.id);
-        if (exists) return;
+        this.activeMessages$.next(next);
 
-        this.activeMessages$.next([...current, message]);
+        const conversationId = message?.conversationId ?? message?.conversation?.id;
+
+        if (conversationId) {
+            this.updateLastMessage(conversationId, message);
+        }
+    }
+
+    private normalizeMessages(messages: any[]): any[] {
+        const normalizedMessages = messages ?? [];
+
+        const uniqueMessages = new Map<string, any>();
+
+        (normalizedMessages ?? []).forEach(message => {
+            uniqueMessages.set(this.getMessageKey(message), message);
+        });
+
+        return Array.from(uniqueMessages.values()).sort((firstMessage, secondMessage) => {
+            const firstDate = new Date(firstMessage?.createdAt ?? 0).getTime();
+            const secondDate = new Date(secondMessage?.createdAt ?? 0).getTime();
+
+            return firstDate - secondDate;
+        });
     }
 
     setActiveConversation(id: string) {
@@ -48,81 +73,161 @@ export class MessagesStoreService {
         }
     }
 
+    clearActiveConversation() {
+        this.activeConversationId$.next(null);
+    }
+
     getActiveConversation() {
         return this.activeConversationId$.value;
     }
 
     setConversations(convs: any[]) {
-        this.conversations$.next(convs ?? []);
+        const current = this.conversations$.value ?? [];
+        const currentById = new Map<string, any>();
+
+        current.forEach(conversation => {
+            const id = this.getConversationId(conversation);
+
+            if (id) {
+                currentById.set(id, conversation);
+            }
+        });
+
+        const merged = (convs ?? []).map(conversation => {
+            const id = this.getConversationId(conversation);
+            const currentConversation = id ? currentById.get(id) : undefined;
+
+            if (!currentConversation) {
+                return conversation;
+            }
+
+            const currentDate = new Date(currentConversation?.updatedAt ?? currentConversation?.lastMessage?.createdAt ?? 0).getTime();
+            const incomingDate = new Date(conversation?.updatedAt ?? conversation?.lastMessage?.createdAt ?? 0).getTime();
+            const shouldKeepCurrentLastMessage = currentDate > incomingDate;
+
+            return {
+                ...conversation,
+                lastMessage: shouldKeepCurrentLastMessage
+                    ? currentConversation.lastMessage
+                    : conversation.lastMessage,
+                updatedAt: shouldKeepCurrentLastMessage
+                    ? currentConversation.updatedAt
+                    : conversation.updatedAt,
+                unreadCount: {
+                    ...(conversation.unreadCount ?? {}),
+                    ...(currentConversation.unreadCount ?? {})
+                }
+            };
+        });
+
+        this.conversations$.next(this.sortConversationsByLastActivity(merged));
     }
 
     updateLastMessage(conversationId: string, message: any) {
-        const current = this.conversations$.value ?? [];
+        if (!conversationId || !message) {
+            return;
+        }
 
-        const updated = current.map(c => {
-            if (c.id === conversationId) {
-                return { ...c, lastMessage: message };
+        const current = this.conversations$.value ?? [];
+        const messageCreatedAt = message?.createdAt ?? new Date().toISOString();
+
+        const updated = current.map(conversation => {
+            if (this.getConversationId(conversation) !== conversationId) {
+                return conversation;
             }
-            return c;
+
+            return {
+                ...conversation,
+                lastMessage: {
+                    text: message?.text ?? '',
+                    senderId: message?.senderId ?? message?.sender?.id ?? '',
+                    createdAt: messageCreatedAt,
+                    type: message?.type ?? 'text',
+                    mediaType: message?.mediaType ?? null,
+                    stickerUrl: message?.stickerUrl ?? null
+                },
+                updatedAt: messageCreatedAt
+            };
         });
 
-        this.conversations$.next(updated);
+        this.conversations$.next(this.sortConversationsByLastActivity(updated));
     }
 
     incrementUnread(conversationId: string, userId: string) {
-        const updated = this.conversations$.value.map(c => {
-            if (c.id === conversationId) {
-                const unread = c.unreadCount ?? {};
+        if (!conversationId || !userId) {
+            return;
+        }
 
-                return {
-                    ...c,
-                    unreadCount: {
-                        ...unread,
-                        [userId]: (unread[userId] ?? 0) + 1
-                    }
-                };
+        const updated = this.conversations$.value.map(conversation => {
+            if (this.getConversationId(conversation) !== conversationId) {
+                return conversation;
             }
-            return c;
+
+            const unreadCount = conversation.unreadCount ?? {};
+            const currentUnread = Number(unreadCount[userId] ?? 0);
+
+            return {
+                ...conversation,
+                unreadCount: {
+                    ...unreadCount,
+                    [userId]: currentUnread + 1
+                }
+            };
         });
 
-        this.conversations$.next(updated);
+        this.conversations$.next(this.sortConversationsByLastActivity(updated));
     }
 
     markAsRead(conversationId: string, userId: string) {
+        if (!conversationId || !userId) {
+            return;
+        }
 
-        // 🔥 1. sidebar unread reset
-        const updated = this.conversations$.value.map(c => {
-            if (c.id === conversationId) {
-                return {
-                    ...c,
-                    unreadCount: {
-                        ...(c.unreadCount ?? {}),
-                        [userId]: 0
-                    }
-                };
+        const updated = this.conversations$.value.map(conversation => {
+            if (this.getConversationId(conversation) !== conversationId) {
+                return conversation;
             }
-            return c;
+
+            return {
+                ...conversation,
+                unreadCount: {
+                    ...(conversation.unreadCount ?? {}),
+                    [userId]: 0
+                }
+            };
         });
 
-        this.conversations$.next(updated);
+        this.conversations$.next(this.sortConversationsByLastActivity(updated));
 
-        // 🔥 2. chat messages sync read
-        const msgs = this.activeMessages$.value.map(m => {
-            if (m.conversationId !== conversationId) return m;
+        const messages = this.activeMessages$.value.map(message => {
+            if ((message.conversationId ?? message.conversation?.id) !== conversationId) return message;
 
-            const readBy = m.readBy ?? [];
+            const readBy = message.readBy ?? message.readyBy ?? [];
 
             if (!readBy.includes(userId)) {
                 return {
-                    ...m,
-                    readBy: [...readBy, userId]
+                    ...message,
+                    readBy: [...readBy, userId],
+                    readyBy: [...readBy, userId]
                 };
             }
 
-            return m;
+            return message;
         });
 
-        this.activeMessages$.next(msgs);
+        this.activeMessages$.next(messages);
+    }
+    private sortConversationsByLastActivity(conversations: any[]): any[] {
+        return [...(conversations ?? [])].sort((firstConversation, secondConversation) => {
+            const firstDate = new Date(firstConversation?.updatedAt ?? firstConversation?.lastMessage?.createdAt ?? 0).getTime();
+            const secondDate = new Date(secondConversation?.updatedAt ?? secondConversation?.lastMessage?.createdAt ?? 0).getTime();
+
+            return secondDate - firstDate;
+        });
+    }
+
+    private getConversationId(conversation: any): string {
+        return conversation?.id ?? conversation?._id ?? '';
     }
 
     setTyping(conversationId: string, userId: string) {
@@ -178,12 +283,29 @@ export class MessagesStoreService {
     addConversation(conversation: any) {
         const current = this.conversations$.value ?? [];
 
-        const exists = current.some(c => c.id === conversation.id);
+        const conversationId = this.getConversationId(conversation);
+        const exists = current.some(c => this.getConversationId(c) === conversationId);
         if (exists) return;
 
         this.conversations$.next([conversation, ...current]);
     }
     refreshTrigger() {
         this._refresh$.next();
+    }
+
+    private getMessageKey(message: any): string {
+        const id = message?.id ?? message?._id;
+
+        if (id) {
+            return `id:${id}`;
+        }
+
+        const conversationId = message?.conversationId ?? '';
+        const senderId = message?.senderId ?? message?.sender?.id ?? '';
+        const type = message?.type ?? 'text';
+        const text = message?.text ?? '';
+        const createdAt = new Date(message?.createdAt ?? 0).getTime();
+
+        return `message:${conversationId}:${senderId}:${type}:${text}:${createdAt}`;
     }
 }

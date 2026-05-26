@@ -1,5 +1,3 @@
-
-
 import {
     ChangeDetectionStrategy,
     Component,
@@ -46,6 +44,8 @@ export class GenericTextComponent implements OnChanges {
     @Input() expandable: boolean = true;
 
     @Input() theme: 'light' | 'dark' | undefined = undefined;
+
+    @Input() textColor?: string = "none";
 
     @Input() clickableMentions: boolean = true;
 

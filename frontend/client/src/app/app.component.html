@@ -7,14 +7,10 @@
 </div>
 @if(!shouldHideLayout) {
   <!-- LATERAL BARRA -->
-
   <div class="dump">
     <app-sidebar-component />
-    
-    <!-- HEADER -->
-    <app-header />
     <main class="dump_content">
-      <aside class="dump_content_aside" [style.width]="contentWidth" [style.margin]="'auto'">
+      <aside class="dump_content_aside" [style.margin]="'auto'">
         <div class="page-container" [class.loading]="routeLoading">
           @if(!routeLoading) {
           <div class="page-content loaded">

@@ -27,8 +27,9 @@ export const locale = {
         HEADER: {
             ACTIONS: {
                 SIDEBAR: {
-                    TITLE: "Ações rápidas",
+                    TITLE: "DUMP",
                     EXPLORE: "Explorar",
+                    MESSAGES: "Conversas",
                     HOME: "Página inicial",
                     DUMPS: "Dumps",
                     SEARCH: "Buscar",
@@ -42,6 +43,7 @@ export const locale = {
                         AD: "Anunciar",
                         IA: "IA"
                     },
+                    PROFILE: "Perfil",
                     MENU: "Menu",
                     MENU_OPTIONS: {
                         SETTINGS: "Configurações",
@@ -286,7 +288,11 @@ export const locale = {
                 },
                 SEARCH: "Buscar por conversas",
                 LAST_MESSAGE: "Você",
-                LAST_MESSAGE_SENT_POST: "Você enviou um anexo"
+                LAST_MESSAGE_SENT_POST: "enviou um anexo",
+                LAST_MESSAGE_SENT_IMAGE: "enviou uma foto",
+                LAST_MESSAGE_SENT_VIDEO: "enviou um vídeo",
+                LAST_MESSAGE_SENT_AUDIO: "enviou um áudio",
+                LAST_MESSAGE_SENT_STICKER: "enviou um sticker"
             },
             CHAT: {
                 INPUT: {

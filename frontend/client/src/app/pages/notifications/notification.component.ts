@@ -3,6 +3,7 @@ import { NotificationService } from '../../core/services/messages/notification.s
 import { CommonModule } from '@angular/common';
 import {AvatarItem} from '../../shared/components/avatar-item/avatar-item.component';
 import { Router } from '@angular/router';
+import { normalizeLastText } from '../../core/utils/message.utils';
 
 @Component({
     selector: 'app-notification',
@@ -21,5 +22,17 @@ export class NotificationComponent {
     handleClick(notification: any) {
         const newUrl = notification.redirect;
         this.router.navigate([newUrl]);
+    }
+
+    normalizeMessage(notificationOrText: any) {
+        if (typeof notificationOrText === 'string') {
+            return normalizeLastText(notificationOrText);
+        }
+
+        return normalizeLastText(
+            notificationOrText?.text ?? notificationOrText?.message ?? notificationOrText?.lastMessage?.text ?? '',
+            notificationOrText?.type ?? notificationOrText?.lastMessage?.type,
+            notificationOrText?.mediaType ?? notificationOrText?.lastMessage?.mediaType
+        );
     }
 }

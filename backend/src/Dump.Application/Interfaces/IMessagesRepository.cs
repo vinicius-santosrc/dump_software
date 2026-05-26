@@ -12,4 +12,5 @@ public interface IMessagesRepository
     Task<List<Conversation>> GetConversationsByUserIdAsync(string userId);
     Task MarkAsReadAsync(string messageId, string userId);
     Task<Message?> GetByIdAsync(string id);
+    Task<long> CountUnreadMessagesAsync(string conversationId, string userId);
 }

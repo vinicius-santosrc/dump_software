@@ -1,0 +1,39 @@
+.explore-topic-rail {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+.explore-topic-chip {
+    height: 30px;
+    padding: 0 14px;
+    border: none;
+    border-radius: 9px;
+    background: transparent;
+    color: var(--color-text, #111);
+    cursor: pointer;
+    font-size: 16px;
+    line-height: 1;
+    white-space: nowrap;
+    transition: background .18s ease, color .18s ease, transform .18s ease;
+
+    &:hover {
+        background: var(--color-hover, #f1f1f1);
+    }
+
+    &:active {
+        transform: scale(.96);
+    }
+}
+
+.explore-topic-chip--active {
+    background: #1881e2;
+    color: #fff;
+}

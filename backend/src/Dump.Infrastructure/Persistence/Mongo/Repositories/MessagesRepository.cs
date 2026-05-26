@@ -70,6 +70,19 @@ public class MessagesRepository : IMessagesRepository
         return result;
     }
 
+    public async Task<long> CountUnreadMessagesAsync(string conversationId, string userId)
+    {
+        var filter = Builders<Message>.Filter.And(
+            Builders<Message>.Filter.Eq(message => message.ConversationId, conversationId),
+            Builders<Message>.Filter.Ne(message => message.SenderId, userId),
+            Builders<Message>.Filter.Not(
+                Builders<Message>.Filter.AnyEq(message => message.ReadBy, userId)
+            )
+        );
+
+        return await _messages.CountDocumentsAsync(filter);
+    }
+
     public async Task MarkAsReadAsync(string messageId, string userId)
     {
         var update = Builders<Message>.Update.AddToSet(m => m.ReadBy, userId);

@@ -8,6 +8,7 @@ import { PostPageComponent } from "./posts/postpage.component";
 import { MessagesComponent } from "./messages/messages.component";
 import { MemoriePageComponent } from "./memorie/memoriepage.component";
 import { DumpPageComponent } from "./dump/dump-page.component";
+import { ExplorePageComponent } from "./explore/explore-page.component";
 
 export const routes: Routes = [
     {
@@ -49,6 +50,10 @@ export const routes: Routes = [
                 path: 'dumps/:postId',
                 component: DumpPageComponent,
                 canActivate: [authGuard]
+            },
+            {
+                path: "explore",
+                component: ExplorePageComponent
             },
             {
                 path: ":username",

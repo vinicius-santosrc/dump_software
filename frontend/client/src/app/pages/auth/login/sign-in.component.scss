@@ -6,6 +6,7 @@
     min-height: 100vh;
     background: var(--color-background);
     overflow: hidden;
+    margin-left: -100px !important;
 
     .sign-in-left-side {
         width: 50%;

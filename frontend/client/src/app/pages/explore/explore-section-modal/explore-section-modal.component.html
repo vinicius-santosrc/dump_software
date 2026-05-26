@@ -1,0 +1,36 @@
+<section class="explore-modal-section">
+    <header class="explore-modal-section__header">
+        <div>
+            <mat-icon>{{ section.icon }}</mat-icon>
+
+            <span>
+                <strong>{{ section.title }}</strong>
+                <small>{{ section.description }}</small>
+            </span>
+        </div>
+
+        <button mat-icon-button mat-dialog-close aria-label="Fechar">
+            <mat-icon>close</mat-icon>
+        </button>
+    </header>
+
+    <div class="explore-modal-section__rail">
+        <button type="button" class="explore-modal-pill">Mais recentes</button>
+        <button type="button" class="explore-modal-pill">Mais curtidos</button>
+        <button type="button" class="explore-modal-pill">Só vídeos</button>
+        <button type="button" class="explore-modal-pill">Criadores pequenos</button>
+        <button type="button" class="explore-modal-pill">Perto de você</button>
+    </div>
+
+    <div class="explore-modal-section__grid">
+        @for (post of section.posts; track post.id) {
+        <button type="button" class="explore-modal-post"
+            [style.--post-image]="post.imageUrl ? 'url(' + post.imageUrl + ')' : null" (click)="openQuickReels(post)">
+
+            <span>{{ post.score }} relevante</span>
+            <strong>{{ post.title }}</strong>
+            <small>{{ post.author }} · {{ post.meta }}</small>
+        </button>
+        }
+    </div>
+</section>

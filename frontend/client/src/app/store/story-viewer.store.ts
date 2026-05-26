@@ -25,6 +25,42 @@ export class StoryViewerStore {
         this.opened = this.groups.length > 0;
     }
 
+    updateGroupStoriesByUsername(username: string, stories: any[]): void {
+        if (!username || !Array.isArray(stories) || stories.length === 0) {
+            return;
+        }
+
+        const groupIndex = this.findGroupIndexByUsername(username);
+
+        const hydratedGroup: StoryGroup = {
+            user: stories[0]?.user ?? this.groups[groupIndex]?.user,
+            stories,
+            lastStoryAt: stories[0]?.createdAt ?? this.groups[groupIndex]?.lastStoryAt ?? new Date().toISOString()
+        };
+
+        if (groupIndex === -1) {
+            this.groups = [...this.groups, hydratedGroup];
+            this.activeGroupIndex = this.groups.length - 1;
+            this.activeStoryIndex = 0;
+            this.opened = true;
+            return;
+        }
+
+        this.groups = this.groups.map((group, index) => {
+            if (index !== groupIndex) {
+                return group;
+            }
+
+            return hydratedGroup;
+        });
+
+        this.activeGroupIndex = groupIndex;
+
+        const maxStoryIndex = Math.max(0, stories.length - 1);
+        this.activeStoryIndex = Math.max(0, Math.min(this.activeStoryIndex, maxStoryIndex));
+        this.opened = true;
+    }
+
     close(): void {
         this.opened = false;
     }

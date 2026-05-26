@@ -1,0 +1,112 @@
+:host {
+    display: block;
+    width: 100%;
+    min-height: 100dvh;
+    background: var(--color-background, #fff);
+    color: var(--color-text, #111);
+}
+
+.explore-page {
+    width: 100%;
+    min-height: 100dvh;
+    padding: 26px 24px 64px;
+}
+
+.explore-page__inside {
+    width: min(960px, 100%);
+    margin: 0 auto;
+}
+
+.explore-page__hero {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-bottom: 16px;
+}
+
+.explore-page__sections {
+    display: flex;
+    flex-direction: column;
+    gap: 42px;
+}
+
+.explore-page__sections--loading {
+    opacity: .4;
+    pointer-events: none;
+}
+
+.explore-page__loading-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
+    margin-bottom: 34px;
+}
+
+.explore-post-card--skeleton {
+    min-height: 190px;
+    border-radius: 16px;
+    background: linear-gradient(90deg, #dedede, #eeeeee, #dedede);
+    background-size: 200% 100%;
+    animation: explore-skeleton 1.2s ease-in-out infinite;
+}
+
+@keyframes explore-skeleton {
+    from {
+        background-position: 200% 0;
+    }
+
+    to {
+        background-position: -200% 0;
+    }
+}
+
+.explore-page__empty {
+    min-height: 260px;
+    display: grid;
+    place-items: center;
+    gap: 6px;
+    padding: 28px;
+    border-radius: 24px;
+    background: var(--background-secondary, #f7f7f7);
+    color: var(--color-text-secondary, #737373);
+    text-align: center;
+
+    mat-icon {
+        font-size: 34px;
+        width: 34px;
+        height: 34px;
+    }
+
+    strong {
+        color: var(--color-text, #111);
+    }
+}
+
+::ng-deep .explore-section-dialog .mat-mdc-dialog-container,
+::ng-deep .explore-reels-dialog .mat-mdc-dialog-container {
+    --mdc-dialog-container-color: transparent;
+    padding: 0;
+    box-shadow: none;
+}
+
+@media (max-width: 1024px) {
+    .explore-page__loading-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 768px) {
+    .explore-page {
+        padding: 14px 12px 92px;
+    }
+
+    .explore-page__loading-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 480px) {
+    .explore-page__loading-grid {
+        grid-template-columns: 1fr;
+    }
+}

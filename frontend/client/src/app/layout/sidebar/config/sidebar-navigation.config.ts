@@ -18,6 +18,14 @@ export const SIDEBAR_NAVIGATION: NavigationLink[] = [
     },
 
     {
+        id: 'send',
+        icon: "inbox",
+        route: "/messages/inbox",
+        type: 'route',
+        label: "HEADER.ACTIONS.SIDEBAR.MESSAGES"
+    },
+
+    {
         id: 'dumps',
         icon: "movie",
         route: "/dumps",
@@ -88,6 +96,14 @@ export const SIDEBAR_NAVIGATION: NavigationLink[] = [
                 iconUrl: '',
             }
         ]
+    },
+
+    {
+        id: 'profile',
+        icon: "people",
+        route: "/",
+        type: 'route',
+        label: "HEADER.ACTIONS.SIDEBAR.PROFILE"
     },
 
     {

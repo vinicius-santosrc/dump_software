@@ -87,32 +87,89 @@ export class ConversationItemComponent {
   }
 
   getLastMessage(): string {
-    if (!this.convo?.lastMessage) return '';
+    const lastMessage = this.convo?.lastMessage;
+
+    if (!lastMessage) return '';
+
+    const text = lastMessage.text ?? '';
+    const type = lastMessage.type ?? '';
+    const mediaType = lastMessage.mediaType ?? '';
+    const mediaUrl = lastMessage.mediaUrl ?? '';
+    const stickerUrl = lastMessage.stickerUrl ?? '';
+
+    const isMine = lastMessage.senderId === this.currentUser?.id;
+    const prefix = isMine
+      ? `${this.translateService.instant('MESSAGES_INBOX.SIDEBAR.LAST_MESSAGE')}: `
+      : '';
 
     // POST
-    const postMatch = this.convo.lastMessage.text.match(/\/p\/([a-zA-Z0-9-]+)/);
+    const postMatch = text.match(/\/p\/([a-zA-Z0-9-]+)/);
 
     // STORY
-    const storyMatch = this.convo.lastMessage.text.match(/\/memories\/([^\/]+)\/([a-zA-Z0-9-]+)/);
+    const storyMatch = text.match(/\/memories\/([^\/]+)\/([a-zA-Z0-9-]+)/);
 
     if (postMatch || storyMatch) {
-      return this.translateService.instant('MESSAGES_INBOX.SIDEBAR.LAST_MESSAGE_SENT_POST')
+      return prefix + this.translateService.instant('MESSAGES_INBOX.SIDEBAR.LAST_MESSAGE_SENT_POST');
+    }
+
+    if (this.isImageLastMessage(type, mediaType, mediaUrl, text)) {
+      return prefix + this.translateService.instant('MESSAGES_INBOX.SIDEBAR.LAST_MESSAGE_SENT_IMAGE');
+    }
+
+    if (this.isVideoLastMessage(type, mediaType, mediaUrl, text)) {
+      return prefix + this.translateService.instant('MESSAGES_INBOX.SIDEBAR.LAST_MESSAGE_SENT_VIDEO');
+    }
+
+    if (this.isAudioLastMessage(type, mediaType, mediaUrl, text)) {
+      return prefix + this.translateService.instant('MESSAGES_INBOX.SIDEBAR.LAST_MESSAGE_SENT_AUDIO');
+    }
+
+    if (this.isStickerLastMessage(type, stickerUrl, text)) {
+      return prefix + this.translateService.instant('MESSAGES_INBOX.SIDEBAR.LAST_MESSAGE_SENT_STICKER');
     }
 
     if (this.convo.participants.length === 2) {
-      if (this.convo.lastMessage.senderId === this.currentUser?.id) {
-        return this.translateService.instant('MESSAGES_INBOX.SIDEBAR.LAST_MESSAGE') + ': ' + this.convo.lastMessage.text;
-      }
-      return this.convo.lastMessage.text;
+      return prefix + text;
     }
 
-    return '';
+    return text;
+  }
+
+  private isImageLastMessage(type: string, mediaType: string, mediaUrl: string, text: string): boolean {
+    const source = mediaUrl || text;
+
+    return type === 'image'
+      || mediaType.startsWith('image/')
+      || source.startsWith('data:image');
+  }
+
+  private isVideoLastMessage(type: string, mediaType: string, mediaUrl: string, text: string): boolean {
+    const source = mediaUrl || text;
+
+    return type === 'video'
+      || mediaType.startsWith('video/')
+      || source.startsWith('data:video');
+  }
+
+  private isAudioLastMessage(type: string, mediaType: string, mediaUrl: string, text: string): boolean {
+    const source = mediaUrl || text;
+
+    return type === 'audio'
+      || mediaType.startsWith('audio/')
+      || source.startsWith('data:audio');
+  }
+
+  private isStickerLastMessage(type: string, stickerUrl: string, text: string): boolean {
+    const source = stickerUrl || text;
+
+    return type === 'sticker'
+      || source.includes('/stickers/')
+      || source.includes('assets/stickers/');
   }
 
   getUnreadCount(): number {
     if (!this.convo || !this.currentUser?.id) return 0;
 
-    // 🔥 garante que unreadCount existe
     const unreadMap = this.convo.unreadCount ?? {};
 
     const count = unreadMap[this.currentUser.id] ?? 0;

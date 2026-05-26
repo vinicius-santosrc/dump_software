@@ -8,7 +8,7 @@
                 <div class="notification__content">
                     <h2>Mensagens</h2>
                     <span>{{n.sender?.username}}:</span>
-                    <span id="text">{{n.text}}</span>
+                    <span id="text">{{normalizeMessage(n.text)}}</span>
                 </div>
             </div>
         </section>

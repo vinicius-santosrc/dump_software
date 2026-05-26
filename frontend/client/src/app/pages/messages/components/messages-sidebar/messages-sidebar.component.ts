@@ -12,12 +12,13 @@ import { MatButton } from "@angular/material/button";
 import { TranslateModule } from "@ngx-translate/core";
 import { BasicInputComponent } from "../../../../shared/components/basic-input-component/basic-input.component";
 import { MatTabGroup, MatTab } from "@angular/material/tabs";
+import { MemoriesComponent } from "../../../../layout/header/memories-component/memories.component";
 
 @Component({
     selector: "app-messages-sidebar",
     templateUrl: "./messages-sidebar.component.html",
     styleUrls: ["./messages-sidebar.component.scss"],
-    imports: [MatIcon, CommonModule, ConversationItemComponent, MatButton, TranslateModule, BasicInputComponent, MatTabGroup, MatTab]
+    imports: [MatIcon, CommonModule, ConversationItemComponent, MatButton, TranslateModule, BasicInputComponent, MatTabGroup, MatTab, MemoriesComponent]
 })
 @Injectable({
     providedIn: 'root'
@@ -81,13 +82,35 @@ export class MessagesSidebarComponent {
     }
 
     getLastMessage(convo: ConversationMessages): string {
-        if (convo.participants.length === 2) {
-            if (convo?.lastMessage?.senderId == this.current_user.id) {
-                return "Você: " + convo?.lastMessage?.text
-            }
-            return convo?.lastMessage?.text
+        const lastMessage: any = convo?.lastMessage;
+
+        if (!lastMessage) {
+            return '';
         }
-        return '';
+
+        const prefix = lastMessage?.senderId === this.current_user?.id ? 'Você: ' : '';
+
+        return `${prefix}${this.getLastMessagePreview(lastMessage)}`;
+    }
+
+    private getLastMessagePreview(lastMessage: any): string {
+        const type = lastMessage?.type ?? 'text';
+        const text = lastMessage?.text ?? '';
+        const mediaType = lastMessage?.mediaType ?? '';
+
+        if (type === 'image' || mediaType.startsWith('image/') || text.startsWith('data:image')) {
+            return '📷 Imagem';
+        }
+
+        if (type === 'audio' || mediaType.startsWith('audio/') || text.startsWith('data:audio')) {
+            return '🎙️ Áudio';
+        }
+
+        if (type === 'sticker' || lastMessage?.stickerUrl || text.includes('/stickers/') || text.includes('assets/stickers/')) {
+            return 'Sticker';
+        }
+
+        return text;
     }
 
     public clickCreateConversation() {
@@ -104,8 +127,21 @@ export class MessagesSidebarComponent {
     }
 
     getUnreadCount(convo: any): number {
-        if (!convo?.unreadCount) return 0;
+        const userId = this.current_user?.id;
 
-        return convo.unreadCount[this.current_user.id] ?? 0;
+        if (!userId || !convo) {
+            return 0;
+        }
+
+        const unreadCount = convo.unreadCount ?? convo.unreadCounts ?? convo.unread ?? {};
+
+        if (typeof unreadCount === 'number') {
+            return unreadCount;
+        }
+
+        return Number(unreadCount[userId] ?? 0);
+    }
+    hasUnread(convo: any): boolean {
+        return this.getUnreadCount(convo) > 0;
     }
 }

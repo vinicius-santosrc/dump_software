@@ -16,13 +16,28 @@ import { BasicInputComponent } from "../../../../shared/components/basic-input-c
 import { TranslateModule } from "@ngx-translate/core";
 import { MatDialog } from '@angular/material/dialog';
 import { PreCallComponent } from "../../../call/pre-call/pre-call.component";
+import {
+    ChatComposerPayload,
+    MessageComposerComponent
+} from "./components/message-composer-component/message-composer-component";
+import { MediaProcessingService } from "../../../../core/services/media/media-processing.service";
 
 @Component({
     selector: "app-messages-chat",
     standalone: true,
     templateUrl: "./messages-chat.component.html",
     styleUrls: ["./messages-chat.component.scss"],
-    imports: [MatIcon, FormsModule, CommonModule, MessageRendererComponent, GenericButtonComponent, MatButtonModule, BasicInputComponent, TranslateModule]
+    imports: [
+        MatIcon,
+        FormsModule,
+        CommonModule,
+        MessageRendererComponent,
+        GenericButtonComponent,
+        MatButtonModule,
+        BasicInputComponent,
+        TranslateModule,
+        MessageComposerComponent
+    ]
 })
 
 export class MessagesChatComponent implements OnInit, OnChanges {
@@ -30,7 +45,8 @@ export class MessagesChatComponent implements OnInit, OnChanges {
     onlineUsers$: any;
     usersMap: Map<string, any> = new Map();
     messages: any[] = [];
-    pendingMessages: { [tempId: string]: any } = {};
+
+    ilustrationDirect: string = '/assets/app/media/undraw_message-sent_iyz6.svg'
 
     current_user: any;
     input: string = '';
@@ -50,7 +66,9 @@ export class MessagesChatComponent implements OnInit, OnChanges {
         private readonly messagesStore: MessagesStoreService,
         private readonly messagesSidebar: MessagesSidebarComponent,
         private readonly messagesComponent: MessagesComponent,
-        private readonly dialog: MatDialog
+        private readonly mediaProcessingService: MediaProcessingService,
+        private readonly dialog: MatDialog,
+        private readonly store: MessagesStoreService
     ) {
         this.userService.user$.subscribe((user: any) => {
             this.current_user = user;
@@ -69,7 +87,7 @@ export class MessagesChatComponent implements OnInit, OnChanges {
                     return;
                 }
 
-                this.messages = msgs;
+                this.messages = this.normalizeMessages(msgs);
 
                 setTimeout(() => {
                     this.scrollToBottom();
@@ -78,7 +96,6 @@ export class MessagesChatComponent implements OnInit, OnChanges {
     }
 
     ngOnChanges() {
-
         if (!this.conversation?.id) {
             return;
         }
@@ -93,10 +110,10 @@ export class MessagesChatComponent implements OnInit, OnChanges {
         this.chatService.joinConversation(this.conversation.id);
 
         this.messagesService
-            .getMessages(this.conversation.id)
+            .getMessages(this.conversation.id, true)
             .subscribe((msgs: any) => {
 
-                this.messages = msgs ?? [];
+                this.messages = this.normalizeMessages(msgs ?? []);
 
                 this.messagesStore.setActiveMessages(this.messages);
 
@@ -112,50 +129,191 @@ export class MessagesChatComponent implements OnInit, OnChanges {
             });
     }
 
+    ngOnDestroy(): void {
+        this.store.clearActiveConversation();
+    }
+
     // =========================
     // MESSAGES
     // =========================
 
-    sendMessage() {
+    handleComposerSend(payload: ChatComposerPayload): void {
+        switch (payload.type) {
+            case 'text':
+                this.sendMessage(payload.text);
+                break;
+
+            case 'image':
+                this.sendImageMessage(payload.file);
+                break;
+
+            case 'audio':
+                this.sendAudioMessage(payload.blob);
+                break;
+
+            case 'sticker':
+                this.sendStickerMessage(payload.stickerUrl);
+                break;
+        }
+    }
+
+    sendMessage(text: string = this.input): void {
+        const messageText = text?.trim();
+
+        if (!messageText || !this.conversation?.id || !this.current_user?.id) {
+            return;
+        }
+
+        const message = {
+            conversationId: this.conversation.id,
+            senderId: this.current_user.id,
+            text: messageText,
+            type: 'text'
+        };
+
+        this.sendRealtimeMessage(message);
+
+        this.input = '';
+        setTimeout(() => this.scrollToBottom(), 0);
+    }
+
+    private sendImageMessage(file?: File): void {
+        if (!file || !this.conversation?.id || !this.current_user?.id) {
+            return;
+        }
+
+        this.mediaProcessingService.compressChatImage(file, 640, 0.42).then((compressedFile) => {
+            return this.fileToBase64(compressedFile).then(base64 => {
+                const message = {
+                    conversationId: this.conversation.id,
+                    senderId: this.current_user.id,
+                    text: base64,
+                    mediaType: compressedFile.type || file.type,
+                    fileName: compressedFile.name || file.name
+                };
+
+                this.sendRealtimeMessage(message);
+
+                setTimeout(() => this.scrollToBottom(), 0);
+            });
+        });
+    }
+
+    private sendAudioMessage(blob?: Blob): void {
+        if (!blob || !this.conversation?.id || !this.current_user?.id) {
+            return;
+        }
+
+        this.mediaProcessingService.compressAudio(blob, {
+            bitRate: 24_000,
+            sampleRate: 16_000
+        }).then((compressedBlob) => {
+            return this.blobToBase64(compressedBlob).then(base64 => {
+                const message = {
+                    conversationId: this.conversation.id,
+                    senderId: this.current_user.id,
+                    text: base64,
+                    type: 'audio',
+                    mediaUrl: base64,
+                    mediaType: compressedBlob.type || blob.type
+                };
+
+                this.sendRealtimeMessage(message);
+
+                setTimeout(() => this.scrollToBottom(), 0);
+            });
+        });
+    }
+
+    private sendStickerMessage(stickerUrl?: string): void {
+        if (!stickerUrl || !this.conversation?.id || !this.current_user?.id) {
+            return;
+        }
+
         const tempId = 'temp-' + Date.now();
 
         const message = {
             id: tempId,
             conversationId: this.conversation.id,
             senderId: this.current_user.id,
-            text: this.input,
+            text: stickerUrl,
             createdAt: new Date().toISOString(),
             readBy: [this.current_user.id],
             status: 'sending'
         };
 
-        this.pendingMessages[tempId] = message;
+        this.sendRealtimeMessage(message);
 
-        this.messages = [...this.messages, message];
-
-        this.messagesStore.setActiveMessages(this.messages);
-
-        this.messagesService.addMessageToCache(
-            this.conversation.id,
-            message
-        );
-
+        setTimeout(() => this.scrollToBottom(), 0);
+    }
+    private sendRealtimeMessage(message: any): void {
+        const tempId = 'temp-' + Date.now();
         this.chatService.sendMessage({
             conversationId: message.conversationId,
             userId: message.senderId,
             text: message.text,
             tempId
         });
+    }
 
-        this.input = '';
-        setTimeout(() => this.scrollToBottom(), 0);
+    private normalizeMessages(messages: any[]): any[] {
+        const uniqueMessages = new Map<string, any>();
+
+        (messages ?? []).forEach(message => {
+            uniqueMessages.set(this.getMessageUniqueKey(message), message);
+        });
+
+        return Array.from(uniqueMessages.values()).sort((firstMessage, secondMessage) => {
+            const firstDate = new Date(firstMessage?.createdAt ?? 0).getTime();
+            const secondDate = new Date(secondMessage?.createdAt ?? 0).getTime();
+
+            return firstDate - secondDate;
+        });
+    }
+
+    private getMessageUniqueKey(message: any): string {
+        const id = message?.id ?? message?._id;
+
+        if (id) {
+            return `id:${id}`;
+        }
+
+        const conversationId = message?.conversationId ?? '';
+        const senderId = message?.senderId ?? message?.sender?.id ?? '';
+        const type = message?.type ?? 'text';
+        const text = message?.text ?? '';
+        const createdAt = new Date(message?.createdAt ?? 0).getTime();
+
+        return `message:${conversationId}:${senderId}:${type}:${text}:${createdAt}`;
+    }
+
+    private fileToBase64(file: File): Promise<string> {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+
+            reader.onload = () => resolve(reader.result as string);
+            reader.onerror = reject;
+
+            reader.readAsDataURL(file);
+        });
+    }
+
+    private blobToBase64(blob: Blob): Promise<string> {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+
+            reader.onload = () => resolve(reader.result as string);
+            reader.onerror = reject;
+
+            reader.readAsDataURL(blob);
+        });
     }
 
     loadMessages() {
         this.messagesService.getMessages(this.conversation.id)
             .subscribe((msgs: any) => {
 
-                this.messagesStore.setActiveMessages(msgs);
+                this.messagesStore.setActiveMessages(this.normalizeMessages(msgs ?? []));
 
                 setTimeout(() => this.scrollToBottom(), 0);
             });
@@ -182,7 +340,11 @@ export class MessagesChatComponent implements OnInit, OnChanges {
     // TYPING (LOCAL ONLY UI)
     // =========================
 
-    onTyping() {
+    onTyping(): void {
+        if (!this.conversation?.id || !this.current_user?.id) {
+            return;
+        }
+
         this.chatService.typing(
             this.conversation.id,
             this.current_user.id
@@ -191,14 +353,15 @@ export class MessagesChatComponent implements OnInit, OnChanges {
         clearTimeout(this.typingTimeout);
 
         this.typingTimeout = setTimeout(() => {
-            this.chatService.stopTyping(
-                this.conversation.id,
-                this.current_user.id
-            );
+            this.onStopTyping();
         }, 1200);
     }
 
-    onStopTyping() {
+    onStopTyping(): void {
+        if (!this.conversation?.id || !this.current_user?.id) {
+            return;
+        }
+
         this.chatService.stopTyping(
             this.conversation.id,
             this.current_user.id
@@ -253,6 +416,73 @@ export class MessagesChatComponent implements OnInit, OnChanges {
         }
 
         return 'MESSAGES_INBOX.CHAT.POST.DELIVERED';
+    }
+
+    shouldShowDateSeparator(msg: any, index: number): boolean {
+        if (!msg?.createdAt) {
+            return false;
+        }
+
+        if (index === 0) {
+            return true;
+        }
+
+        const previousMessage = this.messages[index - 1];
+
+        if (!previousMessage?.createdAt) {
+            return true;
+        }
+
+        return !this.isSameMessageDay(previousMessage.createdAt, msg.createdAt);
+    }
+
+    getDateSeparatorLabel(msg: any): string {
+        const messageDate = this.toLocalDate(msg?.createdAt);
+
+        if (!messageDate) {
+            return '';
+        }
+
+        const today = new Date();
+        const yesterday = new Date();
+        yesterday.setDate(today.getDate() - 1);
+
+        if (this.isSameMessageDay(messageDate, today)) {
+            return 'Hoje';
+        }
+
+        if (this.isSameMessageDay(messageDate, yesterday)) {
+            return 'Ontem';
+        }
+
+        return new Intl.DateTimeFormat('pt-BR', {
+            day: '2-digit',
+            month: 'long',
+            year: messageDate.getFullYear() === today.getFullYear() ? undefined : 'numeric'
+        }).format(messageDate);
+    }
+
+    private isSameMessageDay(firstDateValue: string | Date, secondDateValue: string | Date): boolean {
+        const firstDate = this.toLocalDate(firstDateValue);
+        const secondDate = this.toLocalDate(secondDateValue);
+
+        if (!firstDate || !secondDate) {
+            return false;
+        }
+
+        return firstDate.getFullYear() === secondDate.getFullYear()
+            && firstDate.getMonth() === secondDate.getMonth()
+            && firstDate.getDate() === secondDate.getDate();
+    }
+
+    private toLocalDate(value: string | Date): Date | null {
+        const date = value instanceof Date ? value : new Date(value);
+
+        if (Number.isNaN(date.getTime())) {
+            return null;
+        }
+
+        return date;
     }
 
     isLastMessageFromMe(msg: any, index: number): boolean {

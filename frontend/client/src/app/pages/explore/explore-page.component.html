@@ -1,8 +1,42 @@
 <div class="explore-page">
     <div class="explore-page__inside">
-        <div class="explore-page__stories"></div>
-        <div class="explore-page__sections">
-            
-        </div>
+        <section class="explore-page__hero">
+            <app-basic-input iconName="search" [label]="'Pesquisar por tópicos, posts, usuários e outros...'"
+                (valueChange)="searchTerm = $event" />
+
+            <app-explore-topic-rail [topics]="topics" [selectedTopicId]="selectedTopicId"
+                (topicSelected)="selectTopic($event)" />
+        </section>
+
+        <app-explore-live-rail [liveCards]="liveCards" />
+
+        <app-explore-insights [insights]="insights" />
+
+        <app-explore-engagement-lab [trendingStickers]="trendingStickers" [communitySignals]="communitySignals" />
+
+        @if (loadingSections) {
+        <section class="explore-page__loading-grid" aria-label="Carregando explorar">
+            @for (item of [1,2,3,4,5,6,7,8]; track item) {
+            <div class="explore-post-card explore-post-card--skeleton"></div>
+            }
+        </section>
+        }
+
+        <section class="explore-page__sections" [class.explore-page__sections--loading]="loadingSections">
+
+            @for (section of filteredSections; track section.id) {
+            <app-explore-section [section]="section" (sectionOpened)="openSectionModal($event)"
+                (quickReelsOpened)="openQuickReels($event.section, $event.post)" (liked)="toggleLike($event)"
+                (saved)="toggleSave($event)" (commented)="commentPost($event)" />
+            }
+
+            @if (filteredSections.length === 0 && !loadingSections) {
+            <div class="explore-page__empty">
+                <mat-icon>travel_explore</mat-icon>
+                <strong>Nada encontrado</strong>
+                <span>Tente buscar outro tópico ou navegar pelas tendências.</span>
+            </div>
+            }
+        </section>
     </div>
 </div>

@@ -1,88 +1,66 @@
 @if(showSidebar) {
 
-<nav
-    class="navigation-bar desktop"
-    [class.conversationsPage]="isInConversations"
-    [class.closed]="!isSidebarOpen"
-    [style.width]="isSidebarOpen ? '213px' : '213px'">
+<nav class="navigation-bar desktop" [class.conversationsPage]="isInConversations" [class.closed]="!isSidebarOpen"
+    [class.hover-open]="!isSidebarOpen && isSidebarHovering"
+    [style.width]="isSidebarOpen || isSidebarHovering ? '230px' : '100px'" (mouseenter)="handleSidebarMouseEnter()"
+    (mouseleave)="handleSidebarMouseLeave()">
 
     <div class="navigation-bar-inside">
 
-        <div
-            class="navigation-bar-title section-nav"
-            [style.flexDirection]="!isSidebarOpen
-                ? 'row-reverse'
-                : 'row'">
+        <div class="navigation-bar-title section-nav">
 
-            <h1 [style.opacity]="isSidebarOpen ? 1 : 0">
+            <!-- <h1 [style.opacity]="isSidebarOpen || isSidebarHovering ? 1 : 0">
                 {{ 'HEADER.ACTIONS.SIDEBAR.TITLE' | translate }}
-            </h1>
+            </h1> -->
 
-            <button
-                class="sidebar-collapse-button"
-                (click)="handleOpenSideBar()">
+            <button class="sidebar-collapse-button" (click)="handleOpenSideBar()">
 
-                <mat-icon>
+                <mat-icon class="sidebar-symbol-icon" fontSet="material-symbols-outlined">
                     {{
-                        isSidebarOpen
-                            ? 'keyboard_arrow_left'
-                            : 'keyboard_arrow_right'
+                    isSidebarOpen || isSidebarHovering
+                    ? 'keyboard_arrow_left'
+                    : 'keyboard_arrow_right'
                     }}
                 </mat-icon>
             </button>
         </div>
 
         <div class="navigation-bar-actions section-nav">
-
             @for(item of navigationLinks; track item.id) {
-
-            <div
-                class="navigator-item"
-                [style.width]="isSidebarOpen
-                    ? '213px'
-                    : '213px'">
-
+            <div class="navigator-item">
                 @if(item.menuOptions) {
-
-                <button
-                    class="sidebar-native-button"
-                    [matMenuTriggerFor]="menu">
+                <button class="sidebar-native-button" [matMenuTriggerFor]="menu">
 
                     <div class="sidebar-button-content">
 
                         @if(item.iconUrl && item.iconUrl != '') {
-                        <img
-                            [src]="item.iconUrl"
-                            alt=""
-                            [class.selected-svg]="isSelected(item)" />
+                        <img [src]="item.iconUrl" alt="" [class.selected-svg]="isSelected(item)" />
                         }
                         @else {
-                        <mat-icon
-                            [fontSet]="isSelected(item)
-                                ? 'material-symbols-rounded'
-                                : 'material-symbols-outlined'">
+                        <span class="sidebar__icon-wrapper">
+                            <mat-icon class="sidebar-symbol-icon" fontSet="material-symbols-outlined">
                             {{ item.icon }}
                         </mat-icon>
+
+                            @if (hasNavigationUnread(item)) {
+                            <span class="sidebar__unread-badge">
+                                {{ getNavigationUnreadCount(item) > 99 ? '99+' : getNavigationUnreadCount(item) }}
+                            </span>
+                            }
+                        </span>
                         }
 
-                        <span>
+                        <span class="sidebar__label">
                             {{ item.label | translate }}
                         </span>
                     </div>
                 </button>
 
                 <mat-menu #menu="matMenu" class="menu-content">
-
                     @for(option of item.menuOptions; track option.id) {
-
-                    <button
-                        mat-menu-item
-                        [matMenuTriggerFor]="option.id === 'display'
+                    <button mat-menu-item [matMenuTriggerFor]="option.id === 'display'
                             ? displayMenu
-                            : null"
-                        [matMenuTriggerRestoreFocus]="false"
-                        #displayTrigger="matMenuTrigger"
-                        (click)="option.id === 'display'
+                            : null" [matMenuTriggerRestoreFocus]="false" #displayTrigger="matMenuTrigger" (click)="option.id === 'display'
                             ? displayTrigger.openMenu()
                             : navigate(option)">
 
@@ -99,16 +77,14 @@
 
                         }
 
-                        <span>
+                        <span class="sidebar__label">
                             {{ option.label | translate }}
                         </span>
                     </button>
                     }
                 </mat-menu>
 
-                <mat-menu
-                    #displayMenu="matMenu"
-                    class="display-theme-menu">
+                <mat-menu #displayMenu="matMenu" class="display-theme-menu">
 
                     <app-theme-menu />
                 </mat-menu>
@@ -116,28 +92,28 @@
                 }
                 @else {
 
-                <button
-                    class="sidebar-native-button"
-                    (click)="navigate(item); selected = item.icon">
+                <button class="sidebar-native-button" (click)="navigate(item); selected = item.icon">
 
                     <div class="sidebar-button-content">
 
                         @if(item.iconUrl && item.iconUrl != '') {
-                        <img
-                            [src]="item.iconUrl"
-                            alt=""
-                            [class.selected-svg]="isSelected(item)" />
+                        <img [src]="item.iconUrl" alt="" [class.selected-svg]="isSelected(item)" />
                         }
                         @else {
-                        <mat-icon
-                            [fontSet]="isSelected(item)
-                                ? 'material-symbols-rounded'
-                                : 'material-symbols-outlined'">
+                        <span class="sidebar__icon-wrapper">
+                            <mat-icon class="sidebar-symbol-icon" fontSet="material-symbols-outlined">
                             {{ item.icon }}
                         </mat-icon>
+
+                            @if (hasNavigationUnread(item)) {
+                            <span class="sidebar__unread-badge">
+                                {{ getNavigationUnreadCount(item) > 99 ? '99+' : getNavigationUnreadCount(item) }}
+                            </span>
+                            }
+                        </span>
                         }
 
-                        <span>
+                        <span class="sidebar__label">
                             {{ item.label | translate }}
                         </span>
                     </div>
@@ -152,13 +128,9 @@
     </div>
 </nav>
 
-<app-search-sidebar
-    *ngIf="panels.search"
-    (close)="closePanels()" />
+<app-search-sidebar *ngIf="panels.search" (close)="closePanels()" />
 
-<app-notifications-sidebar
-    *ngIf="panels.notifications"
-    (close)="closePanels()" />
+<app-notifications-sidebar *ngIf="panels.notifications" (close)="closePanels()" />
 
 @if(!isMessagePage) {
 
@@ -166,26 +138,76 @@
 
     @for(item of mobileNavigationLinks; track item.id) {
 
-    <button
-        class="mobile-item"
-        (click)="navigate(item); selected = item.icon">
+    @if(item.menuOptions) {
+    <button class="mobile-item" [matMenuTriggerFor]="mobileMenu" aria-label="Abrir menu">
 
         @if(item.iconUrl && item.iconUrl != '') {
-        <img
-            [src]="item.iconUrl"
-            alt=""
-            class="iconImage"
-            [class.selected-svg]="isSelected(item)" />
+        <img [src]="item.iconUrl" alt="" class="iconImage" [class.selected-svg]="isSelected(item)" />
         }
         @else {
-        <mat-icon
-            [fontSet]="isSelected(item)
-                ? 'material-symbols-rounded'
-                : 'material-symbols-outlined'">
-            {{ item.icon }}
-        </mat-icon>
+        <span class="sidebar__icon-wrapper">
+            <mat-icon class="sidebar-symbol-icon" fontSet="material-symbols-outlined">
+                {{ item.icon }}
+            </mat-icon>
+
+            @if (hasNavigationUnread(item)) {
+            <span class="sidebar__unread-badge">
+                {{ getNavigationUnreadCount(item) > 99 ? '99+' : getNavigationUnreadCount(item) }}
+            </span>
+            }
+        </span>
         }
     </button>
+
+    <mat-menu #mobileMenu="matMenu" class="menu-content mobile-menu-content" yPosition="above">
+        @for(option of item.menuOptions; track option.id) {
+        <button mat-menu-item [matMenuTriggerFor]="option.id === 'display' ? mobileDisplayMenu : null"
+            [matMenuTriggerRestoreFocus]="false" #mobileDisplayTrigger="matMenuTrigger"
+            (click)="option.id === 'display' ? mobileDisplayTrigger.openMenu() : navigate(option)">
+
+            @if(option.icon) {
+            @if(option.iconUrl && option.iconUrl != '') {
+            <img [src]="option.iconUrl" alt="" />
+            }
+            @else {
+            <mat-icon [fontSet]="'material-symbols-rounded'">
+                {{ option.icon }}
+            </mat-icon>
+            }
+            }
+
+            <span class="sidebar__label">
+                {{ option.label | translate }}
+            </span>
+        </button>
+        }
+    </mat-menu>
+
+    <mat-menu #mobileDisplayMenu="matMenu" class="display-theme-menu mobile-display-theme-menu" yPosition="above">
+        <app-theme-menu />
+    </mat-menu>
+    }
+    @else {
+    <button class="mobile-item" (click)="navigate(item); selected = item.icon">
+
+        @if(item.iconUrl && item.iconUrl != '') {
+        <img [src]="item.iconUrl" alt="" class="iconImage" [class.selected-svg]="isSelected(item)" />
+        }
+        @else {
+        <span class="sidebar__icon-wrapper">
+            <mat-icon class="sidebar-symbol-icon" fontSet="material-symbols-outlined">
+                {{ item.icon }}
+            </mat-icon>
+
+            @if (hasNavigationUnread(item)) {
+            <span class="sidebar__unread-badge">
+                {{ getNavigationUnreadCount(item) > 99 ? '99+' : getNavigationUnreadCount(item) }}
+            </span>
+            }
+        </span>
+        }
+    </button>
+    }
     }
 </nav>
 }

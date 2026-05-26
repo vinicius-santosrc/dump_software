@@ -1,0 +1,47 @@
+<div class="audio-player" [class.audio-player--mine]="isMine">
+
+    <audio #audioElement [src]="src" preload="metadata">
+    </audio>
+
+    <button mat-icon-button type="button" class="audio-player__play" (click)="togglePlay()"
+        [attr.aria-label]="isPlaying ? 'Pausar áudio' : 'Reproduzir áudio'">
+
+        @if (isLoading) {
+        <span class="audio-player__loader"></span>
+        }
+        @else {
+        <mat-icon>
+            {{ isPlaying ? 'pause' : 'play_arrow' }}
+        </mat-icon>
+        }
+    </button>
+
+    @if (showAvatar) {
+    <div class="audio-player__avatar">
+        @if (senderAvatar) {
+        <img [src]="senderAvatar" alt="Avatar" />
+        }
+        @else {
+        <mat-icon>person</mat-icon>
+        }
+    </div>
+    }
+
+    <div class="audio-player__content">
+
+        <div class="audio-player__wave-row">
+            <input class="audio-player__range" type="range" min="0" [max]="duration || 0" step="0.01"
+                [value]="currentTime" [style.--progress.%]="progressPercentage" (input)="seek($event)" />
+        </div>
+
+        <div class="audio-player__footer">
+            <span class="audio-player__time">
+                {{ formatTime(currentTime || duration) }}
+            </span>
+
+            <button type="button" class="audio-player__speed" (click)="changePlaybackRate()">
+                {{ playbackRate }}x
+            </button>
+        </div>
+    </div>
+</div>

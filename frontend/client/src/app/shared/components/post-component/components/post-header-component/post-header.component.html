@@ -15,6 +15,7 @@
     <div class="post-media-caption" [id]="isModal ? 'light' : 'dark'">
         <app-generic-text
             [text]="caption || ''"
+            [theme]="!isModal ? 'light' : 'dark'"
             [expandable]="true"
             [maxCharacters]="180"
             [clickableMentions]="true"

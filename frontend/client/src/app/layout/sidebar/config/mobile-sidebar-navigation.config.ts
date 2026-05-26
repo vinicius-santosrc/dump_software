@@ -21,8 +21,41 @@ export const MOBILE_SIDEBAR_NAVIGATION: NavigationLink[] = [
         id: 'create',
         icon: "add_circle",
         route: "/create",
-        type: 'action',
-        label: "HEADER.ACTIONS.SIDEBAR.ADD_POST"
+        type: 'menu',
+        label: "HEADER.ACTIONS.SIDEBAR.ADD_POST",
+        menuOptions: [
+            {
+                id: 'post',
+                type: 'action',
+                label: 'HEADER.ACTIONS.SIDEBAR.ADD_POST_MENU.POST',
+                icon: "edit",
+                iconUrl: '',
+            },
+
+            {
+                id: 'live',
+                type: 'action',
+                label: 'HEADER.ACTIONS.SIDEBAR.ADD_POST_MENU.LIVE',
+                icon: "videocam",
+                iconUrl: '',
+            },
+
+            {
+                id: 'ad',
+                type: 'action',
+                label: 'HEADER.ACTIONS.SIDEBAR.ADD_POST_MENU.AD',
+                icon: "campaign",
+                iconUrl: '',
+            },
+
+            {
+                id: 'ia',
+                type: 'action',
+                label: 'HEADER.ACTIONS.SIDEBAR.ADD_POST_MENU.IA',
+                icon: "smart_toy",
+                iconUrl: '',
+            }
+        ]
     },
 
     {

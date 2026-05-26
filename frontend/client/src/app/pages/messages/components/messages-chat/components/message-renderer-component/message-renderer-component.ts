@@ -1,27 +1,41 @@
-import { Component, Input, OnChanges } from '@angular/core';
-import { Message } from '../../../../../../core/models/messages/messages.model';
 import { CommonModule, Location } from '@angular/common';
-import { PostsService } from '../../../../../../core/services/post/post.service';
-import { Post } from '../../../../../../core/models/feed/post.model';
-import { PostMediaComponent } from "../../../../../../shared/components/post-component/components/post-media-component/post-media.component";
-import { PostPageComponent } from '../../../../../posts/postpage.component';
+import { MatIconModule } from '@angular/material/icon';
+import { Component, Input, OnChanges } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MemoriesService } from '../../../../../../core/services/memories/memories.service';
 import { TranslateModule } from '@ngx-translate/core';
-import { GenericTextComponent } from "../../../../../../shared/components/generic-text/generic-text.component";
+
+import { Message } from '../../../../../../core/models/messages/messages.model';
+import { Post } from '../../../../../../core/models/feed/post.model';
+import { PostsService } from '../../../../../../core/services/post/post.service';
+import { MemoriesService } from '../../../../../../core/services/memories/memories.service';
+import { PostMediaComponent } from '../../../../../../shared/components/post-component/components/post-media-component/post-media.component';
+import { GenericTextComponent } from '../../../../../../shared/components/generic-text/generic-text.component';
+import { PostPageComponent } from '../../../../../posts/postpage.component';
+import { MessageAudioPlayerComponent } from "./message-audio-player-component/message-audio-player.component";
+
+type MessageRenderType = 'text' | 'post' | 'story' | 'image' | 'audio' | 'sticker';
 
 @Component({
     selector: 'app-message-renderer',
+    standalone: true,
     templateUrl: './message-renderer-component.html',
     styleUrls: ['./message-renderer-component.scss'],
-    imports: [CommonModule, PostMediaComponent, TranslateModule, GenericTextComponent]
+    imports: [
+    CommonModule,
+    PostMediaComponent,
+    TranslateModule,
+    GenericTextComponent,
+    MessageAudioPlayerComponent,
+    MatIconModule
+]
 })
 export class MessageRendererComponent implements OnChanges {
-    @Input() message: Message | undefined;
+    @Input() message: Message | any | undefined;
     @Input() isMine: boolean = false;
-    type: 'text' | 'post' | 'story' | 'image' = 'text'
+
+    type: MessageRenderType = 'text';
     postId?: string;
-    public contentUnavailable: boolean = false;
+    contentUnavailable: boolean = false;
 
     constructor(
         private readonly postService: PostsService,
@@ -30,99 +44,233 @@ export class MessageRendererComponent implements OnChanges {
         private readonly dialog: MatDialog
     ) { }
 
-    ngOnChanges() {
-        if (!this.message?.text) {
-            this.type = 'text';
-            this.contentUnavailable = true;
-            return;
-        }
-
-        this.contentUnavailable = false;
-
-        // POST
-        const postMatch = this.message.text.match(/\/p\/([a-zA-Z0-9-]+)/);
-
-        // STORY
-        const storyMatch = this.message.text.match(/\/memories\/([^\/]+)\/([a-zA-Z0-9-]+)/);
-
-        if (postMatch) {
-            this.type = 'post';
-            this.postId = postMatch[1];
-
-            this.postService.getById(this.postId).subscribe({
-                next: (post: Post | any) => {
-                    if (!post) {
-                        this.contentUnavailable = true;
-                        return;
-                    }
-
-                    if (this.message) {
-                        this.message.post = post;
-                    }
-                },
-                error: () => {
-                    this.contentUnavailable = true;
-                }
-            });
-
-        } else if (storyMatch) {
-            this.type = 'story';
-
-            if (this.message) {
-                const username = storyMatch[1];
-                const storyId = storyMatch[2];
-
-                this.message.story = {
-                    username,
-                    id: storyId
-                } as any;
-
-                // 🔥 igual post: busca preview do story
-                this.memoriesService.getById(storyId).then((story: any) => {
-                    if (!story) {
-                        this.contentUnavailable = true;
-                        return;
-                    }
-
-                    if (this.message) {
-                        this.message.story = story;
-                    }
-                }).catch(() => {
-                    this.contentUnavailable = true;
-                });
-            }
-
-        } else {
-            this.type = 'text';
-        }
+    ngOnChanges(): void {
+        this.resetState();
+        this.resolveMessageType();
     }
-    goToStory(story: any) {
-        if (this.contentUnavailable) {
+
+    get messageText(): string {
+        return this.message?.text ?? '';
+    }
+
+    get mediaUrl(): string {
+        return this.message?.mediaUrl || this.message?.text || '';
+    }
+
+    get stickerUrl(): string {
+        return this.message?.stickerUrl || this.message?.text || '';
+    }
+
+    get audioUrl(): string {
+        return this.message?.mediaUrl || this.message?.text || '';
+    }
+
+    get imageMedia(): Array<{ type: 'image'; url: string }> {
+        if (!this.mediaUrl) return [];
+
+        return [{
+            type: 'image',
+            url: this.mediaUrl
+        }];
+    }
+
+    get messageTime(): string {
+        const dateValue = this.message?.createdAt ?? this.message?.updatedAt;
+
+        if (!dateValue) {
+            return '';
+        }
+
+        const date = new Date(dateValue);
+
+        if (Number.isNaN(date.getTime())) {
+            return '';
+        }
+
+        return new Intl.DateTimeFormat('pt-BR', {
+            hour: '2-digit',
+            minute: '2-digit'
+        }).format(date);
+    }
+
+    get isSending(): boolean {
+        return this.message?.status === 'sending' || String(this.message?.id ?? '').startsWith('temp-');
+    }
+
+    get hasSendFailed(): boolean {
+        return this.message?.status === 'failed';
+    }
+
+    get statusText(): string {
+        if (!this.isMine) {
+            return '';
+        }
+
+        if (this.hasSendFailed) {
+            return 'Falha ao enviar';
+        }
+
+        if (this.isSending) {
+            return 'Enviando...';
+        }
+
+        // Status reais como "Enviada", "Entregue" e "Lida" já são atualizados pelo fluxo de WebSocket
+        // no componente pai. O renderer mostra apenas estados temporários locais para não duplicar.
+        return '';
+    }
+
+    goToStory(story: any): void {
+        if (this.contentUnavailable || !story?.username) {
             return;
         }
-        if (!story?.username) return;
 
         this.location.go(`/memories/${story.username}/${story.id}`);
-
-        // abre igual Instagram (sem reload)
         globalThis.dispatchEvent(new Event('popstate'));
     }
 
-    goToPost(post: Post | undefined) {
+    goToPost(post: Post | undefined): void {
         if (this.contentUnavailable || !post) {
             return;
         }
-        // change URL WITHOUT triggering route
+
         this.location.go(`/p/${post?.id}`);
 
-        // open modal
         const dialogRef = this.dialog.open(PostPageComponent, {
             data: { post }
         });
 
         dialogRef.afterClosed().subscribe(() => {
-            // restore profile URL
-            this.location.go(`/messages/inbox`);
+            this.location.go('/messages/inbox');
         });
+    }
+
+    private resetState(): void {
+        this.type = 'text';
+        this.postId = undefined;
+        this.contentUnavailable = false;
+    }
+
+    private resolveMessageType(): void {
+        if (!this.message) {
+            this.contentUnavailable = true;
+            return;
+        }
+
+        const explicitType = this.message?.type as MessageRenderType | undefined;
+
+        if (explicitType && ['text', 'post', 'story', 'image', 'audio', 'sticker'].includes(explicitType)) {
+            this.type = explicitType;
+        }
+
+        if (this.isImageMessage()) {
+            this.type = 'image';
+            return;
+        }
+
+        if (this.isAudioMessage()) {
+            this.type = 'audio';
+            return;
+        }
+
+        if (this.isStickerMessage()) {
+            this.type = 'sticker';
+            return;
+        }
+
+        if (!this.messageText) {
+            this.contentUnavailable = true;
+            return;
+        }
+
+        const postMatch = this.messageText.match(/\/p\/([a-zA-Z0-9-]+)/);
+        const storyMatch = this.messageText.match(/\/memories\/([^/]+)\/([a-zA-Z0-9-]+)/);
+
+        if (postMatch) {
+            this.resolvePostMessage(postMatch[1]);
+            return;
+        }
+
+        if (storyMatch) {
+            this.resolveStoryMessage(storyMatch[1], storyMatch[2]);
+            return;
+        }
+
+        this.type = 'text';
+    }
+
+    private resolvePostMessage(postId: string): void {
+        this.type = 'post';
+        this.postId = postId;
+
+        this.postService.getById(postId).subscribe({
+            next: (post: Post | any) => {
+                if (!post) {
+                    this.contentUnavailable = true;
+                    return;
+                }
+
+                if (this.message) {
+                    this.message.post = post;
+                }
+            },
+            error: () => {
+                this.contentUnavailable = true;
+            }
+        });
+    }
+
+    private resolveStoryMessage(username: string, storyId: string): void {
+        this.type = 'story';
+
+        if (!this.message) return;
+
+        this.message.story = {
+            username,
+            id: storyId
+        } as any;
+
+        this.memoriesService.getById(storyId)
+            .then((story: any) => {
+                if (!story) {
+                    this.contentUnavailable = true;
+                    return;
+                }
+
+                if (this.message) {
+                    this.message.story = story;
+                }
+            })
+            .catch(() => {
+                this.contentUnavailable = true;
+            });
+    }
+
+    private isImageMessage(): boolean {
+        const type = this.message?.type;
+        const mediaType = this.message?.mediaType ?? '';
+        const source = this.message?.mediaUrl || this.message?.text || '';
+
+        return type === 'image'
+            || mediaType.startsWith('image/')
+            || source.startsWith('data:image');
+    }
+
+    private isAudioMessage(): boolean {
+        const type = this.message?.type;
+        const mediaType = this.message?.mediaType ?? '';
+        const source = this.message?.mediaUrl || this.message?.text || '';
+
+        return type === 'audio'
+            || mediaType.startsWith('audio/')
+            || source.startsWith('data:audio');
+    }
+
+    private isStickerMessage(): boolean {
+        const type = this.message?.type;
+        const source = this.message?.stickerUrl || this.message?.text || '';
+
+        return type === 'sticker'
+            || source.includes('/stickers/')
+            || source.includes('assets/stickers/');
     }
 }

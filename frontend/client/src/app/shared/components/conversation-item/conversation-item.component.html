@@ -1,4 +1,5 @@
-<div [class]="variant === 'default' ? 'conversation-item' : 'conversation-item-circular'" [ngClass]="[variant, selected ? 'selected' : '']" (click)="onClick()">
+<div [class]="variant === 'default' ? 'conversation-item' : 'conversation-item-circular'"
+  [ngClass]="[variant, selected ? 'selected' : '', getUnreadCount() > 0 ? 'unread' : '']" (click)="onClick()">
 
   <div class="avatar-wrapper">
     <app-avatar-item [user]="getConversationUser()" [src]="getConversationAvatar()" [width]="'52px'" [height]="'52px'" />
@@ -13,17 +14,19 @@
 
     <div class="top">
       <span class="name">{{ getConversationName() }}</span>
-      <span class="time"></span>
+      <span class="time" *ngIf="getUnreadCount() > 0"></span>
     </div>
 
     <div class="bottom">
       <span class="last">
         <span *ngIf="isTyping()" class="typing">digitando...</span>
-        <span *ngIf="!isTyping()" [style.fontWeight]="getUnreadCount() > 0 ? '600' : '500'">{{ getLastMessage() }}</span>
+        <span *ngIf="!isTyping()">{{ getLastMessage() }}</span>
       </span>
 
-      <span class="badge" *ngIf="getUnreadCount() > 0">
-        {{ getUnreadCount() }}
+      <span class="unread-indicator" *ngIf="getUnreadCount() > 0" aria-label="Mensagens não lidas">
+        <span class="unread-count" *ngIf="getUnreadCount() > 1">
+          {{ getUnreadCount() > 99 ? '99+' : getUnreadCount() }}
+        </span>
       </span>
     </div>
 

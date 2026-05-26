@@ -4,7 +4,6 @@ import {
 } from '@angular/common/http';
 
 import { inject } from '@angular/core';
-import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -15,7 +14,6 @@ import { ErrorUtils } from '../utils/error.utils';
 export const errorInterceptor: HttpInterceptorFn = (req, next) => {
 
     const snackBar = inject(MatSnackBar);
-    const router = inject(Router);
     const translateService = inject(TranslateService);
 
     return next(req).pipe(
@@ -34,9 +32,7 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
                     return throwError(() => error);
 
                 case 401:
-                    localStorage.removeItem('accessToken');
-                    router.navigate(['/auth/login']);
-                    break;
+                    return throwError(() => error);
 
                 case 403:
                     showError(

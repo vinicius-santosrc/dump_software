@@ -1,0 +1,31 @@
+<button type="button" class="explore-post-card" [class]="'explore-post-card explore-post-card--' + post.height"
+    [style.--post-image]="post.imageUrl ? 'url(' + post.imageUrl + ')' : null" (click)="open()">
+
+    <span class="explore-post-card__topline">
+        <mat-icon>{{ getPostIcon() }}</mat-icon>
+        {{ post.score }} relevante
+    </span>
+
+    <span class="explore-post-card__content">
+        <app-generic-text textColor="white" [text]="post.title || ''" [expandable]="true" [maxCharacters]="180"
+            [clickableMentions]="true" [clickableHashtags]="true" [clickableLinks]="true" />
+
+        <small>{{ post.author }} · {{ post.meta }}</small>
+    </span>
+
+    <span class="explore-post-card__actions">
+        <span [class.is-active]="post.isLiked" (click)="like($event)">
+            <mat-icon>{{ post.isLiked ? 'favorite' : 'favorite_border' }}</mat-icon>
+            {{ formatMetric(post.likes) }}
+        </span>
+
+        <span (click)="comment($event)">
+            <mat-icon>chat_bubble_outline</mat-icon>
+            {{ formatMetric(post.comments) }}
+        </span>
+
+        <span [class.is-active]="post.isSaved" (click)="save($event)">
+            <mat-icon>{{ post.isSaved ? 'bookmark' : 'bookmark_border' }}</mat-icon>
+        </span>
+    </span>
+</button>

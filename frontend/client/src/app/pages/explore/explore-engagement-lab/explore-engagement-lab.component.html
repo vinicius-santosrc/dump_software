@@ -1,0 +1,45 @@
+<section class="explore-engagement-lab" aria-label="Exploração social">
+    <article class="explore-lab-card explore-lab-card--stickers">
+        <header>
+            <div>
+                <mat-icon>sticker</mat-icon>
+                <strong>Stickers em alta</strong>
+            </div>
+            <span>mock</span>
+        </header>
+
+        <div class="explore-sticker-row">
+            @for (sticker of trendingStickers; track sticker.id) {
+            <button type="button" class="explore-sticker-card">
+                <span>{{ sticker.emoji }}</span>
+                <strong>{{ sticker.label }}</strong>
+                <small>{{ sticker.usage }}</small>
+            </button>
+            }
+        </div>
+    </article>
+
+    <article class="explore-lab-card explore-lab-card--social">
+        <header>
+            <div>
+                <mat-icon>favorite</mat-icon>
+                <strong>Pessoas que você segue curtiram</strong>
+            </div>
+            <span>social proof</span>
+        </header>
+
+        <div class="explore-social-signals">
+            @for (signal of communitySignals; track signal.id) {
+            <button type="button" class="explore-social-signal">
+                <img [src]="signal.avatarUrl" [alt]="signal.user" />
+
+                <span>
+                    <strong>{{ signal.user }}</strong>
+                    {{ signal.action }}
+                    <small>{{ signal.postTitle }}</small>
+                </span>
+            </button>
+            }
+        </div>
+    </article>
+</section>

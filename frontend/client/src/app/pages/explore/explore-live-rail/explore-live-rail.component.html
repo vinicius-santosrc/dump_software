@@ -1,0 +1,22 @@
+@if (liveCards.length > 0) {
+<section class="explore-live-rail" aria-label="Lives em alta">
+    @for (live of liveCards; track live.id) {
+    <article class="explore-live-card" [style.--accent]="live.accent"
+        [style.--live-image]="'url(' + live.avatarUrl + ')'">
+
+        <div class="explore-live-card__watching">
+            {{ live.watching }}
+        </div>
+
+        <div class="explore-live-card__profile">
+            <img [src]="live.avatarUrl" [alt]="live.username" />
+
+            <span>{{ live.username }}</span>
+
+            <app-generic-text textColor="white" [text]="live.title || ''" [expandable]="true" [maxCharacters]="180"
+                [clickableMentions]="true" [clickableHashtags]="true" [clickableLinks]="true" />
+        </div>
+    </article>
+    }
+</section>
+}

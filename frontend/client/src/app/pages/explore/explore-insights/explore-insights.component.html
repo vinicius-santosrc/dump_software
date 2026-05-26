@@ -1,0 +1,13 @@
+<section class="explore-insights" aria-label="Diferenciais da exploração">
+    @for (insight of insights; track insight.id) {
+    <article class="explore-insight-card">
+        <mat-icon>{{ insight.icon }}</mat-icon>
+
+        <div>
+            <strong>{{ insight.title }}</strong>
+            <span>{{ insight.value }}</span>
+            <p>{{ insight.description }}</p>
+        </div>
+    </article>
+    }
+</section>

@@ -1,0 +1,116 @@
+:host {
+    display: block;
+}
+
+.explore-modal-section {
+    max-height: 92vh;
+    overflow: auto;
+    padding: 20px;
+    border-radius: 28px;
+    background: var(--color-background, #fff);
+    color: var(--color-text, #111);
+}
+
+.explore-modal-section__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 14px;
+
+    >div {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        min-width: 0;
+    }
+
+    span {
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+    }
+
+    strong {
+        font-size: 20px;
+        font-weight: 900;
+    }
+
+    small {
+        color: var(--color-text-secondary, #737373);
+    }
+}
+
+.explore-modal-section__rail {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 12px;
+}
+
+.explore-modal-pill {
+    height: 34px;
+    padding: 0 14px;
+    border: none;
+    border-radius: 999px;
+    background: var(--background-secondary, #f7f7f7);
+    color: var(--color-text, #111);
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.explore-modal-section__grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.explore-modal-post {
+    min-height: 180px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 5px;
+    padding: 14px;
+    border: none;
+    border-radius: 18px;
+    background:
+        linear-gradient(to bottom, rgba(0, 0, 0, .08), rgba(0, 0, 0, .7)),
+        var(--post-image),
+        #d8d8d8;
+    background-size: cover;
+    background-position: center;
+    color: #fff;
+    cursor: pointer;
+    text-align: left;
+
+    span {
+        width: fit-content;
+        padding: 5px 8px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, .2);
+        font-size: 11px;
+        font-weight: 800;
+    }
+
+    strong {
+        font-size: 15px;
+        line-height: 1.15;
+    }
+
+    small {
+        color: rgba(255, 255, 255, .72);
+    }
+}
+
+@media (max-width: 768px) {
+    .explore-modal-section__grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 480px) {
+    .explore-modal-section__grid {
+        grid-template-columns: 1fr;
+    }
+}

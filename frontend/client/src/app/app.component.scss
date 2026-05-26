@@ -11,6 +11,7 @@
 
 .page-container {
   position: relative;
+  padding-left: 100px;
 }
 
 .page-content {
@@ -82,9 +83,13 @@
   background-color: var(--color-background);
 }
 
-// .dump_content_aside {
-//   min-width: 850px;
-// }
+.dump_content_aside {
+  max-width: 100%;
+}
+
+.dump, .dump_content, .dump_content_aside, .page-container, .page-content {
+  min-height: 100vh;
+}
 
 @media (max-width: 768px) {
   .dump_content {
@@ -94,6 +99,10 @@
   .dump_content_aside {
     width: 100% !important;
     margin: 00px 0 !important;
+  }
+
+  .page-container {
+    padding-left: 0px;
   }
 }
 

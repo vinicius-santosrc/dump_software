@@ -15,10 +15,10 @@
                     <div class="add-icon">+</div>
                     }
                 </div> -->
+            @if(showMyMemorie) {
             <div class="memorie-card" (click)="handleMyStory()">
-                <div class="memorie-card-content">
-                    @if(hasMyMemorie.length <= 0) {
-                    <div class="add-icon">+</div>
+                    <div class="memorie-card-content">
+                        @if(hasMyMemorie.length <= 0) { <div class="add-icon">+</div>
                     }
                     @else {
                     <img [src]="hasMyMemorie[0].stories[0].thumbnail" alt="preview story" />
@@ -27,26 +27,27 @@
                 <div class="profile-content">
                     <app-avatar-item [width]="'48px'" [height]="'48px'" [user]="user" />
                     <span>{{hasMyMemorie.length <= 0 ? ("FEED.MEMORIES.ADD" | translate) : ("FEED.MEMORIES.YOURS" |
-                        translate)}}</span>
+                            translate)}}</span>
                 </div>
             </div>
-
-            @for(group of memoriesList; track group.user?.id) {
-            @if(group?.user?.id !== user?.id) {
-            <div class="memorie-card" (click)="clickStory(group.user.username)">
-                <div class="memorie-card-content">
-                    <img [src]="group.stories[0].thumbnail" alt="preview story" />
-                </div>
-                <div class="profile-content">
-                    <app-avatar-item [seenMemorie]="true" [width]="'48px'" [height]="'48px'" [user]="group.user" />
-                    <span>{{group.user.username}}</span>
-                </div>
+        }
+        
+        @for(group of memoriesList; track group.user?.id) {
+        @if(group?.user?.id !== user?.id) {
+        <div class="memorie-card" (click)="clickStory(group.user.username)">
+            <div class="memorie-card-content">
+                <img [src]="group.stories[0].thumbnail" alt="preview story" />
             </div>
-            }
-            }
-
-            }
-
+            <div class="profile-content">
+                <app-avatar-item [seenMemorie]="true" [width]="'48px'" [height]="'48px'" [user]="group.user" />
+                <span>{{group.user.username}}</span>
+            </div>
         </div>
+        }
+        }
+
+        }
+
+    </div>
     </div>
 </section>

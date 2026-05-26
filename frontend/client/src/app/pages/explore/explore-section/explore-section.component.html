@@ -1,0 +1,27 @@
+<article class="explore-section">
+    <header class="explore-section__header" (click)="openSection()">
+        <div>
+            <span class="explore-section__icon">
+                <mat-icon>{{ section.icon }}</mat-icon>
+            </span>
+
+            <div>
+                <h2>{{ section.title }}</h2>
+                <p>{{ section.description }}</p>
+            </div>
+        </div>
+
+        <button mat-button type="button" class="explore-section__action" (click)="toggleSection($event)">
+
+            {{ section.expanded ? 'ver menos' : 'ver mais' }}
+            <mat-icon>{{ section.expanded ? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}</mat-icon>
+        </button>
+    </header>
+
+    <div class="explore-section__grid">
+        @for (post of visiblePosts; track post.id) {
+        <app-explore-post-card [post]="post" (opened)="openQuickReels($event)" (liked)="liked.emit($event)"
+            (saved)="saved.emit($event)" (commented)="commented.emit($event)" />
+        }
+    </div>
+</article>

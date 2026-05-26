@@ -31,8 +31,12 @@
     </header>
 
     <div #scrollContainer class="chat__body" style="scroll-behavior: smooth;">
-        <div *ngFor="let msg of messages; let i = index" class="message"
-            [class.me]="msg?.sender?.id === current_user?.id">
+        <ng-container *ngFor="let msg of messages; let i = index">
+            <div class="message-date-separator" *ngIf="shouldShowDateSeparator(msg, i)">
+                <span>{{ getDateSeparatorLabel(msg) }}</span>
+            </div>
+
+            <div class="message" [class.me]="msg?.sender?.id === current_user?.id">
 
             @if(msg?.sender?.id != current_user?.id) {
             <img class="message__avatar" alt="Avatar"
@@ -60,35 +64,22 @@
                 [src]="getUserById(msg?.sender?.id)?.profilePictureUrl || 'assets/app/media/default-avatar.webp'" alt />
             }
         </div>
+        </ng-container>
         <div class="typing" *ngIf="typingUsers.size > 0">
             <div class="loader"></div>
         </div>
     </div>
 
-    <div class="chat__input">
-        <div class="chat__input-actions">
-            <button><mat-icon>add</mat-icon></button>
-        </div>
-
-        <!-- <input (input)="onTyping()" (blur)="onStopTyping()" type="text" [(ngModel)]="input"
-            placeholder="Escreva uma mensagem" /> -->
-        <div class="input-content">
-            <app-basic-input type="textarea" (input)="onTyping()" (blur)="onStopTyping()" [value]="input"
-                (valueChange)="input = $event" label="MESSAGES_INBOX.CHAT.INPUT.PLACEHOLDER" />
-        </div>
-
-        <app-generic-button *ngIf="input !== ''" label="" iconName="send" (onClick)="sendMessage()" padding="6px"
-            fontSize="13px" borderRadius="50%"></app-generic-button>
-
-        <div class="chat__input-right" *ngIf="input === ''">
-            <button><mat-icon>face</mat-icon></button>
-            <button><mat-icon>thumb_up</mat-icon></button>
-        </div>
-    </div>
+    <app-message-composer-component
+        (send)="handleComposerSend($event)"
+        (typing)="onTyping()"
+        (stopTyping)="onStopTyping()">
+    </app-message-composer-component>
 </section>
 
 <section class="no_chat__screen" *ngIf="!conversation?.id">
     <div class="no_chat__content">
+        <img [src]="ilustrationDirect" alt="Message Send" />
         <h2>{{'MESSAGES_INBOX.NOT_SELECTED.TITLE' | translate}}</h2>
         <p>{{'MESSAGES_INBOX.NOT_SELECTED.SUBTITLE' | translate}}</p>
         <app-generic-button label="{{'MESSAGES_INBOX.NOT_SELECTED.BUTTON' | translate}}"

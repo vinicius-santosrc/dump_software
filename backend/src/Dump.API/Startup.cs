@@ -9,6 +9,7 @@ using Dump.Application.Features.Search;
 using Dump.Application.Features.Messages;
 using Dump.Infrastructure.Persistence.Mongo.Migrations;
 using Dump.Application.Features.TrendingTopic;
+using Dump.Application.Features.Messages.Compose;
 
 namespace Dump.API
 {
@@ -60,10 +61,14 @@ namespace Dump.API
             services.AddScoped<Dump.Application.Interfaces.IRefreshTokenRepository, Dump.Infrastructure.Persistence.Mongo.Repositories.RefreshTokenRepository>();
             services.AddScoped<ISearchRepository, SearchRepository>();
             services.AddScoped<INotificationRepository, NotificationRepository>();
+            services.AddScoped<Dump.Application.Interfaces.IStickerRepository, StickerRepository>();
 
             services.AddScoped<ITrendingRepository, TrendingTopicRepository>();
             //Search service
             services.AddScoped<SearchService>();
+
+            //Service service
+            services.AddScoped<StickerService>();
 
             //Notification Service
             services.AddScoped<NotificationService>();

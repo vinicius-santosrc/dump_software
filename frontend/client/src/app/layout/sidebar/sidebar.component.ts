@@ -26,6 +26,9 @@ import { MOBILE_SIDEBAR_NAVIGATION } from "./config/mobile-sidebar-navigation.co
 import { SidebarUtils } from "../../core/utils/sidebar.utils";
 import { User } from "../../core/models/user/user.model";
 import { NavigationLink, SidebarMenuOption } from "../../core/models/sidebar/navigation-link.interface";
+import { MessagesStoreService } from "../../store/conversation.store.service";
+import { MessagesService } from "../../pages/messages/messages.service";
+
 @Component({
     selector: "app-sidebar-component",
     templateUrl: "./sidebar.component.html",
@@ -46,6 +49,7 @@ import { NavigationLink, SidebarMenuOption } from "../../core/models/sidebar/nav
 })
 export class SidebarComponent {
     isSidebarOpen: boolean = localStorage.getItem("sidebar") === "true";
+    isSidebarHovering: boolean = false;
     panels = {
         search: false,
         notifications: false
@@ -57,7 +61,16 @@ export class SidebarComponent {
     isInConversations: boolean = globalThis.location.pathname.startsWith("/messages/inbox");
     isDarkMode: boolean = localStorage.getItem('theme') === 'dark';
     showDisplayMenu: boolean = false;
-    constructor(private readonly dialog: MatDialog, private readonly router: Router, private readonly authService: AuthService, private readonly userService: UserService) {
+    unreadMessagesCount: number = 0;
+
+    constructor(
+        private readonly dialog: MatDialog,
+        private readonly router: Router,
+        private readonly authService: AuthService,
+        private readonly userService: UserService,
+        private readonly conversationStore: MessagesStoreService,
+        private readonly messagesService: MessagesService
+    ) {
         if (WHITE_LIST_NAVIGATIONS.some(route => globalThis.location.pathname.startsWith(route))) {
             this.showSidebar = false;
         }
@@ -73,8 +86,69 @@ export class SidebarComponent {
             if (!user) return;
             this.current_user = user;
             this.initializeNavigation();
+            this.updateUnreadMessagesCount(this.conversationStore.conversations$.value ?? []);
+            this.loadUnreadMessagesCounter(user.id);
+        });
+
+        this.conversationStore.conversations$.subscribe(conversations => {
+            this.updateUnreadMessagesCount(conversations ?? []);
         });
         this.updateSelectedByRoute(this.router.url);
+    }
+
+    private loadUnreadMessagesCounter(userId: string): void {
+        if (!userId) {
+            return;
+        }
+
+        this.messagesService.getConversationsByUserId(userId, true)
+            .subscribe({
+                next: (conversations: any[]) => {
+                    const sorted = [...(conversations ?? [])].sort((firstConversation, secondConversation) => {
+                        const firstDate = new Date(firstConversation?.updatedAt ?? firstConversation?.lastMessage?.createdAt ?? 0).getTime();
+                        const secondDate = new Date(secondConversation?.updatedAt ?? secondConversation?.lastMessage?.createdAt ?? 0).getTime();
+
+                        return secondDate - firstDate;
+                    });
+
+                    this.conversationStore.setConversations(sorted);
+                    this.updateUnreadMessagesCount(sorted);
+                },
+                error: (error) => {
+                    console.error('Failed to load unread messages counter', error);
+                }
+            });
+    }
+
+    getNavigationUnreadCount(item: NavigationLink): number {
+        if (item.id !== 'send') {
+            return 0;
+        }
+
+        return this.unreadMessagesCount;
+    }
+
+    hasNavigationUnread(item: NavigationLink): boolean {
+        return this.getNavigationUnreadCount(item) > 0;
+    }
+
+    private updateUnreadMessagesCount(conversations: any[]): void {
+        const userId = this.current_user?.id;
+
+        if (!userId) {
+            this.unreadMessagesCount = 0;
+            return;
+        }
+
+        this.unreadMessagesCount = (conversations ?? []).reduce((total, conversation) => {
+            const unreadCount = conversation?.unreadCount ?? conversation?.unreadCounts ?? conversation?.unread ?? {};
+
+            if (typeof unreadCount === 'number') {
+                return total + unreadCount;
+            }
+
+            return total + Number(unreadCount[userId] ?? 0);
+        }, 0);
     }
 
     isSelected(item: NavigationLink): boolean {
@@ -143,6 +217,18 @@ export class SidebarComponent {
         globalThis.dispatchEvent(new CustomEvent('sidebarToggle', {
             detail: this.isSidebarOpen
         }));
+    }
+
+    handleSidebarMouseEnter(): void {
+        if (this.isSidebarOpen) return;
+
+        this.isSidebarHovering = true;
+    }
+
+    handleSidebarMouseLeave(): void {
+        if (this.isSidebarOpen) return;
+
+        this.isSidebarHovering = false;
     }
 
     openPanel(panel: keyof typeof this.panels) {

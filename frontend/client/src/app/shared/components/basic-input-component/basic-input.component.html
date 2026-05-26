@@ -31,9 +31,8 @@
       <mat-icon [fontSet]="'material-symbols-outlined'">visibility</mat-icon>
     </button>
     }
-  </div>
+  </div>@if (showError) {
   <div class="error-container">
-    @if (showError) {
     <div class="error-message">
       @if (hasMaxLengthError) {
       <p>* {{ 'VALIDATIONS.MAX_LENGTH' | translate: { maxLength: maxLength } }}</p>
@@ -45,11 +44,11 @@
       <p>* {{ 'VALIDATIONS.REQUIRED' | translate }}</p>
       }
     </div>
-    }
-    @else {
-    <div class="error-message">
-      <p>&nbsp;</p>
-    </div>
-    }
   </div>
+  }
+  @else {
+  <div class="error-message">
+    <!-- <p>&nbsp;</p> -->
+  </div>
+  }
 </div>

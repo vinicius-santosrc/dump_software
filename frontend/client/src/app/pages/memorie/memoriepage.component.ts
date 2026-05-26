@@ -101,6 +101,10 @@ export class MemoriePageComponent implements OnInit, OnDestroy {
             if (existingGroupIndex >= 0) {
                 this.storyViewerStore.setActiveGroupIndex(existingGroupIndex);
 
+                if (this.username) {
+                    await this.hydrateActiveGroupByUsername(this.username);
+                }
+
                 if (this.memorieId) {
                     const storyIndex = this.storyViewerStore.findStoryIndexById(this.memorieId);
 
@@ -114,20 +118,25 @@ export class MemoriePageComponent implements OnInit, OnDestroy {
         }
 
         if (this.username && !this.memorieId) {
-            const response = await this.memorieService.getByUsername(this.username);
-            const stories = Array.isArray(response) ? response : [];
-            
-            if (stories.length > 0) {
-                this.storyViewerStore.open(
-                    [{
-                        user: stories[0].user,
-                        stories,
-                        lastStoryAt: stories[0].createdAt
-                    }],
-                    0,
-                    0
-                );
+            await this.hydrateActiveGroupByUsername(this.username);
+
+            if (this.storyViewerStore.getGroups().length <= 0) {
+                const response = await this.memorieService.getByUsername(this.username);
+                const stories = Array.isArray(response) ? response : [];
+
+                if (stories.length > 0) {
+                    this.storyViewerStore.open(
+                        [{
+                            user: stories[0].user,
+                            stories,
+                            lastStoryAt: stories[0].createdAt
+                        }],
+                        0,
+                        0
+                    );
+                }
             }
+
             return;
         }
 
@@ -167,6 +176,22 @@ export class MemoriePageComponent implements OnInit, OnDestroy {
                     }
                 }
             }
+        }
+    }
+
+    private async hydrateActiveGroupByUsername(username: string): Promise<void> {
+        try {
+            const response = await this.memorieService.getByUsername(username);
+            const stories = Array.isArray(response) ? response : [];
+
+            if (stories.length <= 0) {
+                return;
+            }
+
+            this.storyViewerStore.updateGroupStoriesByUsername(username, stories);
+        }
+        catch (error) {
+            console.error('Erro ao hidratar stories por username:', error);
         }
     }
 

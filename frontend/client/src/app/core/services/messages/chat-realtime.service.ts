@@ -53,7 +53,7 @@ export class ChatRealtimeService {
             const isMyMessage = msg.senderId === userId;
 
             const isActiveChat =
-                currentConversationId != null &&
+                Boolean(currentConversationId) &&
                 currentConversationId === msg.conversationId;
 
             if (!isMyMessage && !isActiveChat) {
@@ -90,45 +90,33 @@ export class ChatRealtimeService {
     }
 
     private handleMessage(msg: any) {
+        if (!msg?.conversationId) {
+            return;
+        }
 
-        // sidebar sempre
-        this.store.updateLastMessage(msg.conversationId, msg);
         const currentConversationId = this.store.getActiveConversation();
         const userId = this.userService.getUser()?.id;
 
         const isMyMessage = msg.senderId === userId;
+        const isActiveChat = Boolean(currentConversationId) && currentConversationId === msg.conversationId;
+        const shouldIncrementUnread = Boolean(!isMyMessage && !isActiveChat && userId);
 
-        const conversations = this.store.conversations$.value ?? [];
+        this.store.updateLastMessage(msg.conversationId, msg);
 
-        const updated = conversations.map(c => {
-            if (c.id !== msg.conversationId) return c;
-
-            const unread = { ...(c.unreadCount ?? {}) };
-
-            if (!isMyMessage) {
-                unread[userId] = (unread[userId] ?? 0) + 1;
-            }
-
-            return {
-                ...c,
-                lastMessage: msg,
-                unreadCount: unread
-            };
-        });
-
-        this.store.setConversations(updated);
-        this.store.refreshTrigger();
-
-        const isActiveChat =
-            currentConversationId != null &&
-            currentConversationId === msg.conversationId;
+        if (shouldIncrementUnread && userId) {
+            this.store.incrementUnread(msg.conversationId, userId);
+        }
 
         if (isActiveChat) {
             this.store.appendMessage(msg);
 
-            if (!isMyMessage) {
+            if (!isMyMessage && userId) {
                 this.store.markAsRead(msg.conversationId, userId);
+                this.messagesService.markConversationAsReadInCache(msg.conversationId, userId);
             }
         }
+
+        this.messagesService.upsertMessageInCache(msg.conversationId, msg);
+        this.messagesService.updateConversationLastMessageInCache(msg.conversationId, msg, userId, shouldIncrementUnread);
     }
 }

@@ -1,0 +1,13 @@
+<div class="explore-topic-rail" role="tablist" aria-label="Tópicos em alta">
+    @for (topic of topics; track topic.id) {
+    <button type="button" class="explore-topic-chip" [class.explore-topic-chip--active]="topic.id === selectedTopicId"
+        (click)="selectTopic(topic)">
+
+        @if (topic.icon) {
+        <span>{{ topic.icon }}</span>
+        }
+
+        {{ topic.label }}
+    </button>
+    }
+</div>

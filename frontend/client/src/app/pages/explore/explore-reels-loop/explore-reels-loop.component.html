@@ -1,0 +1,45 @@
+<section class="explore-reels-loop">
+    <header class="explore-reels-loop__header">
+        <strong>{{ section.title }}</strong>
+
+        <button mat-icon-button mat-dialog-close aria-label="Fechar reels rápidos">
+            <mat-icon>close</mat-icon>
+        </button>
+    </header>
+
+    <div class="explore-reels-loop__scroller">
+        @for (post of posts; track post.id; let index = $index) {
+        <article class="explore-reel-card" [id]="'explore-reel-' + index"
+            [style.--post-image]="post.imageUrl ? 'url(' + post.imageUrl + ')' : null">
+
+            <div class="explore-reel-card__content">
+                <span>{{ post.score }} relevante agora</span>
+                <strong>{{ post.title }}</strong>
+                <small>{{ post.author }} · {{ post.meta }}</small>
+            </div>
+
+            <div class="explore-reel-card__actions">
+                <button type="button" [class.is-active]="post.isLiked" (click)="toggleLike(post, $event)">
+                    <mat-icon>{{ post.isLiked ? 'favorite' : 'favorite_border' }}</mat-icon>
+                    <span>{{ formatMetric(post.likes) }}</span>
+                </button>
+
+                <button type="button" (click)="commentPost(post, $event)">
+                    <mat-icon>chat_bubble_outline</mat-icon>
+                    <span>{{ formatMetric(post.comments) }}</span>
+                </button>
+
+                <button type="button" (click)="sharePost(post, $event)">
+                    <mat-icon>send</mat-icon>
+                    <span>{{ formatMetric(post.shares) }}</span>
+                </button>
+
+                <button type="button" [class.is-active]="post.isSaved" (click)="toggleSave(post, $event)">
+                    <mat-icon>{{ post.isSaved ? 'bookmark' : 'bookmark_border' }}</mat-icon>
+                    <span>{{ formatMetric(post.saves) }}</span>
+                </button>
+            </div>
+        </article>
+        }
+    </div>
+</section>

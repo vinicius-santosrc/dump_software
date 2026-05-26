@@ -127,16 +127,25 @@ public class MessageService
             foreach (var participantId in conversation.Participants)
             {
                 var user = await _userRepository.GetByIdAsync(participantId);
+
                 if (user != null)
+                {
                     users.Add(user);
+                }
             }
+
+            var unreadMessagesCount = await _repository.CountUnreadMessagesAsync(conversation.Id, userId);
 
             result.Add(new
             {
                 conversation.Id,
                 Participants = users,
                 conversation.LastMessage,
-                conversation.UpdatedAt
+                conversation.UpdatedAt,
+                UnreadCount = new Dictionary<string, long>
+                {
+                    [userId] = unreadMessagesCount
+                }
             });
         }
 

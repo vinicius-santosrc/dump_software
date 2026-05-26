@@ -22,12 +22,13 @@ import { GenericButtonComponent } from "../../shared/components/generic-button-c
 import { MatTabsModule } from '@angular/material/tabs';
 import { FooterAuthComponent } from "../../shared/components/footer-auth-component/footer-auth-component";
 import { TopicService } from '../../core/services/topic/topic.service';
+import { HeaderComponent } from "../../layout/header/header.component";
 
 @Component({
     selector: "app-feed-component",
     templateUrl: "./feed.component.html",
     styleUrl: "./feed.component.scss",
-    imports: [TranslateModule, PostComponent, CardComponent, GenericCardUserComponent, MemoriesComponent, SkeletonComponent, GenericButtonComponent, MatTabsModule, FooterAuthComponent]
+    imports: [TranslateModule, PostComponent, CardComponent, GenericCardUserComponent, MemoriesComponent, SkeletonComponent, GenericButtonComponent, MatTabsModule, FooterAuthComponent, HeaderComponent]
 })
 export class FeedComponent implements OnInit {
     posts: Post[] = [];

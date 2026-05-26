@@ -1,0 +1,49 @@
+.explore-insights {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    margin-bottom: 34px;
+}
+
+.explore-insight-card {
+    display: flex;
+    gap: 14px;
+    padding: 16px;
+    border: 1px solid color-mix(in srgb, var(--light-gray, #dedede) 78%, transparent);
+    border-radius: 18px;
+    background: color-mix(in srgb, var(--background-secondary, #f7f7f7) 72%, transparent);
+
+    mat-icon {
+        flex: 0 0 auto;
+        color: #1881e2;
+    }
+
+    strong,
+    span {
+        display: block;
+    }
+
+    strong {
+        font-size: 14px;
+        font-weight: 800;
+    }
+
+    span {
+        margin-top: 3px;
+        font-size: 18px;
+        font-weight: 800;
+    }
+
+    p {
+        margin: 5px 0 0;
+        color: var(--color-text-secondary, #737373);
+        font-size: 12px;
+        line-height: 1.35;
+    }
+}
+
+@media (max-width: 1024px) {
+    .explore-insights {
+        grid-template-columns: 1fr;
+    }
+}

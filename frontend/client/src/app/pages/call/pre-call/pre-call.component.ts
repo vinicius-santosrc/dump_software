@@ -1,5 +1,5 @@
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { AfterViewInit, Component, ElementRef, Inject, ViewChild } from "@angular/core";
+import { AfterViewInit, Component, ElementRef, Inject, OnDestroy, ViewChild } from "@angular/core";
 import { GenericButtonComponent } from "../../../shared/components/generic-button-component/generic-button.component";
 import { AvatarItem } from "../../../shared/components/avatar-item/avatar-item.component";
 import { CommonModule } from '@angular/common';
@@ -15,12 +15,13 @@ import { CallModalComponent } from '../call-modal/call-modal.component';
     imports: [CommonModule, GenericButtonComponent, AvatarItem]
 })
 
-export class PreCallComponent implements AfterViewInit {
+export class PreCallComponent implements AfterViewInit, OnDestroy {
 
     @ViewChild('previewVideo')
     previewVideo?: ElementRef<HTMLVideoElement>;
 
     currentUser: any;
+    private previewStream?: MediaStream;
 
     isMuted: boolean = false;
     isCameraOff: boolean = false;
@@ -35,41 +36,34 @@ export class PreCallComponent implements AfterViewInit {
         this.userService.user$.subscribe(user => {
             this.currentUser = user;
         });
+        this.dialogRef.beforeClosed().subscribe(() => {
+            this.stopPreviewStream();
+        });
     }
 
-    async ngAfterViewInit(): Promise<void> {
-
+    ngAfterViewInit(): void {
         if (this.data?.type !== 'video') {
             return;
         }
 
-        try {
+        navigator.mediaDevices.getUserMedia({
+            video: true,
+            audio: true
+        })
+            .then(stream => {
+                this.previewStream = stream;
 
-            const stream =
-                await navigator.mediaDevices.getUserMedia({
-                    video: true,
-                    audio: true
-                });
-
-            if (this.previewVideo?.nativeElement) {
-
-                this.previewVideo.nativeElement.srcObject =
-                    stream;
-            }
-
-        }
-        catch (error) {
-
-            console.error('[PRE CALL CAMERA]', error);
-        }
+                if (this.previewVideo?.nativeElement) {
+                    this.previewVideo.nativeElement.srcObject = this.previewStream;
+                }
+            })
+            .catch(error => {
+                console.error(error);
+            });
     }
 
     toggleCamera(): void {
-
-        const stream =
-            this.previewVideo?.nativeElement
-                ?.srcObject as MediaStream;
-
+        const stream = this.previewStream;
         if (!stream) {
             return;
         }
@@ -83,9 +77,7 @@ export class PreCallComponent implements AfterViewInit {
 
     toggleMute(): void {
 
-        const stream =
-            this.previewVideo?.nativeElement
-                ?.srcObject as MediaStream;
+        const stream = this.previewStream;
 
         if (!stream) {
             return;
@@ -96,6 +88,24 @@ export class PreCallComponent implements AfterViewInit {
         });
 
         this.isMuted = !this.isMuted;
+    }
+
+    ngOnDestroy(): void {
+        this.stopPreviewStream();
+    }
+
+    private stopPreviewStream(): void {
+
+        if (this.previewVideo?.nativeElement) {
+            this.previewVideo.nativeElement.pause();
+            this.previewVideo.nativeElement.srcObject = null;
+        }
+
+        this.previewStream?.getTracks().forEach(track => {
+            track.stop();
+        });
+
+        this.previewStream = undefined;
     }
 
     get callTitle(): string {
@@ -117,9 +127,7 @@ export class PreCallComponent implements AfterViewInit {
         }
 
         this.callService.onCallConnected = (payload: any) => {
-
-            console.warn('[PRE CALL] onCallConnected', payload);
-
+            this.stopPreviewStream();
             this.dialogRef.close();
 
             this.dialog.open(CallModalComponent, {

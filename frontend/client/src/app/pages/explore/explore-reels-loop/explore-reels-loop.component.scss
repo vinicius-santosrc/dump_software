@@ -1,0 +1,100 @@
+.explore-reels-loop {
+    position: relative;
+    width: 100%;
+    height: 100dvh;
+    overflow: hidden;
+    background: #050505;
+    color: #fff;
+}
+
+.explore-reels-loop__header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, .62), transparent);
+}
+
+.explore-reels-loop__scroller {
+    height: 100%;
+    overflow-y: auto;
+    scroll-snap-type: y mandatory;
+}
+
+.explore-reel-card {
+    position: relative;
+    height: 100dvh;
+    display: flex;
+    align-items: flex-end;
+    padding: 24px 76px 34px 18px;
+    scroll-snap-align: start;
+    background:
+        linear-gradient(to bottom, rgba(0, 0, 0, .04), rgba(0, 0, 0, .78)),
+        var(--post-image),
+        #202020;
+    background-size: cover;
+    background-position: center;
+}
+
+.explore-reel-card__content {
+    max-width: 300px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    span {
+        width: fit-content;
+        padding: 6px 9px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, .18);
+        font-size: 11px;
+        font-weight: 900;
+    }
+
+    strong {
+        font-size: 20px;
+        line-height: 1.1;
+    }
+
+    small {
+        color: rgba(255, 255, 255, .78);
+    }
+}
+
+.explore-reel-card__actions {
+    position: absolute;
+    right: 14px;
+    bottom: 34px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+
+    button {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+        border: none;
+        background: transparent;
+        color: #fff;
+        cursor: pointer;
+        font-size: 11px;
+        font-weight: 800;
+    }
+
+    mat-icon {
+        width: 32px;
+        height: 32px;
+        font-size: 32px;
+        filter: drop-shadow(0 3px 8px rgba(0, 0, 0, .35));
+    }
+
+    .is-active {
+        color: #ff3040;
+    }
+}

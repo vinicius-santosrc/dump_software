@@ -1,0 +1,116 @@
+<div class="sticker-picker">
+
+    <input #stickerFileInput type="file" hidden accept="image/png,image/jpeg,image/webp,image/gif"
+        (change)="handleStickerFileSelected($event)" />
+
+    <div class="sticker-picker__header">
+        <div>
+            <strong>Stickers</strong>
+            <span>Escolha ou crie um sticker</span>
+        </div>
+
+        <button mat-icon-button type="button" matTooltip="Criar sticker" (click)="openCreateSticker()">
+            <mat-icon>add_photo_alternate</mat-icon>
+        </button>
+    </div>
+
+    <mat-tab-group class="sticker-picker__tabs" animationDuration="180ms">
+
+        <mat-tab>
+            <ng-template mat-tab-label>
+                <mat-icon>schedule</mat-icon>
+            </ng-template>
+
+            <div class="sticker-picker__grid">
+                @if (recentStickers.length) {
+                @for (sticker of recentStickers; track sticker.id) {
+                <button type="button" class="sticker-picker__item" (click)="selectSticker(sticker)">
+
+                    <img [src]="sticker.url" [alt]="sticker.name" />
+
+                    <button type="button" class="sticker-picker__favorite"
+                        [class.sticker-picker__favorite--active]="isFavorite(sticker)"
+                        (click)="toggleFavorite($event, sticker)">
+                        <mat-icon>{{ isFavorite(sticker) ? 'favorite' : 'favorite_border' }}</mat-icon>
+                    </button>
+                </button>
+                }
+                }
+                @else {
+                <div class="sticker-picker__empty">
+                    Nenhum sticker recente
+                </div>
+                }
+            </div>
+        </mat-tab>
+
+        <mat-tab>
+            <ng-template mat-tab-label>
+                <mat-icon>favorite</mat-icon>
+            </ng-template>
+
+            <div class="sticker-picker__grid">
+                @if (favoriteStickers.length) {
+                @for (sticker of favoriteStickers; track sticker.id) {
+                <button type="button" class="sticker-picker__item" (click)="selectSticker(sticker)">
+
+                    <img [src]="sticker.url" [alt]="sticker.name" />
+
+                    <button type="button" class="sticker-picker__favorite sticker-picker__favorite--active"
+                        (click)="toggleFavorite($event, sticker)">
+                        <mat-icon>favorite</mat-icon>
+                    </button>
+                </button>
+                }
+                }
+                @else {
+                <div class="sticker-picker__empty">
+                    Nenhum favorito ainda
+                </div>
+                }
+            </div>
+        </mat-tab>
+
+        @for (pack of stickerPacks; track pack.id) {
+        <mat-tab>
+            <ng-template mat-tab-label>
+                <mat-icon>{{ pack.id === 'custom' ? 'person' : 'auto_awesome' }}</mat-icon>
+            </ng-template>
+
+            <div class="sticker-picker__pack-title">
+                {{ pack.name }}
+            </div>
+
+            <div class="sticker-picker__grid">
+                @if (pack.stickers.length) {
+                @for (sticker of pack.stickers; track sticker.id) {
+                <button type="button" class="sticker-picker__item" (click)="selectSticker(sticker)">
+
+                    <img [src]="sticker.url" [alt]="sticker.name" />
+
+                    <button type="button" class="sticker-picker__favorite"
+                        [class.sticker-picker__favorite--active]="isFavorite(sticker)"
+                        (click)="toggleFavorite($event, sticker)">
+                        <mat-icon>{{ isFavorite(sticker) ? 'favorite' : 'favorite_border' }}</mat-icon>
+                    </button>
+
+                    @if (sticker.isCustom) {
+                    <button type="button" class="sticker-picker__remove" (click)="removeCustomSticker($event, sticker)">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                    }
+                </button>
+                }
+                }
+                @else {
+                <button type="button" class="sticker-picker__create-card" (click)="openCreateSticker()">
+                    <mat-icon>add</mat-icon>
+                    Criar sticker
+                </button>
+                }
+            </div>
+        </mat-tab>
+        }
+
+    </mat-tab-group>
+</div>

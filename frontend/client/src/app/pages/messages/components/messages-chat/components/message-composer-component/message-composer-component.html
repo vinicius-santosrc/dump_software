@@ -1,0 +1,87 @@
+<div class="message-composer-component">
+
+    <input #imageInput type="file" accept="image/*" hidden (change)="handleImageSelected($event)" />
+
+    @if (pendingImagePreviewUrl) {
+    <div class="message-composer-component__attachment">
+        <img [src]="pendingImagePreviewUrl" alt="Imagem anexada" />
+
+        <div class="message-composer-component__attachment-info">
+            <strong>{{ pendingImage?.name }}</strong>
+            <span>Imagem anexada</span>
+        </div>
+
+        <button mat-icon-button type="button" class="message-composer-component__attachment-remove"
+            (click)="removePendingImage()" matTooltip="Remover imagem">
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
+    }
+
+    <button mat-icon-button type="button" class="message-composer-component__action" [matMenuTriggerFor]="emojiMenu"
+        matTooltip="Emoji">
+        <mat-icon>emoji_emotions</mat-icon>
+    </button>
+
+    <mat-menu #emojiMenu="matMenu" class="message-composer-component__menu">
+        <div class="message-composer-component__emoji-menu" (click)="$event.stopPropagation()">
+            @for (emoji of emojis; track emoji) {
+            <button type="button" class="message-composer-component__emoji-button" (click)="addEmoji(emoji)">
+                {{ emoji }}
+            </button>
+            }
+        </div>
+    </mat-menu>
+
+    <mat-menu #stickerMenu="matMenu" class="message-composer-component__sticker-menu">
+        <div (click)="$event.stopPropagation()">
+            <app-message-sticker-picker (stickerSelected)="sendSticker($event)">
+            </app-message-sticker-picker>
+        </div>
+    </mat-menu>
+
+    @if (isRecording) {
+    <div class="message-composer-component__recording">
+        <span class="message-composer-component__recording-dot"></span>
+        <span class="message-composer-component__recording-time">
+            {{ formatRecordingTime() }}
+        </span>
+
+        <button type="button" class="message-composer-component__cancel-recording" (click)="cancelRecording()">
+            Cancelar
+        </button>
+    </div>
+    }
+    @else {
+    <div class="input-content">
+        <app-basic-input class="message-composer-component__input" type="textarea" [value]="messageText"
+            label="MESSAGES_INBOX.CHAT.INPUT.PLACEHOLDER" (input)="onTyping()" (blur)="onStopTyping()"
+            (keydown.enter)="sendTextMessage()" (valueChange)="messageText = $event; onTyping()" />
+    </div>
+    }
+
+    @if(messageText.trim() || pendingImage) {
+    <button mat-icon-button type="button" class="message-composer-component__send"
+        [disabled]="(!messageText.trim() && !pendingImage) || isRecording" (click)="sendTextMessage()" matTooltip="Enviar">
+        <mat-icon>send</mat-icon>
+    </button>
+    }
+    @else {
+    <button mat-icon-button type="button" class="message-composer-component__action"
+        [class.message-composer-component__action--recording]="isRecording" (click)="toggleMicrophone()"
+        matTooltip="Microfone">
+        <mat-icon [fontSet]="'material-symbols-rounded'">{{ isRecording ? 'stop_circle' : 'mic' }}</mat-icon>
+    </button>
+
+    <button mat-icon-button type="button" class="message-composer-component__action" (click)="openImagePicker()"
+        matTooltip="Imagem">
+        <mat-icon [fontSet]="'material-symbols-rounded'">image</mat-icon>
+    </button>
+
+    <button mat-icon-button type="button" class="message-composer-component__action" [matMenuTriggerFor]="stickerMenu"
+        matTooltip="Sticker">
+        <mat-icon [fontSet]="'material-symbols-rounded'">sticker_add</mat-icon>
+    </button>
+    }
+
+</div>
