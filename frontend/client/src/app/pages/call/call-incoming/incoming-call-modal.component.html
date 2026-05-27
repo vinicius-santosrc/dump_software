@@ -8,32 +8,34 @@
         <div class="incoming-call-modal__avatar-container">
             <img class="incoming-call-modal__avatar"
                 [src]="incomingCall?.caller?.profilePictureUrl || 'assets/app/media/default-avatar.webp'"
-                alt="Caller avatar" />
+                [alt]="'CALL.INCOMING.AVATAR_ALT' | translate" />
         </div>
 
         <div class="incoming-call-modal__content">
 
             <span class="incoming-call-modal__calling-text">
-                Chamada recebida
+                {{ 'CALL.INCOMING.RECEIVED' | translate }}
             </span>
 
             <h2 class="incoming-call-modal__username">
-                {{ incomingCall?.caller?.fullName || incomingCall?.caller?.username || 'Usuário' }}
+                {{ incomingCall?.caller?.fullName || incomingCall?.caller?.username || ('CALL.INCOMING.FALLBACK_USER' | translate) }}
             </h2>
 
             <p class="incoming-call-modal__type">
-                {{ incomingCall?.type === 'video' ? 'Ligação de vídeo' : 'Ligação de áudio' }}
+                {{ (incomingCall?.type === 'video' ? 'CALL.INCOMING.VIDEO' : 'CALL.INCOMING.AUDIO') | translate }}
             </p>
 
         </div>
 
         <div class="incoming-call-modal__actions">
 
-            <button class="incoming-call-modal__action incoming-call-modal__action--reject" (click)="handleReject()">
+            <button class="incoming-call-modal__action incoming-call-modal__action--reject"
+                [attr.aria-label]="'CALL.INCOMING.REJECT' | translate" (click)="handleReject()">
                 <mat-icon>call_end</mat-icon>
             </button>
 
-            <button class="incoming-call-modal__action incoming-call-modal__action--accept" (click)="handleAccept()">
+            <button class="incoming-call-modal__action incoming-call-modal__action--accept"
+                [attr.aria-label]="'CALL.INCOMING.ACCEPT' | translate" (click)="handleAccept()">
                 <mat-icon>
                     {{ incomingCall?.type === 'video' ? 'videocam' : 'call' }}
                 </mat-icon>

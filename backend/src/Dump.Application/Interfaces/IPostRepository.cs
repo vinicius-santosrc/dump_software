@@ -13,7 +13,7 @@ public interface IPostsRepository
     Task<Post> GetById(string postId);
     Task<Post> UpdatePost(Post post);
     Task CreateAsync(Post post);
-    Task<Post[]> GetDumpsByUserProfile(string id);
+    Task<Post[]> GetDumpsByUserProfile(string id, DateTime? cursor = null, int limit = 6);
     Task ArchiveAsync(string postId);
     Task UnarchiveAsync(string postId);
     Task SoftDeleteAsync(string postId);

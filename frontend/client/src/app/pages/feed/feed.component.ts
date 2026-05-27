@@ -36,7 +36,7 @@ export class FeedComponent implements OnInit {
     loadingMore: boolean = false;
     hasMorePosts: boolean = true;
     cursor?: string;
-    readonly limit: number = 5;
+    readonly limit: number = 6;
     private readonly loadedPostIds = new Set<string>();
     public current_user: any;
     relatedUsers: User[] = [];

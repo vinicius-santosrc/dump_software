@@ -6,13 +6,14 @@ import { CommonModule } from '@angular/common';
 import { CallService } from '../../../core/services/messages/call/call.service';
 import { UserService } from '../../../core/services/user/user.service';
 import { CallModalComponent } from '../call-modal/call-modal.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
     selector: "app-pre-call",
     standalone: true,
     templateUrl: "./pre-call.component.html",
     styleUrl: "./pre-call.component.scss",
-    imports: [CommonModule, GenericButtonComponent, AvatarItem]
+    imports: [CommonModule, GenericButtonComponent, AvatarItem, TranslateModule]
 })
 
 export class PreCallComponent implements AfterViewInit, OnDestroy {

@@ -1,14 +1,14 @@
 <div class="message-renderer" [class.message-renderer--mine]="isMine">
     <div class="message-actions" [class.message-actions--mine]="isMine">
-        <button type="button" class="message-action" aria-label="Reagir">
+        <button type="button" class="message-action" [attr.aria-label]="'MESSAGES_INBOX.CHAT.ACTIONS.REACT' | translate">
             <mat-icon>add_reaction</mat-icon>
         </button>
 
-        <button type="button" class="message-action" aria-label="Responder">
+        <button type="button" class="message-action" [attr.aria-label]="'MESSAGES_INBOX.CHAT.ACTIONS.REPLY' | translate">
             <mat-icon>reply</mat-icon>
         </button>
 
-        <button type="button" class="message-action" aria-label="Mais opções">
+        <button type="button" class="message-action" [attr.aria-label]="'MESSAGES_INBOX.CHAT.ACTIONS.MORE_OPTIONS' | translate">
             <mat-icon>more_horiz</mat-icon>
         </button>
     </div>
@@ -20,7 +20,7 @@
 
         @if (contentUnavailable) {
             <span class="message-deleted">
-                {{ 'Mensagem apagada' }}
+                {{ 'MESSAGES_INBOX.CHAT.MESSAGE.DELETED' | translate }}
             </span>
         }
         @else {
@@ -47,7 +47,7 @@
         <button
             type="button"
             class="message-media-card"
-            aria-label="Abrir imagem">
+            [attr.aria-label]="'MESSAGES_INBOX.CHAT.MEDIA.OPEN_IMAGE' | translate">
             <app-post-media
                 class="message-media-card__image"
                 [media]="imageMedia" />
@@ -77,7 +77,7 @@
         <img
             class="message-sticker"
             [src]="stickerUrl"
-            alt="Sticker" />
+            [alt]="'MESSAGES_INBOX.CHAT.MEDIA.STICKER_ALT' | translate" />
         <span class="message-time message-time--floating" [class.message-time--mine]="isMine">
             {{ messageTime }}
         </span>
@@ -96,7 +96,7 @@
 
             @if (contentUnavailable) {
                 <div class="message-unavailable">
-                    Publicação não está mais disponível
+                    {{ 'MESSAGES_INBOX.CHAT.POST.UNAVAILABLE' | translate }}
                 </div>
             }
             @else {
@@ -128,11 +128,11 @@
         [class.message__bubble--mine]="isMine">
 
         <div class="post-preview">
-            <p class="post-label">Story</p>
+            <p class="post-label">{{ 'MESSAGES_INBOX.CHAT.STORY.LABEL' | translate }}</p>
 
             @if (contentUnavailable) {
                 <div class="message-unavailable">
-                    Story não está mais disponível
+                    {{ 'MESSAGES_INBOX.CHAT.STORY.UNAVAILABLE' | translate }}
                 </div>
             }
             @else {
@@ -145,7 +145,7 @@
                         <img
                             class="story-preview-image"
                             [src]="message?.story?.thumbnail || message?.story?.photoUrl"
-                            alt="Story" />
+                            [alt]="'MESSAGES_INBOX.CHAT.STORY.ALT' | translate" />
                     }
 
                     <div class="post-info">

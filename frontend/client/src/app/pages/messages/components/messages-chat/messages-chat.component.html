@@ -18,13 +18,13 @@
         </div>
 
         <div class="chat__actions">
-            <button id="call" (click)="openAudioCall()">
+            <button id="call" (click)="openAudioCall()" [attr.aria-label]="'MESSAGES_INBOX.CHAT.CALL.AUDIO' | translate">
                 <mat-icon [fontSet]="'material-symbols-rounded'">phone</mat-icon>
             </button>
-            <button id="video-call" (click)="openVideoCall()">
+            <button id="video-call" (click)="openVideoCall()" [attr.aria-label]="'MESSAGES_INBOX.CHAT.CALL.VIDEO' | translate">
                 <mat-icon [fontSet]="'material-symbols-rounded'">videocam</mat-icon>
             </button>
-            <button id="info">
+            <button id="info" [attr.aria-label]="'MESSAGES_INBOX.CHAT.ACTIONS.INFO' | translate">
                 <mat-icon [fontSet]="'material-symbols-rounded'">info</mat-icon>
             </button>
         </div>
@@ -39,7 +39,7 @@
             <div class="message" [class.me]="msg?.sender?.id === current_user?.id">
 
             @if(msg?.sender?.id != current_user?.id) {
-            <img class="message__avatar" alt="Avatar"
+            <img class="message__avatar" [alt]="'MESSAGES_INBOX.CHAT.MEDIA.AVATAR_ALT' | translate"
                 [src]="getUserById(msg?.sender?.id)?.profilePictureUrl || 'assets/app/media/default-avatar.webp'" />
             }
 
@@ -61,7 +61,7 @@
 
             @if(msg?.sender?.id == current_user?.id) {
             <img class="message__avatar"
-                [src]="getUserById(msg?.sender?.id)?.profilePictureUrl || 'assets/app/media/default-avatar.webp'" alt />
+                [src]="getUserById(msg?.sender?.id)?.profilePictureUrl || 'assets/app/media/default-avatar.webp'" [alt]="'MESSAGES_INBOX.CHAT.MEDIA.AVATAR_ALT' | translate" />
             }
         </div>
         </ng-container>
@@ -79,7 +79,7 @@
 
 <section class="no_chat__screen" *ngIf="!conversation?.id">
     <div class="no_chat__content">
-        <img [src]="ilustrationDirect" alt="Message Send" />
+        <img [src]="ilustrationDirect" [alt]="'MESSAGES_INBOX.NOT_SELECTED.ILLUSTRATION_ALT' | translate" />
         <h2>{{'MESSAGES_INBOX.NOT_SELECTED.TITLE' | translate}}</h2>
         <p>{{'MESSAGES_INBOX.NOT_SELECTED.SUBTITLE' | translate}}</p>
         <app-generic-button label="{{'MESSAGES_INBOX.NOT_SELECTED.BUTTON' | translate}}"

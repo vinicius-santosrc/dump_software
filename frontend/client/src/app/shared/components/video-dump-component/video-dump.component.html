@@ -1,40 +1,30 @@
 <div class="video-container">
 
-  <img 
-    *ngIf="!hasLoaded"
-    [src]="thumbnail"
-    class="video-thumb"
-  />
-
   <video
     #video
     [attr.src]="hasLoaded ? src : null"
+    [attr.poster]="thumbnail || null"
     loop
     preload="metadata"
-    autoplay
     playsinline
     (timeupdate)="onTimeUpdate()"
   ></video>
 
-  <!-- Loading -->
   <div class="loading" *ngIf="isLoading && hasLoaded">
     <div class="spinner"></div>
   </div>
 
-  <!-- Center play icon when paused -->
-  <div class="overlay" *ngIf="isPaused">
+  <div class="overlay" *ngIf="isPaused && hasLoaded">
     <span class="play-icon">▶</span>
   </div>
 
-  <!-- Bottom controls -->
-  <div class="controls">
+  <div class="controls" *ngIf="hasLoaded">
     <div class="progress">
       <div class="bar" [style.width.%]="progress"></div>
     </div>
 
     <button mat-icon-button class="mute-btn" (pointerup)="$event.stopPropagation(); toggleMute()">
-      <mat-icon>{{isMuted ? 'volume_off' : 'volume_up'}}</mat-icon>
-
+      <mat-icon>{{ isMuted ? 'volume_off' : 'volume_up' }}</mat-icon>
     </button>
   </div>
 

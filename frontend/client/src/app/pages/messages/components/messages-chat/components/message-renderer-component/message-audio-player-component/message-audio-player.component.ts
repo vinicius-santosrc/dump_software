@@ -11,6 +11,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-message-audio-player',
@@ -18,7 +19,8 @@ import { MatButtonModule } from '@angular/material/button';
     imports: [
         CommonModule,
         MatIconModule,
-        MatButtonModule
+        MatButtonModule,
+        TranslateModule
     ],
     templateUrl: './message-audio-player.component.html',
     styleUrl: './message-audio-player.component.scss',

@@ -110,6 +110,15 @@ public class PostResponse
     public bool Archived { get; set; }
 }
 
+public class PostMediaResponse
+{
+    [BsonElement("id")]
+    public string? Id { get; set; }
+
+    [BsonElement("media")]
+    public List<PostMedia> Media { get; set; } = new();
+}
+
 public class PostMedia
 {
     [BsonElement("url")]
@@ -126,6 +135,9 @@ public class PostMedia
 
     [BsonElement("thumbnail")]
     public string Thumbnail { get; set; } = string.Empty;
+
+    [BsonElement("duration")]
+    public double Duration { get; set; }
 }
 
 public class PostLocation

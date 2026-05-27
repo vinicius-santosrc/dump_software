@@ -4,7 +4,7 @@
     </audio>
 
     <button mat-icon-button type="button" class="audio-player__play" (click)="togglePlay()"
-        [attr.aria-label]="isPlaying ? 'Pausar áudio' : 'Reproduzir áudio'">
+        [attr.aria-label]="(isPlaying ? 'MESSAGES_INBOX.CHAT.AUDIO.PAUSE' : 'MESSAGES_INBOX.CHAT.AUDIO.PLAY') | translate">
 
         @if (isLoading) {
         <span class="audio-player__loader"></span>
@@ -19,7 +19,7 @@
     @if (showAvatar) {
     <div class="audio-player__avatar">
         @if (senderAvatar) {
-        <img [src]="senderAvatar" alt="Avatar" />
+        <img [src]="senderAvatar" [alt]="'MESSAGES_INBOX.CHAT.MEDIA.AVATAR_ALT' | translate" />
         }
         @else {
         <mat-icon>person</mat-icon>
@@ -39,7 +39,7 @@
                 {{ formatTime(currentTime || duration) }}
             </span>
 
-            <button type="button" class="audio-player__speed" (click)="changePlaybackRate()">
+            <button type="button" class="audio-player__speed" [attr.aria-label]="'MESSAGES_INBOX.CHAT.AUDIO.CHANGE_SPEED' | translate" (click)="changePlaybackRate()">
                 {{ playbackRate }}x
             </button>
         </div>

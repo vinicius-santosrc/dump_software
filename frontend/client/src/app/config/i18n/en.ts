@@ -7,10 +7,10 @@ export const locale = {
             HIGHLIGHT_MESSAGE: "Share and follow moments with those who ",
             HIGHLIGHT_MESSAGE_2: "really matter.",
             GOOGLE_SIGN_IN: "Sign in with Google",
-            JOIN_DUMP: "Join Dump",
+            JOIN_DUMP: "Sign in to Dump",
             FORGOT_PASSWORD: "Recover account",
             INPUTS: {
-                EMAIL: "Phone number, username or email",
+                EMAIL: "Phone number, username, or email",
                 EMAIL_SIGN_UP: "Phone number or email",
                 PASSWORD: "Password",
                 FULL_NAME: "Full name",
@@ -27,8 +27,9 @@ export const locale = {
         HEADER: {
             ACTIONS: {
                 SIDEBAR: {
-                    TITLE: "Quick actions",
+                    TITLE: "DUMP",
                     EXPLORE: "Explore",
+                    MESSAGES: "Messages",
                     HOME: "Home",
                     DUMPS: "Dumps",
                     SEARCH: "Search",
@@ -42,6 +43,7 @@ export const locale = {
                         AD: "Advertise",
                         IA: "AI"
                     },
+                    PROFILE: "Profile",
                     MENU: "Menu",
                     MENU_OPTIONS: {
                         SETTINGS: "Settings",
@@ -50,7 +52,7 @@ export const locale = {
                         DISPLAY: "Display",
                         REPORT: "Report a problem",
                         CHANGE_ACCOUNT: "Switch account",
-                        DISCONNECT: "Disconnect",
+                        DISCONNECT: "Log out",
                     },
                     SETTINGS: "Settings",
                 },
@@ -67,6 +69,12 @@ export const locale = {
                     COMMENT: "commented on your post",
                 },
                 EMPTY: "No notifications yet."
+            },
+            THEME_CHANGE: {
+                CHANGE_THEME: "Change display",
+                THEME: {
+                    DARK: "Dark mode"
+                }
             }
         },
         COMPONENTS: {
@@ -94,7 +102,18 @@ export const locale = {
             REQUIRED: "This field is required.",
             INVALID_EMAIL: "Please enter a valid email.",
             MIN_LENGTH: "This field must contain at least {{minLength}} characters.",
-            MAX_LENGTH: "This field must contain a maximum of {{maxLength}} characters."
+            MAX_LENGTH: "This field must contain at most {{maxLength}} characters."
+        },
+        ERRORS: {
+            DEFAULT: "An unexpected error occurred.",
+            NETWORK: "Connection error. Check your internet.",
+            OFFLINE: "You are offline.",
+            BAD_REQUEST: "Invalid request.",
+            FORBIDDEN: "You do not have permission for this action.",
+            NOT_FOUND: "Resource not found.",
+            SERVER_ERROR: "Internal server error.",
+            CONFLICT: "Conflict while processing the request.",
+            CLOSE: "Close"
         },
         FEED: {
             HEADER: {
@@ -116,10 +135,10 @@ export const locale = {
                         SEND: "Send",
                         CANCEL: "Cancel"
                     },
-                    DELETED: "Comment deleted",
-                    SHOW_RESPONSES: "+ View responses ({{count}})",
+                    DELETED: "Comment removed",
+                    SHOW_RESPONSES: "+ View replies ({{count}})",
                     LOADING: "Loading...",
-                    HIDE_RESPONSES: "Hide responses"
+                    HIDE_RESPONSES: "Hide replies"
                 },
                 SHARE: {
                     HEADER: "Share",
@@ -135,23 +154,27 @@ export const locale = {
                     OPTIONS: "Options",
                     CANCEL: "Cancel",
                     ARCHIVE: "Archive",
+                    UNARCHIVE: "Unarchive",
                     DELETE: "Delete",
                     ABOUT: "About this account",
-                    WHY: "Why are you seeing this post",
+                    WHY: "Why you're seeing this post",
                     HIDE: "Hide",
                     REPORT: "Report"
-                }
+                },
+                POST_ARCHIVED: "Post archived.",
+                POST_DELETED: "Post deleted.",
+                POST_UNARCHIVED: "Post unarchived."
             },
             CARD: {
-                WHO_FOLLOW: "who to follow",
-                TENDING_TOPICS: "what people are talking about",
+                WHO_FOLLOW: "Who to follow",
+                TENDING_TOPICS: "What people are talking about",
                 SEE_ALL: "See all",
                 BUTTON: {
                     FOLLOW: "Connect",
                     TALK: "Talk",
                     UNFOLLOW: "Connected",
                     MORE_INFO: "Learn more",
-                    OF_POSTS: "posts"
+                    OF_POSTS: "of posts"
                 }
             }
         },
@@ -162,14 +185,14 @@ export const locale = {
         },
         CREATE_POST: {
             HEADER: "Create new post",
-            CAPTION: "Write a caption for your post",
+            CAPTION: "Enter a caption for your post",
             FIELDS: {
                 AUDIO: "Add audio",
                 LOCATION: "Add location",
                 TAG_PEOPLE: "Tag people",
                 IA: "Add AI label",
                 PUBLIC: "Public",
-                TOGGLE_COMMENTS: "Disable comments",
+                TOGGLE_COMMENTS: "Turn off comments",
                 HIDE_LIKES: "Hide likes",
                 SCHEDULE: "Schedule post"
             },
@@ -179,19 +202,52 @@ export const locale = {
             }
         },
         NOT_FOUND: {
-            MESSAGE: "This page isn't available.",
-            DESCRIPTION: "The link you followed may be broken, or the page may have been removed.",
-            LINK: "Go back to Dump."
+            MESSAGE: "This page is not available.",
+            DESCRIPTION: "The link you clicked may be broken, or the page may have been removed.",
+            LINK: "Back to Dump."
         },
         SEARCH: {
             HEADER: "Search",
-            LABEL: "Search for users, posts or topics",
+            LABEL: "Search for users, posts, or topics",
             RECENT: "Recent",
             CLEAR_ALL: "Clear all",
             SECTION: {
                 USERS: "Users",
                 POSTS: "Posts",
                 TOPICS: "Topics"
+            }
+        },
+        EXPLORE: {
+            SEARCH: {
+                PLACEHOLDER: "Search for topics, posts, users, and more..."
+            },
+            EMPTY: {
+                TITLE: "Nothing found",
+                DESCRIPTION: "Try searching for another topic or browsing trends."
+            },
+            SECTION: {
+                SEE_MORE: "see more",
+                SEE_LESS: "see less"
+            },
+            MODAL: {
+                CLOSE: "Close",
+                FILTERS: {
+                    RECENT: "Most recent",
+                    MOST_LIKED: "Most liked",
+                    VIDEOS_ONLY: "Videos only",
+                    SMALL_CREATORS: "Small creators",
+                    NEAR_YOU: "Near you"
+                }
+            },
+            POST: {
+                RELEVANT_SCORE: "{{score}} relevant"
+            },
+            ENGAGEMENT_LAB: {
+                ARIA_LABEL: "Social exploration",
+                STICKERS_TITLE: "Trending stickers",
+                MOCK_BADGE: "mock",
+                SOCIAL_TITLE: "People you follow liked",
+                SOCIAL_BADGE: "social proof"
             }
         },
         USER_PROFILE: {
@@ -207,6 +263,16 @@ export const locale = {
             FEED: {
                 EMPTY: "No posts found.",
             },
+            MODAL: {
+                FOLLOWING: {
+                    TITLE: "Following",
+                    SUBTITLE: "See who {{username}} is following.",
+                },
+                FOLLOWERS: {
+                    TITLE: "Followers",
+                    SUBTITLE: "See who follows {{username}}.",
+                }
+            },
             EDIT_PROFILE: {
                 HEADER: "Edit profile",
                 SUBTITLE: "Complete the steps below to update your profile.",
@@ -218,8 +284,8 @@ export const locale = {
                     NAME_PLACEHOLDER: "Change your name",
                     USERNAME: "Username",
                     USERNAME_PLACEHOLDER: "Change your username",
-                    BIO: "Biography",
-                    BIO_PLACEHOLDER: "Change your biography",
+                    BIO: "Bio",
+                    BIO_PLACEHOLDER: "Change your bio",
                     WEBSITE: "Website",
                     WEBSITE_PLACEHOLDER: "Add a website to your profile",
                     GENDER: "Gender",
@@ -230,10 +296,15 @@ export const locale = {
                         PREFER_NOT_TO_SAY: "Prefer not to say"
                     },
                     AVATAR: {
-                        CHANGE: "Change profile picture",
-                        REMOVE: "Remove profile picture"
+                        CHANGE: "Change profile photo",
+                        REMOVE: "Remove profile photo"
                     },
                     WARNING_GENDER: "This will not be part of your public profile."
+                },
+                ARCHIVED: {
+                    TITLE: "Archived",
+                    SUBTITLE: "Here are the posts you archived. They are not visible to other people.",
+                    EMPTY: "There are no archived posts"
                 },
                 BUTTON: {
                     UPDATE: "Update"
@@ -256,7 +327,11 @@ export const locale = {
                 },
                 SEARCH: "Search conversations",
                 LAST_MESSAGE: "You",
-                LAST_MESSAGE_SENT_POST: "You sent an attachment"
+                LAST_MESSAGE_SENT_POST: "sent an attachment",
+                LAST_MESSAGE_SENT_IMAGE: "sent a photo",
+                LAST_MESSAGE_SENT_VIDEO: "sent a video",
+                LAST_MESSAGE_SENT_AUDIO: "sent an audio",
+                LAST_MESSAGE_SENT_STICKER: "sent a sticker"
             },
             CHAT: {
                 INPUT: {
@@ -267,19 +342,115 @@ export const locale = {
                     RESEND: "Resend",
                     SEE_STORY: "View story",
                 },
+                ACTIONS: {
+                    REACT: "React",
+                    REPLY: "Reply",
+                    MORE_OPTIONS: "More options",
+                    INFO: "Conversation info"
+                },
+                CALL: {
+                    AUDIO: "Start audio call",
+                    VIDEO: "Start video call"
+                },
+                DATE: {
+                    TODAY: "Today",
+                    YESTERDAY: "Yesterday"
+                },
+                MEDIA: {
+                    OPEN_IMAGE: "Open image",
+                    STICKER_ALT: "Sticker",
+                    AVATAR_ALT: "User avatar"
+                },
+                COMPOSER: {
+                    ATTACHMENT: {
+                        IMAGE_ALT: "Attached image",
+                        IMAGE_ATTACHED: "Attached image",
+                        REMOVE_IMAGE: "Remove image"
+                    },
+                    ACTIONS: {
+                        EMOJI: "Emoji",
+                        MICROPHONE: "Microphone",
+                        IMAGE: "Image",
+                        STICKER: "Sticker"
+                    },
+                    RECORDING: {
+                        CANCEL: "Cancel"
+                    }
+                },
+                AUDIO: {
+                    PLAY: "Play audio",
+                    PAUSE: "Pause audio",
+                    CHANGE_SPEED: "Change audio speed"
+                },
+                STICKERS: {
+                    TITLE: "Stickers",
+                    SUBTITLE: "Choose or create a sticker",
+                    CREATE: "Create sticker",
+                    SELECT: "Select sticker {{name}}",
+                    ADD_FAVORITE: "Add {{name}} to favorites",
+                    REMOVE_FAVORITE: "Remove {{name}} from favorites",
+                    REMOVE_CUSTOM: "Remove sticker {{name}}",
+                    EMPTY_RECENT: "No recent stickers",
+                    EMPTY_FAVORITES: "No favorites yet"
+                },
+                MESSAGE: {
+                    DELETED: "Message deleted"
+                },
                 POST: {
                     SHARED: "Shared",
                     USER: "User",
                     SENT: "Sent",
                     DELIVERED: "Delivered",
-                    READ: "Read"
+                    READ: "Read",
+                    UNAVAILABLE: "Post is no longer available"
+                },
+                STORY: {
+                    LABEL: "Story",
+                    ALT: "Story",
+                    UNAVAILABLE: "Story is no longer available"
                 }
             },
             NOT_SELECTED: {
                 TITLE: "Your messages",
                 SUBTITLE: "Select a conversation to read messages",
                 BUTTON: "Write a message",
+                ILLUSTRATION_ALT: "Sent message illustration",
+            }
+        },
+        CALL: {
+            PRE_CALL: {
+                CAMERA_PREVIEW: "Camera preview",
+                ACTIONS: {
+                    TOGGLE_CAMERA: "Turn camera on or off",
+                    TOGGLE_MICROPHONE: "Turn microphone on or off",
+                    VOLUME: "Configure volume",
+                    SETTINGS: "Call settings"
+                },
+                STATUS: {
+                    CALLING: "Calling...",
+                    RINGING: "Ringing...",
+                    CONNECTED: "Connected",
+                    REJECTED: "Call rejected",
+                    UNAVAILABLE: "User unavailable",
+                    ENDED: "Call ended",
+                    READY_VIDEO: "Ready for the video call?",
+                    READY_AUDIO: "Ready to call?"
+                },
+                BUTTONS: {
+                    CALLING: "Calling...",
+                    REJECTED: "Rejected",
+                    START: "Start call"
+                }
+            },
+            INCOMING: {
+                AVATAR_ALT: "Caller avatar",
+                RECEIVED: "Incoming call",
+                FALLBACK_USER: "User",
+                VIDEO: "Video call",
+                AUDIO: "Audio call",
+                REJECT: "Reject call",
+                ACCEPT: "Accept call"
             }
         },
     }
-}
+};

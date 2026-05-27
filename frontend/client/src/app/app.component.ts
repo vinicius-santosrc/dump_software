@@ -101,13 +101,9 @@ export class AppComponent
   }
 
   ngOnInit(): void {
-
     this.initializeAuth();
-
     this.initializeRouterEvents();
-
     this.initializeSidebarListeners();
-
     this.store.setActiveConversation('');
   }
 
@@ -125,7 +121,6 @@ export class AppComponent
   }
 
   private initializeTranslations(): void {
-
     this.translationService.loadTranslations(
       ptLang,
       enLang,
@@ -134,9 +129,7 @@ export class AppComponent
   }
 
   private initializeTheme(): void {
-
     this.themeService.loadTheme();
-
     this.currentTheme = this.themeService.getTheme();
 
     this.splashScreenImage =

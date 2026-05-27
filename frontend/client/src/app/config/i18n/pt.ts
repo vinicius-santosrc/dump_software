@@ -69,6 +69,12 @@ export const locale = {
                     COMMENT: "comentou na sua publicação",
                 },
                 EMPTY: "Sem notificações ainda."
+            },
+            THEME_CHANGE: {
+                CHANGE_THEME: "Alterar exibição",
+                THEME: {
+                    DARK: "Modo escuro"
+                }
             }
         },
         COMPONENTS: {
@@ -211,6 +217,39 @@ export const locale = {
                 TOPICS: "Tópicos"
             }
         },
+        EXPLORE: {
+            SEARCH: {
+                PLACEHOLDER: "Pesquisar por tópicos, posts, usuários e outros..."
+            },
+            EMPTY: {
+                TITLE: "Nada encontrado",
+                DESCRIPTION: "Tente buscar outro tópico ou navegar pelas tendências."
+            },
+            SECTION: {
+                SEE_MORE: "ver mais",
+                SEE_LESS: "ver menos"
+            },
+            MODAL: {
+                CLOSE: "Fechar",
+                FILTERS: {
+                    RECENT: "Mais recentes",
+                    MOST_LIKED: "Mais curtidos",
+                    VIDEOS_ONLY: "Só vídeos",
+                    SMALL_CREATORS: "Criadores pequenos",
+                    NEAR_YOU: "Perto de você"
+                }
+            },
+            POST: {
+                RELEVANT_SCORE: "{{score}} relevante"
+            },
+            ENGAGEMENT_LAB: {
+                ARIA_LABEL: "Exploração social",
+                STICKERS_TITLE: "Stickers em alta",
+                MOCK_BADGE: "mock",
+                SOCIAL_TITLE: "Pessoas que você segue curtiram",
+                SOCIAL_BADGE: "prova social"
+            }
+        },
         USER_PROFILE: {
             TABS: {
                 POSTS: "Posts",
@@ -303,19 +342,114 @@ export const locale = {
                     RESEND: "Reenviar",
                     SEE_STORY: "Ver story",
                 },
+                ACTIONS: {
+                    REACT: "Reagir",
+                    REPLY: "Responder",
+                    MORE_OPTIONS: "Mais opções",
+                    INFO: "Informações da conversa"
+                },
+                CALL: {
+                    AUDIO: "Iniciar chamada de áudio",
+                    VIDEO: "Iniciar chamada de vídeo"
+                },
+                DATE: {
+                    TODAY: "Hoje",
+                    YESTERDAY: "Ontem"
+                },
+                MEDIA: {
+                    OPEN_IMAGE: "Abrir imagem",
+                    STICKER_ALT: "Sticker",
+                    AVATAR_ALT: "Avatar do usuário"
+                },
+                COMPOSER: {
+                    ATTACHMENT: {
+                        IMAGE_ALT: "Imagem anexada",
+                        IMAGE_ATTACHED: "Imagem anexada",
+                        REMOVE_IMAGE: "Remover imagem"
+                    },
+                    ACTIONS: {
+                        EMOJI: "Emoji",
+                        MICROPHONE: "Microfone",
+                        IMAGE: "Imagem",
+                        STICKER: "Sticker"
+                    },
+                    RECORDING: {
+                        CANCEL: "Cancelar"
+                    }
+                },
+                AUDIO: {
+                    PLAY: "Reproduzir áudio",
+                    PAUSE: "Pausar áudio",
+                    CHANGE_SPEED: "Alterar velocidade do áudio"
+                },
+                STICKERS: {
+                    TITLE: "Stickers",
+                    SUBTITLE: "Escolha ou crie um sticker",
+                    CREATE: "Criar sticker",
+                    SELECT: "Selecionar sticker {{name}}",
+                    ADD_FAVORITE: "Adicionar {{name}} aos favoritos",
+                    REMOVE_FAVORITE: "Remover {{name}} dos favoritos",
+                    REMOVE_CUSTOM: "Remover sticker {{name}}",
+                    EMPTY_RECENT: "Nenhum sticker recente",
+                    EMPTY_FAVORITES: "Nenhum favorito ainda"
+                },
+                MESSAGE: {
+                    DELETED: "Mensagem apagada"
+                },
                 POST: {
                     SHARED: "Compartilhado",
                     USER: "Usuário",
                     SENT: "Enviado",
                     DELIVERED: "Entregue",
-                    READ: "Lido"
+                    READ: "Lido",
+                    UNAVAILABLE: "Publicação não está mais disponível"
+                },
+                STORY: {
+                    LABEL: "Story",
+                    ALT: "Story",
+                    UNAVAILABLE: "Story não está mais disponível"
                 }
             },
             NOT_SELECTED: {
                 TITLE: "Suas mensagens",
                 SUBTITLE: "Selecione uma conversa para ler as mensagens",
                 BUTTON: "Escreva uma mensagem",
-
+                ILLUSTRATION_ALT: "Ilustração de mensagem enviada",
+            }
+        },
+        CALL: {
+            PRE_CALL: {
+                CAMERA_PREVIEW: "Pré-visualização da câmera",
+                ACTIONS: {
+                    TOGGLE_CAMERA: "Ativar ou desativar câmera",
+                    TOGGLE_MICROPHONE: "Ativar ou desativar microfone",
+                    VOLUME: "Configurar volume",
+                    SETTINGS: "Configurações da chamada"
+                },
+                STATUS: {
+                    CALLING: "Ligando...",
+                    RINGING: "Chamando...",
+                    CONNECTED: "Conectado",
+                    REJECTED: "Ligação recusada",
+                    UNAVAILABLE: "Usuário indisponível",
+                    ENDED: "Ligação encerrada",
+                    READY_VIDEO: "Tudo pronto para a videochamada?",
+                    READY_AUDIO: "Tudo pronto para ligar?"
+                },
+                BUTTONS: {
+                    CALLING: "Ligando...",
+                    REJECTED: "Recusada",
+                    START: "Iniciar ligação"
+                }
+            },
+            INCOMING: {
+                AVATAR_ALT: "Avatar de quem está ligando",
+                RECEIVED: "Chamada recebida",
+                FALLBACK_USER: "Usuário",
+                VIDEO: "Ligação de vídeo",
+                AUDIO: "Ligação de áudio",
+                REJECT: "Recusar chamada",
+                ACCEPT: "Aceitar chamada"
             }
         },
     }

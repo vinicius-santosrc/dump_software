@@ -4,13 +4,15 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDialog } from '@angular/material/dialog';
 import { CallModalComponent } from '../call-modal/call-modal.component';
 import { CallService } from '../../../core/services/messages/call/call.service';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-incoming-call-modal',
     standalone: true,
     imports: [
         CommonModule,
-        MatIconModule
+        MatIconModule,
+        TranslateModule
     ],
     templateUrl: './incoming-call-modal.component.html',
     styleUrls: ['./incoming-call-modal.component.scss']

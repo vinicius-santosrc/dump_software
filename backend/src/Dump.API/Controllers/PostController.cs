@@ -25,9 +25,9 @@ public class PostController : ControllerBase
 
     public class FeedRequest
     {
-        public string Id { get; set; }
+        public string Id { get; set; } = string.Empty;
         public DateTime? Cursor { get; set; }
-        public int Limit { get; set; } = 10;
+        public int Limit { get; set; } = 6;
     }
 
     [HttpPost("feed")]
@@ -57,6 +57,13 @@ public class PostController : ControllerBase
         return Ok(post);
     }
 
+    [HttpGet("{id}/media")]
+    public async Task<IActionResult> GetMediaByPostId(string id)
+    {
+        var media = await _postService.GetMediaByPostId(id);
+        return Ok(media);
+    }
+
     public class HandleLikeRequest
     {
         public string PostId { get; set; }
@@ -75,14 +82,11 @@ public class PostController : ControllerBase
 
 
     [HttpGet("dumps/getByUser/{id}")]
-    public async Task<IActionResult> GetDumpsById(string id)
+    public async Task<IActionResult> GetDumpsById(string id, [FromQuery] DateTime? cursor = null, [FromQuery] int limit = 6)
     {
-        var user = await _postService.GetDumpsById(id);
+        var posts = await _postService.GetDumpsById(id, cursor, limit);
 
-        if (user == null)
-            return NotFound(new { message = "User not found" });
-
-        return Ok(user);
+        return Ok(posts);
     }
 
     [HttpGet("archived/getByUser/{id}")]

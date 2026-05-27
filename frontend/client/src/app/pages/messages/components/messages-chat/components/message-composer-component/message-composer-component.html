@@ -4,22 +4,24 @@
 
     @if (pendingImagePreviewUrl) {
     <div class="message-composer-component__attachment">
-        <img [src]="pendingImagePreviewUrl" alt="Imagem anexada" />
+        <img [src]="pendingImagePreviewUrl" [alt]="'MESSAGES_INBOX.CHAT.COMPOSER.ATTACHMENT.IMAGE_ALT' | translate" />
 
         <div class="message-composer-component__attachment-info">
             <strong>{{ pendingImage?.name }}</strong>
-            <span>Imagem anexada</span>
+            <span>{{ 'MESSAGES_INBOX.CHAT.COMPOSER.ATTACHMENT.IMAGE_ATTACHED' | translate }}</span>
         </div>
 
         <button mat-icon-button type="button" class="message-composer-component__attachment-remove"
-            (click)="removePendingImage()" matTooltip="Remover imagem">
+            (click)="removePendingImage()" [matTooltip]="'MESSAGES_INBOX.CHAT.COMPOSER.ATTACHMENT.REMOVE_IMAGE' | translate"
+            [attr.aria-label]="'MESSAGES_INBOX.CHAT.COMPOSER.ATTACHMENT.REMOVE_IMAGE' | translate">
             <mat-icon>close</mat-icon>
         </button>
     </div>
     }
 
     <button mat-icon-button type="button" class="message-composer-component__action" [matMenuTriggerFor]="emojiMenu"
-        matTooltip="Emoji">
+        [matTooltip]="'MESSAGES_INBOX.CHAT.COMPOSER.ACTIONS.EMOJI' | translate"
+        [attr.aria-label]="'MESSAGES_INBOX.CHAT.COMPOSER.ACTIONS.EMOJI' | translate">
         <mat-icon>emoji_emotions</mat-icon>
     </button>
 
@@ -48,7 +50,7 @@
         </span>
 
         <button type="button" class="message-composer-component__cancel-recording" (click)="cancelRecording()">
-            Cancelar
+            {{ 'MESSAGES_INBOX.CHAT.COMPOSER.RECORDING.CANCEL' | translate }}
         </button>
     </div>
     }
@@ -62,24 +64,29 @@
 
     @if(messageText.trim() || pendingImage) {
     <button mat-icon-button type="button" class="message-composer-component__send"
-        [disabled]="(!messageText.trim() && !pendingImage) || isRecording" (click)="sendTextMessage()" matTooltip="Enviar">
+        [disabled]="(!messageText.trim() && !pendingImage) || isRecording" (click)="sendTextMessage()"
+        [matTooltip]="'MESSAGES_INBOX.CHAT.BUTTON.SEND' | translate"
+        [attr.aria-label]="'MESSAGES_INBOX.CHAT.BUTTON.SEND' | translate">
         <mat-icon>send</mat-icon>
     </button>
     }
     @else {
     <button mat-icon-button type="button" class="message-composer-component__action"
         [class.message-composer-component__action--recording]="isRecording" (click)="toggleMicrophone()"
-        matTooltip="Microfone">
+        [matTooltip]="'MESSAGES_INBOX.CHAT.COMPOSER.ACTIONS.MICROPHONE' | translate"
+        [attr.aria-label]="'MESSAGES_INBOX.CHAT.COMPOSER.ACTIONS.MICROPHONE' | translate">
         <mat-icon [fontSet]="'material-symbols-rounded'">{{ isRecording ? 'stop_circle' : 'mic' }}</mat-icon>
     </button>
 
     <button mat-icon-button type="button" class="message-composer-component__action" (click)="openImagePicker()"
-        matTooltip="Imagem">
+        [matTooltip]="'MESSAGES_INBOX.CHAT.COMPOSER.ACTIONS.IMAGE' | translate"
+        [attr.aria-label]="'MESSAGES_INBOX.CHAT.COMPOSER.ACTIONS.IMAGE' | translate">
         <mat-icon [fontSet]="'material-symbols-rounded'">image</mat-icon>
     </button>
 
     <button mat-icon-button type="button" class="message-composer-component__action" [matMenuTriggerFor]="stickerMenu"
-        matTooltip="Sticker">
+        [matTooltip]="'MESSAGES_INBOX.CHAT.COMPOSER.ACTIONS.STICKER' | translate"
+        [attr.aria-label]="'MESSAGES_INBOX.CHAT.COMPOSER.ACTIONS.STICKER' | translate">
         <mat-icon [fontSet]="'material-symbols-rounded'">sticker_add</mat-icon>
     </button>
     }

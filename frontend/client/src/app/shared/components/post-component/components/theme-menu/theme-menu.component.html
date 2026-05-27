@@ -5,7 +5,7 @@
         </button>
 
         <span class="theme-menu__title">
-            Alternar exibição
+            {{'SIDEBAR.THEME_CHANGE.CHANGE_THEME' | translate}}
         </span>
 
         <mat-icon class="theme-menu__icon">
@@ -18,7 +18,7 @@
     <div class="theme-menu__content">
         <div class="theme-menu__item">
             <span class="theme-menu__label">
-                Modo escuro
+                {{'SIDEBAR.THEME_CHANGE.THEME.DARK' | translate}}
             </span>
 
             <mat-slide-toggle [checked]="isDarkMode" (change)="toggleDarkMode($event.checked)">

@@ -36,7 +36,7 @@
 
                 <div class="pre-call-component__preview__camera__status">
                     <span class="status-dot"></span>
-                    Pré-visualização da câmera
+                    {{ 'CALL.PRE_CALL.CAMERA_PREVIEW' | translate }}
                 </div>
 
                 <div class="pre-call-component__preview__controls">
@@ -45,6 +45,7 @@
 
                     <button
                         class="control-button"
+                        [attr.aria-label]="'CALL.PRE_CALL.ACTIONS.TOGGLE_CAMERA' | translate"
                         (click)="toggleCamera()">
 
                         <span class="material-symbols-rounded">
@@ -56,6 +57,7 @@
 
                     <button
                         class="control-button"
+                        [attr.aria-label]="'CALL.PRE_CALL.ACTIONS.TOGGLE_MICROPHONE' | translate"
                         (click)="toggleMute()">
 
                         <span class="material-symbols-rounded">
@@ -63,11 +65,11 @@
                         </span>
                     </button>
 
-                    <button class="control-button">
+                    <button class="control-button" [attr.aria-label]="'CALL.PRE_CALL.ACTIONS.VOLUME' | translate">
                         <span class="material-symbols-rounded">volume_up</span>
                     </button>
 
-                    <button class="control-button control-button--active">
+                    <button class="control-button control-button--active" [attr.aria-label]="'CALL.PRE_CALL.ACTIONS.SETTINGS' | translate">
                         <span class="material-symbols-rounded">settings</span>
                     </button>
 
@@ -90,27 +92,27 @@
                 <p class="pre-call-component__right__content__description">
 
                     @if(callStatus === 'calling') {
-                        Ligando...
+                        {{ 'CALL.PRE_CALL.STATUS.CALLING' | translate }}
                     }
                     @else if(callStatus === 'ringing') {
-                        Chamando...
+                        {{ 'CALL.PRE_CALL.STATUS.RINGING' | translate }}
                     }
                     @else if(callStatus === 'connected') {
-                        Conectado
+                        {{ 'CALL.PRE_CALL.STATUS.CONNECTED' | translate }}
                     }
                     @else if(callStatus === 'rejected') {
-                        Ligação recusada
+                        {{ 'CALL.PRE_CALL.STATUS.REJECTED' | translate }}
                     }
                     @else if(callStatus === 'unavailable') {
-                        Usuário indisponível
+                        {{ 'CALL.PRE_CALL.STATUS.UNAVAILABLE' | translate }}
                     }
                     @else if(callStatus === 'ended') {
-                        Ligação encerrada
+                        {{ 'CALL.PRE_CALL.STATUS.ENDED' | translate }}
                     }
                     @else {
-                        {{ data?.type === 'video'
-                            ? 'Tudo pronto para a videochamada?'
-                            : 'Tudo pronto para ligar?'
+                        {{ (data?.type === 'video'
+                            ? 'CALL.PRE_CALL.STATUS.READY_VIDEO'
+                            : 'CALL.PRE_CALL.STATUS.READY_AUDIO') | translate
                         }}
                     }
 
@@ -123,7 +125,7 @@
                         [disabled]="true"
                         [padding]="'12px 24px'"
                         [borderRadius]="'999px'"
-                        [label]="'Ligando...'">
+                        [label]="'CALL.PRE_CALL.BUTTONS.CALLING' | translate">
                     </app-generic-button>
 
                 }
@@ -134,7 +136,7 @@
                         [disabled]="true"
                         [padding]="'12px 24px'"
                         [borderRadius]="'999px'"
-                        [label]="'Recusada'">
+                        [label]="'CALL.PRE_CALL.BUTTONS.REJECTED' | translate">
                     </app-generic-button>
 
                 }
@@ -145,7 +147,7 @@
                         (onClick)="call()"
                         [padding]="'12px 24px'"
                         [borderRadius]="'999px'"
-                        [label]="'Iniciar ligação'">
+                        [label]="'CALL.PRE_CALL.BUTTONS.START'">
                     </app-generic-button>
 
                 }

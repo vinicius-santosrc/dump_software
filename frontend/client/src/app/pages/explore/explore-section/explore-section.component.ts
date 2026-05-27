@@ -5,11 +5,12 @@ import { MatIconModule } from "@angular/material/icon";
 import { ExplorePostCardComponent } from "../explore-post-card/explore-post-card.component";
 import { ExplorePostCard, ExploreSection } from "../../../core/models/feed/explore.model";
 import { ExploreFacadeService } from "../../../core/services/explore/explore-facade.service";
+import { TranslateModule } from "@ngx-translate/core";
 
 @Component({
     selector: "app-explore-section",
     standalone: true,
-    imports: [CommonModule, MatButtonModule, MatIconModule, ExplorePostCardComponent],
+    imports: [CommonModule, MatButtonModule, MatIconModule, ExplorePostCardComponent, TranslateModule],
     templateUrl: "./explore-section.component.html",
     styleUrl: "./explore-section.component.scss"
 })

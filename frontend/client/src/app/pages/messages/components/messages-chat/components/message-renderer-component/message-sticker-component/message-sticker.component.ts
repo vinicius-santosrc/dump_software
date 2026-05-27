@@ -16,6 +16,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { ChatSticker, ChatStickerPack } from '../../../../../../../core/models/messages/chat-sticker.model';
 import { ChatStickerService } from '../../../../../../../core/services/messages/chat/chat-sticker.service';
 import { MediaProcessingService } from '../../../../../../../core/services/media/media-processing.service';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-message-sticker-picker',
@@ -25,7 +26,8 @@ import { MediaProcessingService } from '../../../../../../../core/services/media
         MatIconModule,
         MatButtonModule,
         MatTabsModule,
-        MatTooltipModule
+        MatTooltipModule,
+        TranslateModule
     ],
     templateUrl: './message-sticker.component.html',
     styleUrl: './message-sticker.component.scss',

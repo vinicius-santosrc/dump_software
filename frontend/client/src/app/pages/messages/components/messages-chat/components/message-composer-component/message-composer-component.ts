@@ -16,6 +16,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { BasicInputComponent } from "../../../../../../shared/components/basic-input-component/basic-input.component";
 import { ChatSticker } from '../../../../../../core/models/messages/chat-sticker.model';
 import { MessageStickerPickerComponent } from "../message-renderer-component/message-sticker-component/message-sticker.component";
+import { TranslateModule } from '@ngx-translate/core';
 
 export type ChatComposerMessageType = 'text' | 'image' | 'audio' | 'sticker';
 
@@ -38,7 +39,8 @@ export interface ChatComposerPayload {
         MatMenuModule,
         MatTooltipModule,
         BasicInputComponent,
-        MessageStickerPickerComponent
+        MessageStickerPickerComponent,
+        TranslateModule
     ],
     templateUrl: './message-composer-component.html',
     styleUrl: './message-composer-component.scss',

@@ -46,7 +46,7 @@ public class PostService
     {
         var posts = await _postRepository.GetArchivedAsync(userId);
 
-        var responses = await Task.WhenAll(posts.Select(MapToResponse));
+        var responses = await Task.WhenAll(posts.Select(post => MapToResponse(post)));
 
         return responses
             .OrderByDescending(r => r.CreatedAt)
@@ -92,10 +92,32 @@ public class PostService
         return comments.ToArray();
     }
 
-    private async Task<Dump.Domain.Entities.PostResponse> MapToResponse(Dump.Domain.Entities.Post post)
+    private static List<PostMedia> CreateLightweightMedia(List<PostMedia>? media)
+    {
+        if (media == null || media.Count == 0)
+            return new List<PostMedia>();
+
+        return media.Select(item => new PostMedia
+        {
+            Url = item.Type == "video" ? string.Empty : item.Url,
+            Thumbnail = item.Thumbnail,
+            Width = item.Width,
+            Height = item.Height,
+            Type = item.Type,
+            Duration = item.Duration
+        }).ToList();
+    }
+
+    private async Task<Dump.Domain.Entities.PostResponse> MapToResponse(
+        Dump.Domain.Entities.Post post,
+        bool lightweightMedia = false,
+        bool includeComments = true
+    )
     {
         var user = await _userRepository.GetByIdAsync(post.User);
-        var comments = await this.MapComments(await _commentsRepository.GetByPostIdAsync(post.Id));
+        var comments = includeComments
+            ? await this.MapComments(await _commentsRepository.GetByPostIdAsync(post.Id))
+            : Array.Empty<Comment>();
 
         if (user == null)
             throw new Exception("User not found");
@@ -104,7 +126,7 @@ public class PostService
         {
             Id = post.Id,
             Caption = post.Caption,
-            Media = post.Media,
+            Media = lightweightMedia ? CreateLightweightMedia(post.Media) : post.Media,
             Location = post.Location,
             Hashtags = post.Hashtags,
             Mentions = post.Mentions,
@@ -152,16 +174,22 @@ public class PostService
     public async Task<Dump.Domain.Entities.PostResponse[]> GetByUser(
         string id,
         DateTime? cursor = null,
-        int limit = 10
+        int limit = 6
     )
     {
+        limit = Math.Clamp(limit, 1, 8);
+
         var posts = await _postRepository.GetByUser(
             id,
             cursor,
             limit
         );
 
-        var responses = await Task.WhenAll(posts.Select(MapToResponse));
+        var responses = await Task.WhenAll(posts.Select(post => MapToResponse(
+            post,
+            lightweightMedia: true,
+            includeComments: false
+        )));
 
         return responses
             .OrderByDescending(r => r.CreatedAt)
@@ -172,7 +200,7 @@ public class PostService
     {
         var posts = await _postRepository.GetByUserProfile(id);
 
-        var responses = await Task.WhenAll(posts.Select(MapToResponse));
+        var responses = await Task.WhenAll(posts.Select(post => MapToResponse(post)));
 
         return responses
             .OrderByDescending(r => r.CreatedAt)
@@ -188,6 +216,20 @@ public class PostService
             throw new Exception("Post not found");
 
         return await MapToResponse(post);
+    }
+
+    public async Task<PostMediaResponse> GetMediaByPostId(string postId)
+    {
+        var post = await _postRepository.GetById(postId);
+
+        if (post == null)
+            throw new Exception("Post not found");
+
+        return new PostMediaResponse
+        {
+            Id = post.Id,
+            Media = post.Media ?? new List<PostMedia>()
+        };
     }
 
     public async Task<bool> HandleLike(string postId, string likerId)
@@ -216,11 +258,21 @@ public class PostService
         return true; // adicionou like
     }
 
-    public async Task<Dump.Domain.Entities.PostResponse[]> GetDumpsById(string id)
+    public async Task<Dump.Domain.Entities.PostResponse[]> GetDumpsById(
+        string id,
+        DateTime? cursor = null,
+        int limit = 6
+    )
     {
-        var posts = await _postRepository.GetDumpsByUserProfile(id);
+        limit = Math.Clamp(limit, 1, 8);
 
-        var responses = await Task.WhenAll(posts.Select(MapToResponse));
+        var posts = await _postRepository.GetDumpsByUserProfile(id, cursor, limit);
+
+        var responses = await Task.WhenAll(posts.Select(post => MapToResponse(
+            post,
+            lightweightMedia: true,
+            includeComments: false
+        )));
 
         return responses
             .OrderByDescending(r => r.CreatedAt)
@@ -231,7 +283,7 @@ public class PostService
     {
         var posts = await _postRepository.GetArchivedByUser(id);
 
-        var responses = await Task.WhenAll(posts.Select(MapToResponse));
+        var responses = await Task.WhenAll(posts.Select(post => MapToResponse(post)));
 
         return responses
             .OrderByDescending(r => r.CreatedAt)

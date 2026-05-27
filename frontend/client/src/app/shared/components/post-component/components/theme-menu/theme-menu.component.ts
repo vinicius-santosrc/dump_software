@@ -7,6 +7,7 @@ import {
 import { MatIconModule } from '@angular/material/icon';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatButtonModule } from '@angular/material/button';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-theme-menu',
@@ -15,6 +16,7 @@ import { MatButtonModule } from '@angular/material/button';
         MatIconModule,
         MatSlideToggleModule,
         MatButtonModule,
+        TranslateModule
     ],
     templateUrl: './theme-menu.component.html',
     styleUrl: './theme-menu.component.scss',

@@ -1,11 +1,11 @@
-<section class="explore-engagement-lab" aria-label="Exploração social">
+<section class="explore-engagement-lab" [attr.aria-label]="'EXPLORE.ENGAGEMENT_LAB.ARIA_LABEL' | translate">
     <article class="explore-lab-card explore-lab-card--stickers">
         <header>
             <div>
                 <mat-icon>sticker</mat-icon>
-                <strong>Stickers em alta</strong>
+                <strong>{{ 'EXPLORE.ENGAGEMENT_LAB.STICKERS_TITLE' | translate }}</strong>
             </div>
-            <span>mock</span>
+            <span>{{ 'EXPLORE.ENGAGEMENT_LAB.MOCK_BADGE' | translate }}</span>
         </header>
 
         <div class="explore-sticker-row">
@@ -23,9 +23,9 @@
         <header>
             <div>
                 <mat-icon>favorite</mat-icon>
-                <strong>Pessoas que você segue curtiram</strong>
+                <strong>{{ 'EXPLORE.ENGAGEMENT_LAB.SOCIAL_TITLE' | translate }}</strong>
             </div>
-            <span>social proof</span>
+            <span>{{ 'EXPLORE.ENGAGEMENT_LAB.SOCIAL_BADGE' | translate }}</span>
         </header>
 
         <div class="explore-social-signals">

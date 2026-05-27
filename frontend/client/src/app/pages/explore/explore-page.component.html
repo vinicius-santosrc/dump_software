@@ -1,7 +1,7 @@
 <div class="explore-page">
     <div class="explore-page__inside">
         <section class="explore-page__hero">
-            <app-basic-input iconName="search" [label]="'Pesquisar por tópicos, posts, usuários e outros...'"
+            <app-basic-input iconName="search" [label]="'EXPLORE.SEARCH.PLACEHOLDER' | translate"
                 (valueChange)="searchTerm = $event" />
 
             <app-explore-topic-rail [topics]="topics" [selectedTopicId]="selectedTopicId"
@@ -33,8 +33,8 @@
             @if (filteredSections.length === 0 && !loadingSections) {
             <div class="explore-page__empty">
                 <mat-icon>travel_explore</mat-icon>
-                <strong>Nada encontrado</strong>
-                <span>Tente buscar outro tópico ou navegar pelas tendências.</span>
+                <strong>{{ 'EXPLORE.EMPTY.TITLE' | translate }}</strong>
+                <span>{{ 'EXPLORE.EMPTY.DESCRIPTION' | translate }}</span>
             </div>
             }
         </section>

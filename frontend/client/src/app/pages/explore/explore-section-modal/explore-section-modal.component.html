@@ -9,17 +9,17 @@
             </span>
         </div>
 
-        <button mat-icon-button mat-dialog-close aria-label="Fechar">
+        <button mat-icon-button mat-dialog-close [attr.aria-label]="'EXPLORE.MODAL.CLOSE' | translate">
             <mat-icon>close</mat-icon>
         </button>
     </header>
 
     <div class="explore-modal-section__rail">
-        <button type="button" class="explore-modal-pill">Mais recentes</button>
-        <button type="button" class="explore-modal-pill">Mais curtidos</button>
-        <button type="button" class="explore-modal-pill">Só vídeos</button>
-        <button type="button" class="explore-modal-pill">Criadores pequenos</button>
-        <button type="button" class="explore-modal-pill">Perto de você</button>
+        <button type="button" class="explore-modal-pill">{{ 'EXPLORE.MODAL.FILTERS.RECENT' | translate }}</button>
+        <button type="button" class="explore-modal-pill">{{ 'EXPLORE.MODAL.FILTERS.MOST_LIKED' | translate }}</button>
+        <button type="button" class="explore-modal-pill">{{ 'EXPLORE.MODAL.FILTERS.VIDEOS_ONLY' | translate }}</button>
+        <button type="button" class="explore-modal-pill">{{ 'EXPLORE.MODAL.FILTERS.SMALL_CREATORS' | translate }}</button>
+        <button type="button" class="explore-modal-pill">{{ 'EXPLORE.MODAL.FILTERS.NEAR_YOU' | translate }}</button>
     </div>
 
     <div class="explore-modal-section__grid">
@@ -27,7 +27,7 @@
         <button type="button" class="explore-modal-post"
             [style.--post-image]="post.imageUrl ? 'url(' + post.imageUrl + ')' : null" (click)="openQuickReels(post)">
 
-            <span>{{ post.score }} relevante</span>
+            <span>{{ 'EXPLORE.POST.RELEVANT_SCORE' | translate: { score: post.score } }}</span>
             <strong>{{ post.title }}</strong>
             <small>{{ post.author }} · {{ post.meta }}</small>
         </button>

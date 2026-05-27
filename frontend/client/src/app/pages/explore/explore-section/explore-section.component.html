@@ -13,7 +13,7 @@
 
         <button mat-button type="button" class="explore-section__action" (click)="toggleSection($event)">
 
-            {{ section.expanded ? 'ver menos' : 'ver mais' }}
+            {{ (section.expanded ? 'EXPLORE.SECTION.SEE_LESS' : 'EXPLORE.SECTION.SEE_MORE') | translate }}
             <mat-icon>{{ section.expanded ? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}</mat-icon>
         </button>
     </header>

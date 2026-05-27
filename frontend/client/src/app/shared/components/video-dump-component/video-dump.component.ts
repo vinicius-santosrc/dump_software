@@ -27,7 +27,7 @@ export class VideoDumpComponent implements OnInit, OnDestroy, AfterViewInit {
     @ViewChild('video') videoRef!: ElementRef<HTMLVideoElement>;
 
     isMuted = true;
-    observer!: IntersectionObserver;
+    observer?: IntersectionObserver;
 
     isPaused = true;
     progress = 0;
@@ -64,7 +64,8 @@ export class VideoDumpComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     ngAfterViewInit(): void {
-        const video = this.videoRef.nativeElement;
+        const video = this.videoRef?.nativeElement;
+        if (!video) return;
 
         video.muted = this.isMuted ?? true;
         video.playsInline = true;
@@ -81,7 +82,7 @@ export class VideoDumpComponent implements OnInit, OnDestroy, AfterViewInit {
                     this.isPaused = true;
                 }
             },
-            { threshold: 0.5 }
+            { threshold: 0.45, rootMargin: '250px 0px' }
         );
 
         this.observer.observe(video);

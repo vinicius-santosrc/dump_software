@@ -13,7 +13,7 @@ import { MessagesSidebarComponent } from "../messages-sidebar/messages-sidebar.c
 import { MatButtonModule } from "@angular/material/button";
 import { MessagesComponent } from "../../messages.component";
 import { BasicInputComponent } from "../../../../shared/components/basic-input-component/basic-input.component";
-import { TranslateModule } from "@ngx-translate/core";
+import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { MatDialog } from '@angular/material/dialog';
 import { PreCallComponent } from "../../../call/pre-call/pre-call.component";
 import {
@@ -68,7 +68,8 @@ export class MessagesChatComponent implements OnInit, OnChanges {
         private readonly messagesComponent: MessagesComponent,
         private readonly mediaProcessingService: MediaProcessingService,
         private readonly dialog: MatDialog,
-        private readonly store: MessagesStoreService
+        private readonly store: MessagesStoreService,
+        private readonly translateService: TranslateService
     ) {
         this.userService.user$.subscribe((user: any) => {
             this.current_user = user;
@@ -448,14 +449,14 @@ export class MessagesChatComponent implements OnInit, OnChanges {
         yesterday.setDate(today.getDate() - 1);
 
         if (this.isSameMessageDay(messageDate, today)) {
-            return 'Hoje';
+            return this.translateService.instant('MESSAGES_INBOX.CHAT.DATE.TODAY');
         }
 
         if (this.isSameMessageDay(messageDate, yesterday)) {
-            return 'Ontem';
+            return this.translateService.instant('MESSAGES_INBOX.CHAT.DATE.YESTERDAY');
         }
 
-        return new Intl.DateTimeFormat('pt-BR', {
+        return new Intl.DateTimeFormat(this.translateService.currentLang || 'pt-BR', {
             day: '2-digit',
             month: 'long',
             year: messageDate.getFullYear() === today.getFullYear() ? undefined : 'numeric'

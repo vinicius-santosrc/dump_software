@@ -23,6 +23,7 @@ import { ExploreEngagementLabComponent } from "./explore-engagement-lab/explore-
 import { ExploreSectionModalComponent } from "./explore-section-modal/explore-section-modal.component";
 import { ExploreReelsLoopComponent } from "./explore-reels-loop/explore-reels-loop.component";
 import { GenericTextComponent } from "../../shared/components/generic-text/generic-text.component";
+import { TranslateModule } from "@ngx-translate/core";
 
 @Component({
     selector: "app-explore-page",
@@ -30,19 +31,20 @@ import { GenericTextComponent } from "../../shared/components/generic-text/gener
     styleUrl: "./explore-page.component.scss",
     standalone: true,
     imports: [
-    CommonModule,
-    FormsModule,
-    MatButtonModule,
-    MatIconModule,
-    MatDialogModule,
-    BasicInputComponent,
-    ExploreTopicRailComponent,
-    ExploreLiveRailComponent,
-    ExploreInsightsComponent,
-    ExploreEngagementLabComponent,
-    ExploreSectionComponent,
-    GenericTextComponent
-]
+        CommonModule,
+        FormsModule,
+        MatButtonModule,
+        MatIconModule,
+        MatDialogModule,
+        BasicInputComponent,
+        ExploreTopicRailComponent,
+        ExploreLiveRailComponent,
+        ExploreInsightsComponent,
+        ExploreEngagementLabComponent,
+        ExploreSectionComponent,
+        GenericTextComponent,
+        TranslateModule
+    ]
 })
 export class ExplorePageComponent implements OnInit {
     searchTerm = "";

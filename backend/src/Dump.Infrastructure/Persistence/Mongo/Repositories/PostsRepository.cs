@@ -16,7 +16,80 @@ public class PostsRepository : IPostsRepository
     {
         var database = mongoClient.GetDatabase("dump_dev");
         _posts = database.GetCollection<Post>("posts");
+
+        CreateIndexes();
     }
+
+    private void CreateIndexes()
+    {
+        var indexes = new[]
+        {
+            new CreateIndexModel<Post>(
+                Builders<Post>.IndexKeys
+                    .Ascending(p => p.IsDeleted)
+                    .Ascending(p => p.Archived)
+                    .Descending(p => p.CreatedAt),
+                new CreateIndexOptions
+                {
+                    Name = "idx_posts_active_createdAt"
+                }
+            ),
+            new CreateIndexModel<Post>(
+                Builders<Post>.IndexKeys
+                    .Ascending("media.type")
+                    .Ascending(p => p.IsDeleted)
+                    .Ascending(p => p.Archived)
+                    .Descending(p => p.CreatedAt),
+                new CreateIndexOptions
+                {
+                    Name = "idx_posts_video_active_createdAt"
+                }
+            ),
+            new CreateIndexModel<Post>(
+                Builders<Post>.IndexKeys
+                    .Ascending(p => p.User)
+                    .Ascending(p => p.IsDeleted)
+                    .Ascending(p => p.Archived)
+                    .Descending(p => p.CreatedAt),
+                new CreateIndexOptions
+                {
+                    Name = "idx_posts_user_active_createdAt"
+                }
+            )
+        };
+
+        _posts.Indexes.CreateMany(indexes);
+    }
+
+    private static BsonDocument LightweightVideoMediaStage()
+    {
+        return new BsonDocument("$set", new BsonDocument("media",
+            new BsonDocument("$map", new BsonDocument
+            {
+                { "input", "$media" },
+                { "as", "m" },
+                { "in", new BsonDocument
+                    {
+                        {
+                            "url",
+                            new BsonDocument("$cond", new BsonArray
+                            {
+                                new BsonDocument("$eq", new BsonArray { "$$m.type", "video" }),
+                                string.Empty,
+                                "$$m.url"
+                            })
+                        },
+                        { "thumbnail", "$$m.thumbnail" },
+                        { "width", "$$m.width" },
+                        { "height", "$$m.height" },
+                        { "type", "$$m.type" },
+                        { "duration", new BsonDocument("$ifNull", new BsonArray { "$$m.duration", 0 }) }
+                    }
+                }
+            })
+        ));
+    }
+
     public async Task CreateAsync(Post post)
     {
         await _posts.InsertOneAsync(post);
@@ -28,6 +101,8 @@ public class PostsRepository : IPostsRepository
         int limit = 10
     )
     {
+        limit = Math.Clamp(limit, 1, 8);
+
         var filter = Builders<Post>.Filter.And(
             Builders<Post>.Filter.Ne(p => p.User, id),
             Builders<Post>.Filter.Eq(p => p.IsDeleted, false),
@@ -42,13 +117,15 @@ public class PostsRepository : IPostsRepository
             );
         }
 
-        return (await _posts
-            .Find(filter)
-            .SortByDescending(p => p.CreatedAt)
-            .ThenByDescending(p => p.Id)
+        var posts = await _posts
+            .Aggregate()
+            .Match(filter)
+            .Sort(Builders<Post>.Sort.Descending(p => p.CreatedAt))
             .Limit(limit)
-            .ToListAsync())
-            .ToArray();
+            .AppendStage<Post>(LightweightVideoMediaStage())
+            .ToListAsync();
+
+        return posts.ToArray();
     }
 
     public async Task<List<Post>> GetArchivedAsync(string userId)
@@ -65,14 +142,20 @@ public class PostsRepository : IPostsRepository
 
     public async Task<List<Post>> GetByUserProfile(string userId)
     {
-        return await _posts
-            .Find(p =>
-                p.User == userId &&
-                !p.IsDeleted &&
-                !p.Archived
-            )
-            .SortByDescending(p => p.CreatedAt)
-            .ToListAsync();
+        var filter = Builders<Post>.Filter.And(
+            Builders<Post>.Filter.Eq(p => p.User, userId),
+            Builders<Post>.Filter.Eq(p => p.IsDeleted, false),
+            Builders<Post>.Filter.Eq(p => p.Archived, false)
+        );
+
+        var options = new FindOptions<Post>
+        {
+            Sort = Builders<Post>.Sort.Descending(p => p.CreatedAt),
+            AllowDiskUse = true
+        };
+
+        using var result = await _posts.FindAsync(filter, options);
+        return await result.ToListAsync();
     }
 
     public async Task<Post> GetById(string id)
@@ -95,20 +178,38 @@ public class PostsRepository : IPostsRepository
         return await _posts.Find(filter).FirstOrDefaultAsync();
     }
 
-    public async Task<Post[]> GetDumpsByUserProfile(string id)
+    public async Task<Post[]> GetDumpsByUserProfile(
+        string id,
+        DateTime? cursor = null,
+        int limit = 6
+    )
     {
+        limit = Math.Clamp(limit, 1, 8);
+
         var filter = Builders<Post>.Filter.And(
-            // Builders<Post>.Filter.Eq(p => p.User, id),
+            Builders<Post>.Filter.Ne(p => p.User, id),
             Builders<Post>.Filter.ElemMatch(p => p.Media, m => m.Type == "video"),
             Builders<Post>.Filter.Eq(p => p.IsDeleted, false),
             Builders<Post>.Filter.Eq(p => p.Archived, false)
         );
 
-        return (await _posts
-            .Find(filter)
-            .SortByDescending(p => p.CreatedAt)
-            .ToListAsync())
-            .ToArray();
+        if (cursor.HasValue)
+        {
+            filter &= Builders<Post>.Filter.Lt(
+                p => p.CreatedAt,
+                cursor.Value.ToUniversalTime()
+            );
+        }
+
+        var posts = await _posts
+            .Aggregate()
+            .Match(filter)
+            .Sort(Builders<Post>.Sort.Descending(p => p.CreatedAt))
+            .Limit(limit)
+            .AppendStage<Post>(LightweightVideoMediaStage())
+            .ToListAsync();
+
+        return posts.ToArray();
     }
 
     public async Task ArchiveAsync(string postId)
@@ -169,14 +270,20 @@ public class PostsRepository : IPostsRepository
 
     public async Task<List<Post>> GetArchivedByUser(string userId)
     {
-        return await _posts
-            .Find(p =>
-                p.User == userId &&
-                !p.IsDeleted &&
-                p.Archived
-            )
-            .SortByDescending(p => p.CreatedAt)
-            .ToListAsync();
+        var filter = Builders<Post>.Filter.And(
+            Builders<Post>.Filter.Eq(p => p.User, userId),
+            Builders<Post>.Filter.Eq(p => p.IsDeleted, false),
+            Builders<Post>.Filter.Eq(p => p.Archived, true)
+        );
+
+        var options = new FindOptions<Post>
+        {
+            Sort = Builders<Post>.Sort.Descending(p => p.CreatedAt),
+            AllowDiskUse = true
+        };
+
+        using var result = await _posts.FindAsync(filter, options);
+        return await result.ToListAsync();
     }
 
 }

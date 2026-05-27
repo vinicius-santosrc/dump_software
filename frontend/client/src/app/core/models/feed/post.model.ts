@@ -2,10 +2,11 @@ import { User } from "../user/user.model";
 
 export interface Media {
     url: string;
-    width: string;
-    height: string;
-    type: "image" | "video",
-    thumbnail?: string
+    width?: string;
+    height?: string;
+    type: "image" | "video";
+    thumbnail?: string;
+    duration?: number;
 }
 
 export interface PostML {
