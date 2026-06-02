@@ -11,6 +11,7 @@
 
 .page-container {
   position: relative;
+  min-height: 100vh;
   padding-left: 100px;
 }
 
@@ -87,13 +88,18 @@
   max-width: 100%;
 }
 
-.dump, .dump_content, .dump_content_aside, .page-container, .page-content {
+.dump,
+.dump_content,
+.dump_content_aside,
+.page-container,
+.page-content {
   min-height: 100vh;
 }
 
 @media (max-width: 768px) {
   .dump_content {
     width: 100%;
+    padding-bottom: 120px;
   }
 
   .dump_content_aside {

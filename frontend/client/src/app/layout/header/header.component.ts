@@ -14,12 +14,13 @@ import { WHITE_LIST_NAVIGATIONS } from "../../core/config/api.config";
 import { ThemeService } from "../../core/services/theme.service";
 import { GenericButtonComponent } from "../../shared/components/generic-button-component/generic-button.component";
 import { AvatarItem } from "../../shared/components/avatar-item/avatar-item.component";
+import { NotificationsSidebarComponent } from "../sidebar/notifications-sidebar/notifications-sidebar.component";
 
 @Component({
     selector: "app-header",
     templateUrl: "./header.component.html",
     styleUrl: "./header.component.scss",
-    imports: [TranslateModule, NgStyle, CommonModule, RouterLink, GenericButtonComponent, AvatarItem]
+    imports: [TranslateModule, NgStyle, CommonModule, RouterLink, GenericButtonComponent, AvatarItem, NotificationsSidebarComponent]
 })
 
 export class HeaderComponent implements OnInit {
@@ -32,6 +33,10 @@ export class HeaderComponent implements OnInit {
     showHeader: boolean = true;
     showDumpLogo: boolean = false;
     theme: 'light' | 'dark' = 'light';
+    panels = {
+        notifications: false
+    };
+
     isMessagePage: boolean = globalThis.location.pathname.startsWith('/messages');
     constructor(
         public userService: UserService,
@@ -111,5 +116,18 @@ export class HeaderComponent implements OnInit {
 
     openMessages() {
         this.router.navigate(['/messages/inbox']);
+    }
+
+    openNotifications() {
+        this.openPanel('notifications');
+    }
+
+    openPanel(panel: keyof typeof this.panels) {
+        Object.keys(this.panels).forEach(p => this.panels[p as keyof typeof this.panels] = false);
+        this.panels[panel] = true;
+    }
+
+    closePanels() {
+        Object.keys(this.panels).forEach(p => this.panels[p as keyof typeof this.panels] = false);
     }
 };

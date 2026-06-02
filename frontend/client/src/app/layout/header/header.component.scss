@@ -91,6 +91,8 @@
         border-top: none;
         background-color: var(--color-background);
         z-index: 10;
+        position: fixed !important;
+        top: 0;
 
         .header-component-top {
             .header-component-left {

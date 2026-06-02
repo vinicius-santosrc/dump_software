@@ -1,5 +1,6 @@
 .post-title {
     padding: 12px 20px;
+    color: var(--color-text);
 }
 
 .post-media-caption {
@@ -7,6 +8,7 @@
 
     span {
         white-space: pre-line;
+        color: var(--color-text);
         word-break: break-word;
     }
 }
@@ -24,12 +26,13 @@
 @media (max-width: 768px) {
     .post-title {
         padding: 10px 12px;
+        width: 100%;
     }
 
     .post-media-caption {
         margin: 10px 0;
         font-size: 14px;
-
+        
         span {
             white-space: pre-line;
             word-break: break-word;

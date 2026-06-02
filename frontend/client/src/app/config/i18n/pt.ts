@@ -126,6 +126,7 @@ export const locale = {
             },
             POST: {
                 FOLLOW: "Seguir",
+                POST: "Post",
                 COMMENTS: {
                     EMPTY: "Sem comentários ainda. Seja o primeiro a comentar!",
                     TITLE: "Comentários",

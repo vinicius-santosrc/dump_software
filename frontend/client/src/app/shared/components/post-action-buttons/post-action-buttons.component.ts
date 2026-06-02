@@ -10,6 +10,7 @@ import { MatButtonModule } from "@angular/material/button";
 import { OWNER_POST_ACTIONS, VISITOR_POST_ACTIONS } from "../../../core/config/post-actions.config";
 import { GenericActionsModal } from "../comment-actions-modal/generic-actions-modal.component";
 import { PostActionHandlerService } from "../../../core/services/actions/post-action-handler.service";
+import { ThemeService } from "../../../core/services/theme.service";
 
 @Component({
     selector: 'app-post-action-buttons',
@@ -20,7 +21,7 @@ import { PostActionHandlerService } from "../../../core/services/actions/post-ac
 })
 export class PostActionButtonsComponent implements DoCheck {
     @Input() post: Post | undefined = {} as Post;
-    @Input() theme: 'light' | 'dark' = 'light';
+    theme: 'light' | 'dark' = 'light';
     @Input() type: 'post' | 'reel' = 'post';
     @Input() showOptions: boolean = false;
     liked = false;
@@ -28,23 +29,28 @@ export class PostActionButtonsComponent implements DoCheck {
     router: any;
     saved: boolean = false;
 
-
     constructor(
         private readonly postService: PostComponentService,
         private readonly userService: UserService,
         public angularRouter: Router,
         private readonly dialog: MatDialog,
-        private readonly actionHandler: PostActionHandlerService
+        private readonly actionHandler: PostActionHandlerService,
+        private readonly themeService: ThemeService,
     ) {
         this.userService.user$.subscribe((user: any) => {
             this.current_user = user;
         });
         this.router = angularRouter;
+        this.theme = themeService.getTheme();
     }
     ngDoCheck(): void {
         if (this.post && this.current_user) {
             this.liked = this.post.likes?.includes(this.current_user.id) ?? false;
         }
+    }
+
+    get isMobile(): boolean {
+        return window.innerWidth <= 768;
     }
 
     handleLike(postId: string | undefined) {
@@ -91,11 +97,16 @@ export class PostActionButtonsComponent implements DoCheck {
     }
 
     async handleComment(post: any) {
-        const { PostPageComponent } = await import('../../../pages/posts/postpage.component');
-        this.dialog.closeAll();
-        this.dialog.open(PostPageComponent, {
-            data: { post }
-        });
+        if (!this.isMobile) {
+            const { PostPageComponent } = await import('../../../pages/posts/postpage.component');
+            this.dialog.closeAll();
+            this.dialog.open(PostPageComponent, {
+                data: { post }
+            });
+        }
+        else {
+            this.router.navigate(['/p/', post.id]);
+        }
     }
 
     handleSend() {

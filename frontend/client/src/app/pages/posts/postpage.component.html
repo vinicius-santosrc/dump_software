@@ -9,36 +9,57 @@
 } @else {
 <div class="post-page">
     <ng-container *ngTemplateOutlet="content"></ng-container>
+
+    <!-- <div class="related-posts">
+        <app-generic-card-component mainText="Posts relacionados" width="100%">
+            @for (relatedPost of relatedPosts; track relatedPost.id) {
+            <app-post-media [media]="relatedPost.media" [postId]="relatedPost.id" />
+            }
+        </app-generic-card-component>
+    </div> -->
 </div>
 }
 
 <ng-template #content>
 
-    <div class="media">
-        <app-post-media [media]="post.media" [postId]="post?.id" />
+    @if(isMobile) {
+    <div class="post-mobile-header">
+        <div class="inside-header">
+            <button mat-icon-button (click)="close()">
+                <mat-icon>arrow_back</mat-icon>
+            </button>
+        </div>
+        <div class="inside-header">
+            <span>{{ 'FEED.POST.POST' | translate }}</span>
+        </div>
+        <div class="inside-header"></div>
     </div>
-
-    <div class="info">
-        <app-post-header [isModal]="isModal" [post]="post" [user]="post?.user" [caption]="post?.caption"
-            [theme]="isModal ? 'dark' : 'light'" />
-
-        <app-post-action-buttons [post]="post" [theme]="isModal ? 'dark' : 'light'" />
-
-        <mat-divider />
-
-        <app-post-comments [comments]="comments" [theme]="isModal ? 'dark' : 'light'" />
-
-        <div class="info-comment">
-            <div class="comment-input">
-                <app-basic-input label="FEED.POST.COMMENTS.ADD" />
-                <app-generic-button iconName="send" />
-            </div>
+    }
+        <div class="media">
+            <app-post-media [media]="post.media" [postId]="post?.id" />
         </div>
 
-    </div>
+        <div class="info">
+            <app-post-header [isModal]="isModal" [post]="post" [user]="post?.user" [caption]="post?.caption"
+                [theme]="isModal ? 'dark' : 'light'" />
 
-    @if (isModal) {
-    <button class="close-btn" (click)="close()">✕</button>
-    }
+            <app-post-action-buttons [post]="post" />
+
+            <mat-divider />
+
+            <app-post-comments [comments]="comments" />
+
+            <div class="info-comment">
+                <div class="comment-input">
+                    <app-basic-input label="FEED.POST.COMMENTS.ADD" />
+                    <app-generic-button iconName="send" />
+                </div>
+            </div>
+
+        </div>
+
+        <!-- @if (isModal) {
+        <button class="close-btn" (click)="close()">✕</button>
+        } -->
 
 </ng-template>

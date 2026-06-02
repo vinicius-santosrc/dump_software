@@ -172,3 +172,13 @@
     color: var(--color-text-secondary);
   }
 }
+
+@media screen and (max-width: 700px) {
+  .user-card__name {
+    font-size: 10px;
+  }
+
+  .user-card__username {
+    font-size: 10px;
+  }
+}

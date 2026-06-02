@@ -32,16 +32,17 @@
   &__inside {
     position: relative;
     height: 100vh;
-    width: 100%;
+    width: 400px;
+    max-width: min(100%, 430px);
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: auto;
+    margin: 0;
   }
 
   &__content {
-    width: 400px;
-    height: 100%;
+    width: 100%;
+    height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -55,14 +56,58 @@
     }
   }
 
+  &__media {
+    width: 100%;
+    height: 100vh;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border-radius: 0;
+
+    app-post-media {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    ::ng-deep .post-media {
+      width: 100%;
+      height: 100%;
+      max-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      // background: #000;
+    }
+
+    ::ng-deep .media-container,
+    ::ng-deep .media-container--video-placeholder {
+      width: 100%;
+      height: 100%;
+      max-height: 100vh;
+      // background: #000;
+    }
+
+    ::ng-deep img,
+    ::ng-deep video,
+    ::ng-deep app-video-dump {
+      width: 100%;
+      height: 100%;
+      max-width: 100%;
+      max-height: 100vh;
+      display: block;
+      object-fit: cover;
+    }
+  }
+
   .actions-vertical-video {
     width: 33%;
   }
 }
 
-.dump__content {
-  width: 100%;
-}
+
 
 .dump.horizontal-video {
 
@@ -79,11 +124,30 @@
   }
 
   .dump__media {
+    width: 100%;
+    height: auto;
+    max-height: 72vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    // width: 846px;
-    // height: 470px;
+    overflow: hidden;
+    border-radius: 16px;
+
+    ::ng-deep .post-media,
+    ::ng-deep .media-container,
+    ::ng-deep .media-container--video-placeholder {
+      height: auto;
+      max-height: 72vh;
+    }
+
+    ::ng-deep img,
+    ::ng-deep video,
+    ::ng-deep app-video-dump {
+      width: 100%;
+      height: auto;
+      max-height: 72vh;
+      object-fit: contain;
+    }
   }
 
   .dump__bottom-header {
@@ -101,6 +165,30 @@
 @media (max-width: 760px) {
   .dump {
     width: 100%;
+    gap: 0;
+
+    &__header {
+      // margin: auto;
+      // height: 87%;
+      // margin-bottom: 13%;
+      width: 100%;
+    }
+
+    &__inside {
+      width: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: -1;
+      max-width: 100%;
+    }
+
+    &__content,
+    &__media {
+      width: 100%;
+      height: 100dvh;
+      min-height: 100dvh;
+    }
   }
 
   .action-button {

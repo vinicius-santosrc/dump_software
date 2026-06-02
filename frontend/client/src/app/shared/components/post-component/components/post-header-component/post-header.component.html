@@ -8,14 +8,13 @@
             fontSize="14px"
         />
         @if(showOptions) {
-        <button (click)="options()" mat-icon-button><mat-icon [style.color]="theme == 'dark' ? 'white' : 'black'">more_horiz</mat-icon></button>
+        <button (click)="options()" mat-icon-button><mat-icon>more_horiz</mat-icon></button>
         }
     </div>
 
-    <div class="post-media-caption" [id]="isModal ? 'light' : 'dark'">
+    <div class="post-media-caption">
         <app-generic-text
             [text]="caption || ''"
-            [theme]="!isModal ? 'light' : 'dark'"
             [expandable]="true"
             [maxCharacters]="180"
             [clickableMentions]="true"

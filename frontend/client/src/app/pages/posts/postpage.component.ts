@@ -13,10 +13,13 @@ import { PostCommentsComponent } from "../../shared/components/post-component/co
 import { CommentsService } from '../../core/services/comments/comments.service';
 import { BasicInputComponent } from "../../shared/components/basic-input-component/basic-input.component";
 import { GenericButtonComponent } from "../../shared/components/generic-button-component/generic-button.component";
+import { CardComponent } from "../../shared/components/card-component/card-component";
+import { MatIcon } from "@angular/material/icon";
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-post-page',
-    imports: [CommonModule, PostActionButtonsComponent, PostMediaComponent, PostHeaderComponent, PostCommentsComponent, MatDividerModule, BasicInputComponent, GenericButtonComponent],
+    imports: [CommonModule, TranslateModule, PostActionButtonsComponent, PostMediaComponent, PostHeaderComponent, PostCommentsComponent, MatDividerModule, BasicInputComponent, GenericButtonComponent, CardComponent, MatIcon],
     templateUrl: './postpage.component.html',
     styleUrl: './postpage.component.scss',
     standalone: true
@@ -62,6 +65,10 @@ export class PostPageComponent implements OnInit, AfterViewInit, OnChanges, OnDe
         this.getComments(this.postId);
     }
 
+    get isMobile(): boolean {
+        return window.innerWidth <= 768;
+    }
+
     ngAfterViewInit() {
         const firstMedia = this.post?.media?.[0];
 
@@ -91,6 +98,15 @@ export class PostPageComponent implements OnInit, AfterViewInit, OnChanges, OnDe
     }
 
     close() {
+        this.navigateBack();
+    }
+
+    navigateBack() {
+        if (typeof globalThis === 'undefined') {
+            return;
+        }
+
+        globalThis.history.scrollRestoration = 'auto';
         globalThis.history.back();
     }
 

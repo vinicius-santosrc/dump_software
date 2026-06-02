@@ -20,7 +20,7 @@
         </ng-container>
         <ng-template #notLoadingFile>
             <ng-container *ngIf="iconName">
-                <mat-icon class="generic-button__icon">{{ iconName }}</mat-icon>
+                <mat-icon [style.fontSize]="fontSize" class="generic-button__icon">{{ iconName }}</mat-icon>
             </ng-container>
             <ng-container *ngIf="logoIcon">
                 <img [src]="logoIcon" alt="Button Icon" class="generic-button__icon" />
@@ -55,7 +55,7 @@
     </ng-container>
     <ng-template #notLoadingButton>
         <ng-container *ngIf="iconName">
-            <mat-icon class="generic-button__icon">{{ iconName }}</mat-icon>
+            <mat-icon [style.fontSize]="fontSize" [fontSet]="'material-symbols-rounded'" class="generic-button__icon">{{ iconName }}</mat-icon>
         </ng-container>
         <ng-container *ngIf="logoIcon">
             <img [src]="logoIcon" alt="Button Icon" class="generic-button__icon" />

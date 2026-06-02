@@ -6,20 +6,25 @@ import { MemoriesService } from "../../../core/services/memories/memories.servic
 import { SkeletonComponent } from "../../../shared/components/skeleton/skeleton.component";
 import { Router } from "@angular/router";
 import { StoryGroup, StoryViewerStore } from "../../../store/story-viewer.store";
-import {AvatarItem} from "../../../shared/components/avatar-item/avatar-item.component";
+import { AvatarItem } from "../../../shared/components/avatar-item/avatar-item.component";
+import { MatMenu, MatMenuTrigger } from "@angular/material/menu";
+import { MatIcon } from "@angular/material/icon";
+import { getMemoriesCreationMenu } from "../../../core/utils/memorie.utils";
 
 @Component({
     selector: "app-memories-component",
     templateUrl: "./memories.component.html",
     styleUrl: "./memories.component.scss",
-    imports: [CommonModule, TranslateModule, SkeletonComponent, AvatarItem]
+    imports: [CommonModule, TranslateModule, SkeletonComponent, AvatarItem, MatMenu, MatIcon, MatMenuTrigger]
 })
 export class MemoriesComponent implements OnInit {
     @Input() user: User | null = null;
     @Input() width: string = "";
     @Input() showMyMemorie: boolean = true;
     hasMyMemorie: StoryGroup[] = [];
-    
+    displayMenu: boolean = false;
+    optionsMenu: any = [];
+
     constructor(
         private readonly memoriesService: MemoriesService,
         private readonly router: Router,
@@ -31,9 +36,10 @@ export class MemoriesComponent implements OnInit {
     get isMobile(): boolean {
         return window.innerWidth <= 768;
     }
-    
+
     ngOnInit(): void {
         this.getAllMoments();
+        this.optionsMenu = getMemoriesCreationMenu(this.hasMyMemorie.length > 0);
         if (this.isMobile) {
             this.width = '100%';
         }
@@ -54,7 +60,7 @@ export class MemoriesComponent implements OnInit {
         this.loading = false;
     }
 
-    handleMyStory() {
+    handleMyStory(action: string) {
         if (this.hasMyMemorie.length > 0) {
             const groupIndex = this.memoriesList.findIndex(
                 (group: StoryGroup) => group?.user?.id === this.user?.id
@@ -66,8 +72,25 @@ export class MemoriesComponent implements OnInit {
             }
             return;
         }
+        this.displayMenu = true;
 
-        console.log("criar story");
+        switch (action) {
+            case 'viewCurrentStory':
+                // this.handleMyStory('viewCurrentStory');
+                break;
+            case 'createStory':
+                this.router.navigate(['/create-story']);
+                break;
+            case 'createPost':
+                this.router.navigate(['/create-post']);
+                break;
+            case 'createLive':
+                this.router.navigate(['/create-live']);
+                break;
+            case 'createEvent':
+                this.router.navigate(['/create-event']);
+                break;
+        }
     }
 
     clickStory(username: string) {
