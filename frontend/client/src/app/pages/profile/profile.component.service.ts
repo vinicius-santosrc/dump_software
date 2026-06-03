@@ -123,18 +123,36 @@ export class ProfileComponentService {
     this.backgroundColorSubject.next(`rgb(${r}, ${g}, ${b})`);
   }
     
-    public getPostsByUser(userId: string): any {
+    public getPostsByUser(
+        userId: string,
+        cursor: string | Date | null = null,
+        limit = 12,
+        forceRefresh = false
+    ): Observable<any> {
+        const normalizedCursor = cursor instanceof Date ? cursor.toISOString() : cursor;
+        const cacheKey = `${userId}:${normalizedCursor ?? 'first'}:${limit}`;
 
-        if (this.postsCache.has(userId)) {
-            return this.postsCache.get(userId)!;
+        if (!forceRefresh && this.postsCache.has(cacheKey)) {
+            return this.postsCache.get(cacheKey)!;
         }
 
-        const request = this.postsService.getByUser(userId).pipe(
-            shareReplay(1)
+        const request = this.postsService.getByUser(userId, normalizedCursor, limit).pipe(
+            shareReplay({ bufferSize: 1, refCount: true })
         );
 
-        this.postsCache.set(userId, request);
+        this.postsCache.set(cacheKey, request);
 
         return request;
+    }
+
+    public clearPostsCache(userId?: string): void {
+        if (!userId) {
+            this.postsCache.clear();
+            return;
+        }
+
+        Array.from(this.postsCache.keys())
+            .filter(key => key.startsWith(`${userId}:`))
+            .forEach(key => this.postsCache.delete(key));
     }
 }

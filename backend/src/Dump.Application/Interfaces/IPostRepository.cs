@@ -9,7 +9,7 @@ public interface IPostsRepository
         DateTime? cursor = null,
         int limit = 10
     );
-    Task<List<Post>> GetByUserProfile(string userId);
+    Task<Post[]> GetByUserProfile(string userId, DateTime? dateTime, int limit);
     Task<Post> GetById(string postId);
     Task<Post> UpdatePost(Post post);
     Task CreateAsync(Post post);

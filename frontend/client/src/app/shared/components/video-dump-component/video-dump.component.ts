@@ -5,6 +5,8 @@ import {
     Input,
     OnDestroy,
     OnInit,
+    OnChanges,
+    SimpleChanges,
     ViewChild
 } from '@angular/core';
 import { VideoDumpService } from './video-dump.service';
@@ -19,10 +21,11 @@ import { CommonModule } from '@angular/common';
     imports: [CommonModule, MatIcon, MatButtonModule],
     standalone: true
 })
-export class VideoDumpComponent implements OnInit, OnDestroy, AfterViewInit {
+export class VideoDumpComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges {
 
     @Input() src!: string;
     @Input() thumbnail!: string;
+    @Input() autoplay = true;
 
     @ViewChild('video') videoRef!: ElementRef<HTMLVideoElement>;
 
@@ -34,7 +37,9 @@ export class VideoDumpComponent implements OnInit, OnDestroy, AfterViewInit {
     showLike = false;
     lastTap = 0;
 
-    isLoading = true;
+    isLoading = false;
+    isVisible = false;
+    userPaused = false;
 
     hasLoaded = false;
 
@@ -42,6 +47,30 @@ export class VideoDumpComponent implements OnInit, OnDestroy, AfterViewInit {
     private muteSub: any;
 
     constructor(private readonly videoService: VideoDumpService) { }
+
+    ngOnChanges(changes: SimpleChanges): void {
+        if (!changes['src'] || changes['src'].firstChange) {
+            return;
+        }
+
+        const video = this.videoRef?.nativeElement;
+        this.hasLoaded = false;
+        this.isLoading = false;
+        this.progress = 0;
+        this.isPaused = true;
+        this.userPaused = false;
+
+        if (video) {
+            video.pause();
+            video.removeAttribute('src');
+            video.load();
+
+            if (this.isVisible && this.autoplay) {
+                this.loadVideo();
+                this.safePlay();
+            }
+        }
+    }
 
     ngOnInit(): void {
         this.isMuted = this.videoService.getMute();
@@ -57,8 +86,7 @@ export class VideoDumpComponent implements OnInit, OnDestroy, AfterViewInit {
             const video = this.videoRef?.nativeElement;
             if (!video) return;
             if (current && current !== video) {
-                video.pause();
-                this.isPaused = true;
+                this.pauseVideo(false);
             }
         });
     }
@@ -72,26 +100,49 @@ export class VideoDumpComponent implements OnInit, OnDestroy, AfterViewInit {
 
         this.observer = new IntersectionObserver(
             ([entry]) => {
-                if (entry.isIntersecting) {
+                this.isVisible = entry.isIntersecting && entry.intersectionRatio >= 0.7;
+
+                if (this.isVisible) {
                     if (!this.hasLoaded) {
                         this.loadVideo();
                     }
-                    this.play();
-                } else {
-                    video.pause();
-                    this.isPaused = true;
+
+                    if (this.autoplay && !this.userPaused) {
+                        this.safePlay();
+                    }
+                    return;
                 }
+
+                this.pauseVideo(false);
             },
-            { threshold: 0.45, rootMargin: '250px 0px' }
+            { threshold: [0, 0.35, 0.7, 0.9], rootMargin: '80px 0px' }
         );
 
         this.observer.observe(video);
 
-        video.addEventListener('play', () => this.isPaused = false);
-        video.addEventListener('pause', () => this.isPaused = true);
+        video.addEventListener('play', () => {
+            this.isPaused = false;
+            this.isLoading = false;
+        });
+
+        video.addEventListener('pause', () => {
+            this.isPaused = true;
+        });
 
         video.addEventListener('loadeddata', () => {
             this.isLoading = false;
+
+            if (this.isVisible && this.autoplay && !this.userPaused && video.paused) {
+                this.safePlay();
+            }
+        });
+
+        video.addEventListener('canplay', () => {
+            this.isLoading = false;
+
+            if (this.isVisible && this.autoplay && !this.userPaused && video.paused) {
+                this.safePlay();
+            }
         });
 
         video.addEventListener('waiting', () => {
@@ -104,23 +155,77 @@ export class VideoDumpComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     loadVideo() {
-        if (this.hasLoaded) return;
+        if (this.hasLoaded || !this.src) return;
 
         const video = this.videoRef?.nativeElement;
         if (!video) return;
 
+        this.isLoading = true;
         video.src = this.src;
         video.load();
         this.hasLoaded = true;
+
+        if (this.isVisible && this.autoplay && !this.userPaused) {
+            this.safePlay();
+        }
     }
 
     play() {
-        const video = this.videoRef.nativeElement;
+        this.togglePlay();
+    }
+
+    togglePlay() {
+        const video = this.videoRef?.nativeElement;
+        if (!video) return;
+
         if (!this.hasLoaded) {
             this.loadVideo();
         }
+
+        if (video.paused) {
+            this.userPaused = false;
+            this.safePlay();
+            return;
+        }
+
+        this.pauseVideo(true);
+    }
+
+    private safePlay() {
+        const video = this.videoRef?.nativeElement;
+        if (!video) return;
+
+        if (!this.src) return;
+
+        if (!this.hasLoaded) {
+            this.loadVideo();
+            return;
+        }
+
         this.videoService.setCurrent(video);
-        video.play().catch(() => { });
+
+        video.play()
+            .then(() => {
+                this.isPaused = false;
+                this.isLoading = false;
+            })
+            .catch(() => {
+                this.isPaused = true;
+                this.isLoading = false;
+            });
+    }
+
+    private pauseVideo(fromUser: boolean) {
+        const video = this.videoRef?.nativeElement;
+        if (!video) return;
+
+        if (fromUser) {
+            this.userPaused = true;
+        }
+
+        video.pause();
+        this.isPaused = true;
+        this.isLoading = false;
     }
 
     toggleMute() {
@@ -135,6 +240,12 @@ export class VideoDumpComponent implements OnInit, OnDestroy, AfterViewInit {
 
     ngOnDestroy(): void {
         if (this.observer) this.observer.disconnect();
+        const video = this.videoRef?.nativeElement;
+        if (video) {
+            video.pause();
+            video.removeAttribute('src');
+            video.load();
+        }
         this.currentSub?.unsubscribe?.();
         this.muteSub?.unsubscribe?.();
     }

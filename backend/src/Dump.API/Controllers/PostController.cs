@@ -42,10 +42,22 @@ public class PostController : ControllerBase
         return Ok(posts);
     }
 
-    [HttpPost("getByUserProfile")]
-    public async Task<IActionResult> GetByUserProfile(GenericId genericId)
+    public class ProfileFeedRequest
     {
-        var posts = await _postService.GetByUserProfile(genericId.Id);
+        public string Id { get; set; } = string.Empty;
+        public DateTime? Cursor { get; set; }
+        public int Limit { get; set; } = 12;
+    }
+
+    [HttpPost("getByUserProfile")]
+    public async Task<IActionResult> GetByUserProfile([FromBody] ProfileFeedRequest request)
+    {
+        var posts = await _postService.GetByUserProfile(
+            request.Id,
+            request.Cursor,
+            request.Limit
+        );
+
         return Ok(posts);
     }
 

@@ -1,9 +1,10 @@
-<div class="video-container">
+<div class="video-container" (click)="togglePlay()">
 
   <video
     #video
     [attr.src]="hasLoaded ? src : null"
     [attr.poster]="thumbnail || null"
+    [muted]="isMuted"
     loop
     preload="metadata"
     playsinline
@@ -23,7 +24,7 @@
       <div class="bar" [style.width.%]="progress"></div>
     </div>
 
-    <button mat-icon-button class="mute-btn" (pointerup)="$event.stopPropagation(); toggleMute()">
+    <button mat-icon-button class="mute-btn" (click)="$event.stopPropagation(); toggleMute()">
       <mat-icon>{{ isMuted ? 'volume_off' : 'volume_up' }}</mat-icon>
     </button>
   </div>

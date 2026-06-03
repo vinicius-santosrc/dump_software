@@ -140,22 +140,37 @@ public class PostsRepository : IPostsRepository
             .ToListAsync();
     }
 
-    public async Task<List<Post>> GetByUserProfile(string userId)
+    public async Task<Post[]> GetByUserProfile(
+        string userId,
+        DateTime? cursor = null,
+        int limit = 12
+    )
     {
+        limit = Math.Clamp(limit, 1, 24);
+
         var filter = Builders<Post>.Filter.And(
             Builders<Post>.Filter.Eq(p => p.User, userId),
             Builders<Post>.Filter.Eq(p => p.IsDeleted, false),
             Builders<Post>.Filter.Eq(p => p.Archived, false)
         );
 
-        var options = new FindOptions<Post>
+        if (cursor.HasValue)
         {
-            Sort = Builders<Post>.Sort.Descending(p => p.CreatedAt),
-            AllowDiskUse = true
-        };
+            filter &= Builders<Post>.Filter.Lt(
+                p => p.CreatedAt,
+                cursor.Value.ToUniversalTime()
+            );
+        }
 
-        using var result = await _posts.FindAsync(filter, options);
-        return await result.ToListAsync();
+        var posts = await _posts
+            .Aggregate()
+            .Match(filter)
+            .Sort(Builders<Post>.Sort.Descending(p => p.CreatedAt))
+            .Limit(limit)
+            .AppendStage<Post>(LightweightVideoMediaStage())
+            .ToListAsync();
+
+        return posts.ToArray();
     }
 
     public async Task<Post> GetById(string id)

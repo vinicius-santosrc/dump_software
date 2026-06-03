@@ -196,11 +196,21 @@ public class PostService
             .ToArray();
     }
 
-    public async Task<Dump.Domain.Entities.PostResponse[]> GetByUserProfile(string id)
+    public async Task<Dump.Domain.Entities.PostResponse[]> GetByUserProfile(
+        string id,
+        DateTime? cursor = null,
+        int limit = 12
+    )
     {
-        var posts = await _postRepository.GetByUserProfile(id);
+        limit = Math.Clamp(limit, 1, 24);
 
-        var responses = await Task.WhenAll(posts.Select(post => MapToResponse(post)));
+        var posts = await _postRepository.GetByUserProfile(id, cursor, limit);
+
+        var responses = await Task.WhenAll(posts.Select(post => MapToResponse(
+            post,
+            lightweightMedia: true,
+            includeComments: false
+        )));
 
         return responses
             .OrderByDescending(r => r.CreatedAt)

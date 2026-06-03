@@ -96,8 +96,18 @@ export class PostsService {
         return request;
     }
 
-    public getByUser(id: string) {
-        return this.http.post(`${API_CONFIG.baseUrl}${this.API}/getByUserProfile`, { id: id });
+    public getByUser(
+        id: string,
+        cursor: string | Date | null = null,
+        limit: number = 12
+    ): Observable<any> {
+        const normalizedCursor = cursor instanceof Date ? cursor.toISOString() : cursor;
+
+        return this.http.post(`${API_CONFIG.baseUrl}${this.API}/getByUserProfile`, {
+            id,
+            cursor: normalizedCursor,
+            limit
+        });
     }
 
     public handleLike(postId: string, likerId: string) {
