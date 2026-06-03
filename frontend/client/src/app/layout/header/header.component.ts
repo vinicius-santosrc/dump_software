@@ -15,6 +15,8 @@ import { ThemeService } from "../../core/services/theme.service";
 import { GenericButtonComponent } from "../../shared/components/generic-button-component/generic-button.component";
 import { AvatarItem } from "../../shared/components/avatar-item/avatar-item.component";
 import { NotificationsSidebarComponent } from "../sidebar/notifications-sidebar/notifications-sidebar.component";
+import { MatDialog } from "@angular/material/dialog";
+import { ProfileEditComponent } from "../../pages/profile/edit/profile-edit.component";
 
 @Component({
     selector: "app-header",
@@ -41,7 +43,8 @@ export class HeaderComponent implements OnInit {
     constructor(
         public userService: UserService,
         public router: Router,
-        private readonly themeService: ThemeService
+        private readonly themeService: ThemeService,
+        private readonly dialog: MatDialog
     ) {
         this.theme = this.themeService.getTheme();
         this.logo = this.theme === 'light' ? 'assets/app/media/anim/icon/splash-screen.svg' : 'assets/app/media/anim/icon/splash-screen-light.svg';
@@ -129,5 +132,11 @@ export class HeaderComponent implements OnInit {
 
     closePanels() {
         Object.keys(this.panels).forEach(p => this.panels[p as keyof typeof this.panels] = false);
+    }
+
+    openSettings() {
+        this.dialog.open(ProfileEditComponent, {
+            minWidth: this.isMobile ? '400px' : '1000px',
+        })
     }
 };

@@ -24,6 +24,149 @@
     margin-bottom: 16px;
 }
 
+.explore-page__search-loader {
+    width: 100%;
+    min-height: 72px;
+    display: grid;
+    place-items: center;
+    border-radius: 18px;
+    background: var(--background-secondary, #f7f7f7);
+    border: 1px solid var(--color-border, rgba(0, 0, 0, 0.08));
+}
+
+.explore-page__search-results,
+.explore-page__recent-searches {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    padding: 16px;
+    border-radius: 22px;
+    background: var(--background-secondary, #f7f7f7);
+    border: 1px solid var(--color-border, rgba(0, 0, 0, 0.08));
+    box-shadow: 0 18px 50px rgba(0, 0, 0, 0.06);
+}
+
+.explore-page__search-section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    h4 {
+        margin: 0;
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+        color: var(--color-text, #111);
+    }
+}
+
+.explore-page__search-users {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+
+    app-generic-card-user {
+        min-width: 0;
+        padding: 10px;
+        border-radius: 16px;
+        background: var(--color-background, #fff);
+        border: 1px solid var(--color-border, rgba(0, 0, 0, 0.07));
+        cursor: pointer;
+        transition: transform .18s ease, background .18s ease, border-color .18s ease;
+
+        &:hover {
+            transform: translateY(-1px);
+            background: var(--background-hover, rgba(0, 0, 0, 0.04));
+            border-color: var(--color-border-hover, rgba(0, 0, 0, 0.14));
+        }
+    }
+}
+
+.explore-page__search-posts {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+
+    app-post-media {
+        display: block;
+        aspect-ratio: 1 / 1;
+        overflow: hidden;
+        border-radius: 16px;
+        background: #000;
+        cursor: pointer;
+    }
+
+    ::ng-deep .post-media,
+    ::ng-deep .media-container,
+    ::ng-deep .media-container--video-placeholder,
+    ::ng-deep .media-container--carousel-placeholder {
+        width: 100%;
+        height: 100%;
+        min-height: 100%;
+        border-radius: 16px;
+    }
+
+    ::ng-deep img,
+    ::ng-deep video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+}
+
+.explore-page__recent-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+
+    span {
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--color-text, #111);
+    }
+
+    button {
+        min-width: auto;
+        height: 32px;
+        padding: 0 10px;
+        color: var(--color-primary, #1881e2);
+        font-size: 12px;
+        font-weight: 700;
+    }
+}
+
+.explore-page__recent-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 8px 8px 8px 10px;
+    border-radius: 16px;
+    background: var(--color-background, #fff);
+    border: 1px solid var(--color-border, rgba(0, 0, 0, 0.07));
+    transition: background .18s ease, border-color .18s ease;
+
+    &:hover {
+        background: var(--background-hover, rgba(0, 0, 0, 0.04));
+        border-color: var(--color-border-hover, rgba(0, 0, 0, 0.14));
+    }
+
+    app-generic-card-user {
+        flex: 1;
+        min-width: 0;
+        cursor: pointer;
+    }
+
+    button {
+        width: 34px;
+        height: 34px;
+        flex: 0 0 34px;
+        color: var(--color-text-secondary, #737373);
+    }
+}
+
 .explore-page__sections {
     display: flex;
     flex-direction: column;
@@ -103,10 +246,29 @@
     .explore-page__loading-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
+
+    .explore-page__search-results,
+    .explore-page__recent-searches {
+        padding: 12px;
+        border-radius: 18px;
+        gap: 14px;
+    }
+
+    .explore-page__search-users {
+        grid-template-columns: 1fr;
+    }
+
+    .explore-page__search-posts {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
 }
 
 @media (max-width: 480px) {
     .explore-page__loading-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .explore-page__search-posts {
         grid-template-columns: 1fr;
     }
 }

@@ -4,7 +4,7 @@
         </div>
         <div class="header-component-center">
             <a routerLinkActive="active" [routerLink]="'/'">
-                <img [src]="logo" alt="Dump Logo" />
+                <img [src]="logo" alt="Dump Logo" loading="lazy" decoding="async" [attr.width]="120" [attr.height]="120" />
             </a>
         </div>
         <div class="header-component-right desktop">
@@ -19,15 +19,16 @@
             </div>
         </div>
         <div class="header-component-right mobile">
-            @if(!isMessagePage) {
+            <!-- @if(!isMessagePage) {
             <app-generic-button (onClick)="openMessages()" [label]="!isMobile ? 'HEADER.ACTIONS.CONVERSATIONS' : ''"
                 [iconName]="'send'" variant="ghost" padding="0px 0px" fontSize="24px"></app-generic-button>
             }
-            <app-generic-button (onClick)="openNotifications()" [label]="''" [iconName]="'favorite'" variant="ghost"
-                padding="0px 0px" fontSize="24px"></app-generic-button>
+        -->
+            <app-generic-button (onClick)="openSettings()" [label]="''" [iconName]="'menu'" variant="ghost"
+                padding="0px 0px" fontSize="24px"></app-generic-button> 
             <div class="account-details">
                 <a routerLinkActive="active" [routerLink]="'/' + current_user.username">
-                    <app-avatar-item width="52px" height="52px" [redirectOnClick]="false" [user]="current_user" />
+                    <app-avatar-item width="42px" height="42px" [redirectOnClick]="false" [user]="current_user" />
                 </a>
             </div>
         </div>

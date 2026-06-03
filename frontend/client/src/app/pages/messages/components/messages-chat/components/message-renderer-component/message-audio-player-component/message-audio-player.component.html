@@ -19,7 +19,7 @@
     @if (showAvatar) {
     <div class="audio-player__avatar">
         @if (senderAvatar) {
-        <img [src]="senderAvatar" [alt]="'MESSAGES_INBOX.CHAT.MEDIA.AVATAR_ALT' | translate" />
+        <img loading="lazy" decoding="async" [src]="senderAvatar" [alt]="'MESSAGES_INBOX.CHAT.MEDIA.AVATAR_ALT' | translate" />
         }
         @else {
         <mat-icon>person</mat-icon>

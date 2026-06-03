@@ -41,3 +41,15 @@
     position: relative;
     z-index: 1;
 }
+
+/* ONLINE STATUS */
+.user-card__avatar-status {
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    z-index: 1;
+    background: #05a35a;
+}

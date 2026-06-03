@@ -10,11 +10,11 @@ export const MOBILE_SIDEBAR_NAVIGATION: NavigationLink[] = [
     },
 
     {
-        id: 'dumps',
-        icon: "movie",
-        route: "/dumps",
+        id: 'search',
+        icon: "explore",
+        route: "/explore",
         type: 'route',
-        label: "HEADER.ACTIONS.SIDEBAR.DUMPS"
+        label: "HEADER.ACTIONS.SIDEBAR.SEARCH"
     },
 
     {
@@ -59,11 +59,11 @@ export const MOBILE_SIDEBAR_NAVIGATION: NavigationLink[] = [
     },
 
     {
-        id: 'search',
-        icon: "search",
-        route: "/search",
-        type: 'panel',
-        label: "HEADER.ACTIONS.SIDEBAR.SEARCH"
+        id: 'inbox',
+        icon: "inbox",
+        route: "/activity/inbox",
+        type: 'route',
+        label: "HEADER.ACTIONS.SIDEBAR.INBOX"
     },
 
     {

@@ -1,7 +1,7 @@
 <div class="comment" [class.dark]="theme === 'dark'" [class.light]="theme === 'light'" [class.simple]="style === 'simple'" [class.default]="style === 'default'" [style.marginLeft.px]="level * 16">
 
     <div class="avatar" *ngIf="!comment.isDeleted">
-        <img [src]="comment.user?.profilePictureUrl" alt />
+        <img loading="lazy" decoding="async" [src]="comment.user?.profilePictureUrl" alt />
     </div>
 
     <div class="content">

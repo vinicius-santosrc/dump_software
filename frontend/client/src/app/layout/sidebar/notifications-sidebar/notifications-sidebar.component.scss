@@ -42,6 +42,14 @@
         }
     }
 }
+.tabs-inbox {
+    width: 100%;
+}
+
+::ng-deep .tabs-inbox .tab-label {
+    color: var(--color-text) !important;
+    opacity: 1;
+}
 
 /* RESULTS */
 .results {
@@ -84,6 +92,10 @@
     }
 }
 
+.activity-mobile {
+    display: none;
+}
+
 /* ANIMATION */
 @keyframes slideIn {
     from {
@@ -99,6 +111,14 @@
 @media (max-width: 768px) {
     .search-sidebar {
         width: 100%;
+    }
+
+    .activity-mobile {
+        display: flex;
+    }
+
+    .overlay {
+        display: none;
     }
 }
 

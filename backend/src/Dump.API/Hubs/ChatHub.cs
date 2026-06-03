@@ -3,12 +3,14 @@ using Dump.Application.DTOs;
 using Dump.Application.Features.Messages;
 using Dump.Application.Features.User;
 using System.Text.Json;
+using System.Collections.Concurrent;
 
 namespace Dump.API.Hubs;
 
 public class ChatHub : Hub
 {
-    private static readonly Dictionary<string, string> _onlineUsers = new();
+    private static readonly ConcurrentDictionary<string, HashSet<string>> _onlineUsers = new();
+    private static readonly object _onlineUsersLock = new();
     private readonly MessageService _messageService;
     private readonly UserService _userService;
 
@@ -18,6 +20,77 @@ public class ChatHub : Hub
         _userService = userService;
     }
 
+    private static bool AddOnlineConnection(string userId, string connectionId)
+    {
+        lock (_onlineUsersLock)
+        {
+            var connections = _onlineUsers.GetOrAdd(userId, _ => new HashSet<string>());
+            var wasOffline = connections.Count == 0;
+            connections.Add(connectionId);
+            return wasOffline;
+        }
+    }
+
+    private static bool RemoveOnlineConnection(string connectionId, out string? userId)
+    {
+        lock (_onlineUsersLock)
+        {
+            foreach (var pair in _onlineUsers)
+            {
+                if (!pair.Value.Remove(connectionId))
+                {
+                    continue;
+                }
+
+                userId = pair.Key;
+
+                if (pair.Value.Count == 0)
+                {
+                    _onlineUsers.TryRemove(pair.Key, out _);
+                    return true;
+                }
+
+                return false;
+            }
+        }
+
+        userId = null;
+        return false;
+    }
+
+    private static string[] GetOnlineUserIds()
+    {
+        lock (_onlineUsersLock)
+        {
+            return _onlineUsers
+                .Where(pair => pair.Value.Count > 0)
+                .Select(pair => pair.Key)
+                .ToArray();
+        }
+    }
+
+    private static string[] GetUserConnections(string userId)
+    {
+        lock (_onlineUsersLock)
+        {
+            return _onlineUsers.TryGetValue(userId, out var connections)
+                ? connections.ToArray()
+                : Array.Empty<string>();
+        }
+    }
+
+    private Task SendToOnlineUser(string userId, string eventName, object payload)
+    {
+        var connectionIds = GetUserConnections(userId);
+
+        if (connectionIds.Length == 0)
+        {
+            return Task.CompletedTask;
+        }
+
+        return Clients.Clients(connectionIds).SendAsync(eventName, payload);
+    }
+
     public async Task JoinConversation(string conversationId)
     {
         await Groups.AddToGroupAsync(Context.ConnectionId, conversationId);
@@ -25,12 +98,24 @@ public class ChatHub : Hub
 
     public async Task JoinUserRoom(string userId)
     {
-        if (!string.IsNullOrWhiteSpace(userId))
+        if (string.IsNullOrWhiteSpace(userId))
         {
-            _onlineUsers[userId] = Context.ConnectionId;
+            return;
         }
 
+        var becameOnline = AddOnlineConnection(userId, Context.ConnectionId);
+
         await Groups.AddToGroupAsync(Context.ConnectionId, $"user:{userId}");
+
+        if (becameOnline)
+        {
+            await Clients.All.SendAsync("UserOnline", userId);
+        }
+    }
+
+    public Task<string[]> GetOnlineUsers()
+    {
+        return Task.FromResult(GetOnlineUserIds());
     }
 
     public async Task SendMessage(SendMessageDto dto)
@@ -51,10 +136,9 @@ public class ChatHub : Hub
         await Clients.Group(dto.ConversationId)
             .SendAsync("ReceiveMessage", newMessage);
 
-        // also notify user rooms (global inbox)
-        foreach (var connection in _onlineUsers.Where(x => x.Key != null))
+        foreach (var userId in GetOnlineUserIds())
         {
-            await Clients.Group($"user:{connection.Key}")
+            await Clients.Group($"user:{userId}")
                 .SendAsync("ReceiveMessage", newMessage);
         }
     }
@@ -65,11 +149,14 @@ public class ChatHub : Hub
 
         if (!string.IsNullOrEmpty(userId))
         {
-            _onlineUsers[userId] = Context.ConnectionId;
+            var becameOnline = AddOnlineConnection(userId, Context.ConnectionId);
 
             await Groups.AddToGroupAsync(Context.ConnectionId, $"user:{userId}");
 
-            await Clients.All.SendAsync("UserOnline", userId);
+            if (becameOnline)
+            {
+                await Clients.All.SendAsync("UserOnline", userId);
+            }
         }
 
         await base.OnConnectedAsync();
@@ -77,12 +164,10 @@ public class ChatHub : Hub
 
     public override async Task OnDisconnectedAsync(Exception? exception)
     {
-        var userId = _onlineUsers.FirstOrDefault(x => x.Value == Context.ConnectionId).Key;
+        var becameOffline = RemoveOnlineConnection(Context.ConnectionId, out var userId);
 
-        if (userId != null)
+        if (becameOffline && !string.IsNullOrWhiteSpace(userId))
         {
-            _onlineUsers.Remove(userId);
-
             await Clients.All.SendAsync("UserOffline", userId);
         }
 
@@ -106,46 +191,22 @@ public class ChatHub : Hub
     {
         dto.Caller = await _userService.GetById(dto.CallerId);
 
-        if (_onlineUsers.TryGetValue(
-            dto.TargetUserId,
-            out var connectionId))
-        {
-            await Clients.Client(connectionId)
-                .SendAsync("IncomingCall", dto);
-        }
+        await SendToOnlineUser(dto.TargetUserId, "IncomingCall", dto);
     }
 
     public async Task AcceptCall(CallUserDto dto)
     {
-        if (_onlineUsers.TryGetValue(
-            dto.CallerId,
-            out var connectionId))
-        {
-            await Clients.Client(connectionId)
-                .SendAsync("CallAccepted", dto);
-        }
+        await SendToOnlineUser(dto.CallerId, "CallAccepted", dto);
     }
 
     public async Task RejectCall(CallUserDto dto)
     {
-        if (_onlineUsers.TryGetValue(
-            dto.CallerId,
-            out var connectionId))
-        {
-            await Clients.Client(connectionId)
-                .SendAsync("CallRejected", dto);
-        }
+        await SendToOnlineUser(dto.CallerId, "CallRejected", dto);
     }
 
     public async Task EndCall(CallUserDto dto)
     {
-        if (_onlineUsers.TryGetValue(
-            dto.TargetUserId,
-            out var connectionId))
-        {
-            await Clients.Client(connectionId)
-                .SendAsync("CallEnded", dto);
-        }
+        await SendToOnlineUser(dto.TargetUserId, "CallEnded", dto);
     }
 
     public async Task ToggleCallCamera(JsonElement dto)
@@ -160,17 +221,13 @@ public class ChatHub : Hub
             return;
         }
 
-        if (_onlineUsers.TryGetValue(targetUserId, out var connectionId))
+        await SendToOnlineUser(targetUserId, "CallCameraToggled", new
         {
-            await Clients.Client(connectionId)
-                .SendAsync("CallCameraToggled", new
-                {
-                    callerId,
-                    targetUserId,
-                    conversationId,
-                    cameraOff
-                });
-        }
+            callerId,
+            targetUserId,
+            conversationId,
+            cameraOff
+        });
     }
 
     public async Task ToggleCallMicrophone(JsonElement dto)
@@ -185,17 +242,13 @@ public class ChatHub : Hub
             return;
         }
 
-        if (_onlineUsers.TryGetValue(targetUserId, out var connectionId))
+        await SendToOnlineUser(targetUserId, "CallMicrophoneToggled", new
         {
-            await Clients.Client(connectionId)
-                .SendAsync("CallMicrophoneToggled", new
-                {
-                    callerId,
-                    targetUserId,
-                    conversationId,
-                    muted
-                });
-        }
+            callerId,
+            targetUserId,
+            conversationId,
+            muted
+        });
     }
 
     //WebRTC signaling methods
@@ -208,11 +261,7 @@ public class ChatHub : Hub
             return;
         }
 
-        if (_onlineUsers.TryGetValue(targetUserId, out var connectionId))
-        {
-            await Clients.Client(connectionId)
-                .SendAsync("ReceiveOffer", dto);
-        }
+        await SendToOnlineUser(targetUserId, "ReceiveOffer", dto);
     }
 
     public async Task SendAnswer(JsonElement dto)
@@ -223,11 +272,7 @@ public class ChatHub : Hub
             return;
         }
 
-        if (_onlineUsers.TryGetValue(targetUserId, out var connectionId))
-        {
-            await Clients.Client(connectionId)
-                .SendAsync("ReceiveAnswer", dto);
-        }
+        await SendToOnlineUser(targetUserId, "ReceiveAnswer", dto);
     }
 
     public async Task SendIceCandidate(JsonElement dto)
@@ -238,11 +283,7 @@ public class ChatHub : Hub
             return;
         }
 
-        if (_onlineUsers.TryGetValue(targetUserId, out var connectionId))
-        {
-            await Clients.Client(connectionId)
-                .SendAsync("ReceiveIceCandidate", dto);
-        }
+        await SendToOnlineUser(targetUserId, "ReceiveIceCandidate", dto);
     }
 
     private static string GetStringProperty(JsonElement element, params string[] propertyNames)

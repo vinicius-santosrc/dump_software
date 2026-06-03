@@ -9,7 +9,8 @@ import { API_CONFIG } from "../../core/config/api.config";
 export class MessagesService {
 
     private readonly conversationsCache = new Map<string, any[]>();
-    private readonly messagesCache = new Map<string, any[]>();
+    private readonly messagesCache = new Map<string, any[]>()
+    private readonly messagesRequestCache = new Map<string, Observable<any>>();;
 
     constructor(private readonly http: HttpClient) { }
 
@@ -30,21 +31,51 @@ export class MessagesService {
         );
     }
 
-    getMessages(conversationId: string, forceRefresh: boolean = false): Observable<any> {
-        const cached = this.messagesCache.get(conversationId);
+    getMessages(
+        conversationId: string,
+        forceRefresh: boolean = false,
+        before: string | null = null,
+        limit: number = 25
+    ): Observable<any> {
+        const requestCacheKey = `${conversationId}:${before ?? 'latest'}:${limit}`;
 
-        if (cached && !forceRefresh) {
-            return of(this.normalizeMessages(cached));
+        if (!before) {
+            const cached = this.messagesCache.get(conversationId);
+
+            if (cached && !forceRefresh) {
+                return of(this.normalizeMessages(cached));
+            }
         }
 
-        return this.http.get<any[]>(
-            `${API_CONFIG.baseUrl}/messages/${conversationId}`
+        if (!forceRefresh && this.messagesRequestCache.has(requestCacheKey)) {
+            return this.messagesRequestCache.get(requestCacheKey)!;
+        }
+
+        const params: Record<string, string> = {
+            limit: String(limit)
+        };
+
+        if (before) {
+            params['before'] = before;
+        }
+
+        const request = this.http.get<any[]>(
+            `${API_CONFIG.baseUrl}/messages/${conversationId}`,
+            { params }
         ).pipe(
             tap((response) => {
-                this.messagesCache.set(conversationId, this.normalizeMessages(response ?? []));
+                const normalizedResponse = this.normalizeMessages(response ?? []);
+
+                if (!before) {
+                    this.messagesCache.set(conversationId, normalizedResponse);
+                }
             }),
             shareReplay(1)
         );
+
+        this.messagesRequestCache.set(requestCacheKey, request);
+
+        return request;
     }
 
     updateMessagesCache(conversationId: string, messages: any[]): void {
@@ -152,10 +183,16 @@ export class MessagesService {
     clearMessagesCache(conversationId?: string): void {
         if (conversationId) {
             this.messagesCache.delete(conversationId);
+
+            Array.from(this.messagesRequestCache.keys())
+                .filter(key => key.startsWith(`${conversationId}:`))
+                .forEach(key => this.messagesRequestCache.delete(key));
+
             return;
         }
 
         this.messagesCache.clear();
+        this.messagesRequestCache.clear();
     }
 
     clearConversationsCache(userId?: string): void {

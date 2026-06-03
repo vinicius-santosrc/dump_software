@@ -1,8 +1,8 @@
 <div
     class="generic-text"
-    [class.light]="textColor == 'none' && theme === 'light'"
-    [class.dark]="textColor =='none' && theme === 'dark'"
-    [style.color]="textColor != 'none' ? textColor : null">
+    [class.light]="(!textColor || textColor === 'none') && theme === 'light'"
+    [class.dark]="(!textColor || textColor === 'none') && theme === 'dark'"
+    [style.color]="textColor && textColor !== 'none' ? textColor : null">
 
     <div
         class="generic-text__content"

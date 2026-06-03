@@ -23,7 +23,7 @@
                 <mat-icon [style.fontSize]="fontSize" class="generic-button__icon">{{ iconName }}</mat-icon>
             </ng-container>
             <ng-container *ngIf="logoIcon">
-                <img [src]="logoIcon" alt="Button Icon" class="generic-button__icon" />
+                <img loading="lazy" decoding="async" [src]="logoIcon" alt="Button Icon" class="generic-button__icon" />
             </ng-container>
             <ng-container *ngIf="label != ''">
                 <span class="generic-button__label">{{ label | translate }}</span>
@@ -58,7 +58,7 @@
             <mat-icon [style.fontSize]="fontSize" [fontSet]="'material-symbols-rounded'" class="generic-button__icon">{{ iconName }}</mat-icon>
         </ng-container>
         <ng-container *ngIf="logoIcon">
-            <img [src]="logoIcon" alt="Button Icon" class="generic-button__icon" />
+            <img loading="lazy" decoding="async" [src]="logoIcon" alt="Button Icon" class="generic-button__icon" />
         </ng-container>
         <ng-container *ngIf="label != ''">
             <span class="generic-button__label">{{ label | translate }}</span>

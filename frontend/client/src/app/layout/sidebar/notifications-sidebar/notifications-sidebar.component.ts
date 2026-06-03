@@ -14,10 +14,12 @@ import { Notification } from '../../../core/models/notification/notification.mod
 import { AvatarItem } from "../../../shared/components/avatar-item/avatar-item.component";
 import { formatDateToNow } from '../../../core/utils/format-date.util';
 import { TranslateModule } from '@ngx-translate/core';
+import { MatTabGroup, MatTab, MatTabLabel } from "@angular/material/tabs";
+import { MessagesComponent } from "../../../pages/messages/messages.component";
 
 @Component({
     selector: 'app-notifications-sidebar',
-    imports: [CommonModule, FormsModule, BasicInputComponent, MatIcon, LoaderComponent, GenericCardUserComponent, PostMediaComponent, MatButtonModule, AvatarItem, TranslateModule],
+    imports: [CommonModule, FormsModule, BasicInputComponent, MatIcon, LoaderComponent, GenericCardUserComponent, PostMediaComponent, MatButtonModule, AvatarItem, TranslateModule, MatTabGroup, MatTab, MatTabLabel, MessagesComponent],
     templateUrl: './notifications-sidebar.component.html',
     styleUrl: './notifications-sidebar.component.scss'
 })
@@ -84,5 +86,15 @@ export class NotificationsSidebarComponent implements AfterViewInit, OnInit {
 
     add_recent(item: any) {
         this.recentSearchService.add(item);
+    }
+
+    handleMobileTabChange(index: number): void {
+        if (index === 1) {
+            this.openMessages();
+        }
+    }
+
+    openMessages() {
+        this.router.navigate(['/messages/inbox']);
     }
 }

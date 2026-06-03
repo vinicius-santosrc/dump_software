@@ -13,13 +13,15 @@ import { MediaProcessingService } from "../../../core/services/media/media-proce
 import { SelectInputComponent } from "../../../shared/components/select-input-component/select-input.component";
 import { GenericModalComponent } from "../../../shared/components/generic-modal/generic-modal.component";
 import { TranslateModule } from "@ngx-translate/core";
+import { MatTab, MatTabGroup, MatTabLabel } from "@angular/material/tabs";
+import { ThemeMenuComponent } from "../../../shared/components/post-component/components/theme-menu/theme-menu.component";
 
 @Component({
     standalone: true,
     selector: "app-profile-edit-component",
     templateUrl: "./profile-edit.component.html",
     styleUrl: "./profile-edit.component.scss",
-    imports: [CommonModule, MatIcon, MatButton, MatDialogClose, MatIconButton, BasicInputComponent, GenericButtonComponent, AvatarItem, SelectInputComponent, GenericModalComponent, TranslateModule]
+    imports: [CommonModule, MatIcon, MatButton, MatDialogClose, MatIconButton, BasicInputComponent, GenericButtonComponent, AvatarItem, SelectInputComponent, GenericModalComponent, TranslateModule, MatTab, MatTabGroup, MatTabLabel, ThemeMenuComponent]
 })
 export class ProfileEditComponent implements OnInit {
     private readonly _snackBar = inject(MatSnackBar);

@@ -1,6 +1,7 @@
-import { Component, Input } from "@angular/core";
+import { Component, Input, inject } from "@angular/core";
 import { NgClass } from "@angular/common";
 import { Router } from "@angular/router";
+import { MessagesStoreService } from "../../../store/conversation.store.service";
 
 @Component({
     selector: 'app-avatar-item',
@@ -10,6 +11,8 @@ import { Router } from "@angular/router";
 })
 
 export class AvatarItem {
+    private readonly messagesStore = inject(MessagesStoreService);
+
     @Input() user?: any;
     @Input() src?: string = "";
     @Input() width: string = '32px';
@@ -18,6 +21,16 @@ export class AvatarItem {
     @Input() redirectOnClick?: boolean = true;
 
     @Input() seenMemorie?: boolean = false;
+
+    get showOnlineIndicator(): boolean {
+        const userId = this.user?.id ?? this.user?._id;
+
+        if (!userId) {
+            return Boolean(this.user?.isOnline);
+        }
+
+        return this.messagesStore.isUserOnline(userId) || Boolean(this.user?.isOnline);
+    }
 
     constructor(
         private readonly router: Router

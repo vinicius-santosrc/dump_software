@@ -42,18 +42,53 @@ public class MessageService
         return conversation;
     }
 
-    public async Task<List<MessageReceive>> GetMessages(string conversationId)
+    public async Task<List<MessageReceive>> GetMessages(
+        string conversationId,
+        DateTime? before = null,
+        int limit = 25
+    )
     {
-        var messages = await _repository.GetByConversationIdAsync(conversationId);
+        limit = Math.Clamp(limit, 1, 50);
+
+        var messages = await _repository.GetByConversationIdAsync(
+            conversationId,
+            before,
+            limit
+        );
 
         var result = new List<MessageReceive>();
+
+        if (messages.Count == 0)
+        {
+            return result;
+        }
+
+        var conversation = await _repository.GetByConversationId(conversationId);
+
+        var senderIds = messages
+            .Select(message => message.SenderId)
+            .Where(senderId => !string.IsNullOrWhiteSpace(senderId))
+            .Distinct()
+            .ToList();
+
+        var users = new Dictionary<string, User>();
+
+        foreach (var senderId in senderIds)
+        {
+            var user = await _userService.GetById(senderId);
+
+            if (user != null)
+            {
+                users[senderId] = user;
+            }
+        }
 
         foreach (var message in messages)
         {
             var enriched = new MessageReceive
             {
-                Conversation = await _repository.GetByConversationId(message.ConversationId),
-                Sender = await _userService.GetById(message.SenderId),
+                Conversation = conversation,
+                Sender = users.TryGetValue(message.SenderId, out var sender) ? sender : null,
                 CreatedAt = message.CreatedAt,
                 Id = message.Id,
                 ReadBy = message.ReadBy,
@@ -64,7 +99,7 @@ public class MessageService
             result.Add(enriched);
         }
 
-        return result.Cast<MessageReceive>().ToList();
+        return result;
     }
 
     public async Task<Conversation> CreateConversation(List<string> participants)

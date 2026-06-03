@@ -1,8 +1,72 @@
 <div class="explore-page">
     <div class="explore-page__inside">
         <section class="explore-page__hero">
-            <app-basic-input iconName="search" [label]="'EXPLORE.SEARCH.PLACEHOLDER' | translate"
-                (valueChange)="searchTerm = $event" />
+            <app-basic-input
+                iconName="search"
+                [label]="'EXPLORE.SEARCH.PLACEHOLDER' | translate"
+                (valueChange)="onSearchChange($event)" />
+
+            @if(searchLoading) {
+            <div class="explore-page__search-loader">
+                <app-loader />
+            </div>
+            }
+
+            @if(hasSearchResults) {
+            <section class="explore-page__search-results">
+                @if(searchResults?.users?.length) {
+                <div class="explore-page__search-section">
+                    <h4>{{ 'SEARCH.SECTION.USERS' | translate }}</h4>
+
+                    <div class="explore-page__search-users">
+                        @for(user of searchResults.users; track user.id) {
+                        <app-generic-card-user
+                            fontSize="12px"
+                            [user]="user"
+                            (click)="addRecentSearch(user)" />
+                        }
+                    </div>
+                </div>
+                }
+
+                @if(searchResults?.posts?.length) {
+                <div class="explore-page__search-section">
+                    <h4>{{ 'SEARCH.SECTION.POSTS' | translate }}</h4>
+
+                    <div class="explore-page__search-posts">
+                        @for(post of searchResults.posts; track post.id) {
+                        <app-post-media [media]="post.media" [postId]="post.id" />
+                        }
+                    </div>
+                </div>
+                }
+            </section>
+            }
+
+            @if(!searchLoading && searchTerm === '' && recentSearches.length > 0) {
+            <section class="explore-page__recent-searches">
+                <div class="explore-page__recent-header">
+                    <span>{{ 'SEARCH.RECENT' | translate }}</span>
+                    <button mat-button type="button" (click)="clearRecentSearches()">
+                        {{ 'SEARCH.CLEAR_ALL' | translate }}
+                    </button>
+                </div>
+
+                @for(item of recentSearches; track item.id) {
+                <div class="explore-page__recent-item">
+                    <app-generic-card-user
+                        [showActionButton]="false"
+                        fontSize="12px"
+                        [user]="item"
+                        (click)="addRecentSearch(item)" />
+
+                    <button mat-icon-button type="button" aria-label="Remover busca recente" (click)="removeRecentSearch(item.id); $event.stopPropagation()">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                </div>
+                }
+            </section>
+            }
 
             <app-explore-topic-rail [topics]="topics" [selectedTopicId]="selectedTopicId"
                 (topicSelected)="selectTopic($event)" />

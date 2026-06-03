@@ -24,6 +24,7 @@ export class ChatService {
       .build();
 
     await this.hubConnection.start();
+    await this.joinUserRoom(userId);
   }
 
   joinConversation(conversationId: string) {
@@ -32,6 +33,10 @@ export class ChatService {
 
   joinUserRoom(userId: string) {
     return this.hubConnection.invoke('JoinUserRoom', userId);
+  }
+
+  getOnlineUsers(): Promise<string[]> {
+    return this.hubConnection.invoke('GetOnlineUsers');
   }
 
   sendMessage(data: any) {
@@ -90,6 +95,8 @@ export class ChatService {
   clearAll() {
     this.hubConnection.off('ReceiveMessage');
     this.hubConnection.off('MessageRead');
+    this.hubConnection.off('UserOnline');
+    this.hubConnection.off('UserOffline');
     this.hubConnection.off('Typing');
     this.hubConnection.off('StopTyping');
   }

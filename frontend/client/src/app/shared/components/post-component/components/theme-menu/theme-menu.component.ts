@@ -2,6 +2,7 @@ import {
     ChangeDetectionStrategy,
     Component,
     inject,
+    Input,
 } from '@angular/core';
 
 import { MatIconModule } from '@angular/material/icon';
@@ -25,6 +26,7 @@ import { TranslateModule } from '@ngx-translate/core';
 export class ThemeMenuComponent {
 
     public isDarkMode = false;
+    @Input() backButton = true;
 
     constructor() {
         this.initializeTheme();

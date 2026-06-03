@@ -4,7 +4,7 @@
 
     @if (pendingImagePreviewUrl) {
     <div class="message-composer-component__attachment">
-        <img [src]="pendingImagePreviewUrl" [alt]="'MESSAGES_INBOX.CHAT.COMPOSER.ATTACHMENT.IMAGE_ALT' | translate" />
+        <img loading="lazy" decoding="async" [src]="pendingImagePreviewUrl" [alt]="'MESSAGES_INBOX.CHAT.COMPOSER.ATTACHMENT.IMAGE_ALT' | translate" />
 
         <div class="message-composer-component__attachment-info">
             <strong>{{ pendingImage?.name }}</strong>

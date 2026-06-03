@@ -21,6 +21,7 @@ import {
     MessageComposerComponent
 } from "./components/message-composer-component/message-composer-component";
 import { MediaProcessingService } from "../../../../core/services/media/media-processing.service";
+import { LoaderComponent } from "../../../../shared/components/loader-component/loader.component";
 
 @Component({
     selector: "app-messages-chat",
@@ -28,16 +29,17 @@ import { MediaProcessingService } from "../../../../core/services/media/media-pr
     templateUrl: "./messages-chat.component.html",
     styleUrls: ["./messages-chat.component.scss"],
     imports: [
-        MatIcon,
-        FormsModule,
-        CommonModule,
-        MessageRendererComponent,
-        GenericButtonComponent,
-        MatButtonModule,
-        BasicInputComponent,
-        TranslateModule,
-        MessageComposerComponent
-    ]
+    MatIcon,
+    FormsModule,
+    CommonModule,
+    MessageRendererComponent,
+    GenericButtonComponent,
+    MatButtonModule,
+    BasicInputComponent,
+    TranslateModule,
+    MessageComposerComponent,
+    LoaderComponent
+]
 })
 
 export class MessagesChatComponent implements OnInit, OnChanges {
@@ -45,6 +47,14 @@ export class MessagesChatComponent implements OnInit, OnChanges {
     onlineUsers$: any;
     usersMap: Map<string, any> = new Map();
     messages: any[] = [];
+
+    isLoadingInitialMessages = false;
+    isLoadingOlderMessages = false;
+    hasMoreMessages = true;
+
+    private readonly messagesPageSize = 25;
+    private oldestMessageCursor: string | null = null;
+    private isRestoringInitialScroll = false;
 
     ilustrationDirect: string = '/assets/app/media/undraw_message-sent_iyz6.svg'
 
@@ -89,10 +99,7 @@ export class MessagesChatComponent implements OnInit, OnChanges {
                 }
 
                 this.messages = this.normalizeMessages(msgs);
-
-                setTimeout(() => {
-                    this.scrollToBottom();
-                }, 0);
+                this.updateOldestMessageCursor();
             });
     }
 
@@ -102,6 +109,10 @@ export class MessagesChatComponent implements OnInit, OnChanges {
         }
 
         this.messages = [];
+        this.oldestMessageCursor = null;
+        this.hasMoreMessages = true;
+        this.isLoadingInitialMessages = true;
+        this.isLoadingOlderMessages = false;
 
         this.messagesStore.setUsers(this.conversation.participants);
         this.messagesStore.setActiveConversation(this.conversation.id);
@@ -110,28 +121,148 @@ export class MessagesChatComponent implements OnInit, OnChanges {
 
         this.chatService.joinConversation(this.conversation.id);
 
-        this.messagesService
-            .getMessages(this.conversation.id, true)
-            .subscribe((msgs: any) => {
-
-                this.messages = this.normalizeMessages(msgs ?? []);
-
-                this.messagesStore.setActiveMessages(this.messages);
-
-                this.messagesService.updateMessagesCache(
-                    this.conversation.id,
-                    this.messages
-                );
-
-                setTimeout(() => {
-                    this.scrollToBottom();
-                    this.markMessagesAsRead();
-                }, 100);
-            });
+        this.loadInitialMessages();
     }
 
     ngOnDestroy(): void {
         this.store.clearActiveConversation();
+    }
+
+    private loadInitialMessages(): void {
+        if (!this.conversation?.id) {
+            return;
+        }
+
+        this.messagesService
+            .getMessages(this.conversation.id, true, null, this.messagesPageSize)
+            .subscribe({
+                next: (msgs: any) => {
+                    this.isRestoringInitialScroll = true;
+                    this.messages = this.normalizeMessages(msgs ?? []);
+                    this.updateOldestMessageCursor();
+
+                    this.hasMoreMessages = (msgs ?? []).length >= this.messagesPageSize;
+
+                    this.messagesStore.setActiveMessages(this.messages);
+
+                    this.messagesService.updateMessagesCache(
+                        this.conversation.id,
+                        this.messages
+                    );
+
+                    this.scrollToBottomInstant(() => {
+                        this.markMessagesAsRead();
+                        this.isRestoringInitialScroll = false;
+                    });
+                },
+                complete: () => {
+                    this.isLoadingInitialMessages = false;
+                },
+                error: () => {
+                    this.isLoadingInitialMessages = false;
+                }
+            });
+    }
+
+    private scrollToBottomInstant(afterScroll?: () => void): void {
+        const container = this.chatBody?.nativeElement;
+
+        if (!container) {
+            afterScroll?.();
+            return;
+        }
+
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+                container.scrollTop = container.scrollHeight;
+                afterScroll?.();
+            });
+        });
+    }
+
+    onChatScroll(): void {
+        const container = this.chatBody?.nativeElement;
+
+        if (
+            !container ||
+            this.isRestoringInitialScroll ||
+            this.isLoadingOlderMessages ||
+            this.isLoadingInitialMessages ||
+            !this.hasMoreMessages
+        ) {
+            return;
+        }
+
+        if (container.scrollTop > 120) {
+            return;
+        }
+
+        this.loadOlderMessages();
+    }
+
+    private loadOlderMessages(): void {
+        if (!this.conversation?.id || !this.oldestMessageCursor) {
+            return;
+        }
+
+        const container = this.chatBody?.nativeElement;
+        const previousScrollHeight = container?.scrollHeight ?? 0;
+        const previousScrollTop = container?.scrollTop ?? 0;
+
+        this.isLoadingOlderMessages = true;
+
+        this.messagesService
+            .getMessages(this.conversation.id, true, this.oldestMessageCursor, this.messagesPageSize)
+            .subscribe({
+                next: (olderMessages: any) => {
+                    const normalizedOlderMessages = this.normalizeMessages(olderMessages ?? []);
+
+                    if (normalizedOlderMessages.length === 0) {
+                        this.hasMoreMessages = false;
+                        return;
+                    }
+
+                    const currentMessagesByKey = new Map<string, any>();
+
+                    [...normalizedOlderMessages, ...this.messages].forEach(message => {
+                        currentMessagesByKey.set(this.getMessageUniqueKey(message), message);
+                    });
+
+                    this.messages = this.normalizeMessages(Array.from(currentMessagesByKey.values()));
+
+                    this.updateOldestMessageCursor();
+
+                    this.hasMoreMessages = normalizedOlderMessages.length >= this.messagesPageSize;
+
+                    this.messagesStore.setActiveMessages(this.messages);
+
+                    this.messagesService.updateMessagesCache(
+                        this.conversation.id,
+                        this.messages
+                    );
+
+                    setTimeout(() => {
+                        const newScrollHeight = container?.scrollHeight ?? 0;
+
+                        if (container) {
+                            container.scrollTop =
+                                newScrollHeight - previousScrollHeight + previousScrollTop;
+                        }
+                    }, 0);
+                },
+                complete: () => {
+                    this.isLoadingOlderMessages = false;
+                },
+                error: () => {
+                    this.isLoadingOlderMessages = false;
+                }
+            });
+    }
+
+    private updateOldestMessageCursor(): void {
+        const oldestMessage = this.messages?.[0];
+
+        this.oldestMessageCursor = oldestMessage?.createdAt ?? null;
     }
 
     // =========================
@@ -311,13 +442,7 @@ export class MessagesChatComponent implements OnInit, OnChanges {
     }
 
     loadMessages() {
-        this.messagesService.getMessages(this.conversation.id)
-            .subscribe((msgs: any) => {
-
-                this.messagesStore.setActiveMessages(this.normalizeMessages(msgs ?? []));
-
-                setTimeout(() => this.scrollToBottom(), 0);
-            });
+        this.loadInitialMessages();
     }
 
     markMessagesAsRead() {
@@ -374,8 +499,7 @@ export class MessagesChatComponent implements OnInit, OnChanges {
     // =========================
 
     private scrollToBottom() {
-        if (!this.chatBody) return;
-        this.chatBody.nativeElement.scrollTop = this.chatBody.nativeElement.scrollHeight;
+        this.scrollToBottomInstant();
     }
 
     // =======================

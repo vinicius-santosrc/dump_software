@@ -8,12 +8,12 @@
             (click)="goToPreviousGroup()" aria-label="Abrir stories anteriores">
             @if (previousGroup && previousGroup.stories.length > 0) {
             <div class="memorie-page__side-overlay"></div>
-            <img class="memorie-page__side-image"
+            <img loading="lazy" decoding="async" class="memorie-page__side-image"
                 [src]="previousGroup.stories?.[0]?.thumbnail || previousGroup.stories?.[0]?.photoUrl || 'assets/app/media/default-avatar.webp'"
                 [alt]="previousGroup.user?.username || 'story anterior'" />
 
             <div class="memorie-page__side-user">
-                <img class="memorie-page__side-avatar"
+                <img loading="lazy" decoding="async" class="memorie-page__side-avatar"
                     [src]="previousGroup.user?.profilePictureUrl || 'assets/app/media/default-avatar.webp'"
                     [alt]="previousGroup.user?.username || 'avatar'" />
                 <div class="memorie-page__side-meta">
@@ -57,12 +57,12 @@
             aria-label="Abrir próximos stories">
             @if (nextGroup && nextGroup.stories.length > 0) {
             <div class="memorie-page__side-overlay"></div>
-            <img class="memorie-page__side-image"
+            <img loading="lazy" decoding="async" class="memorie-page__side-image"
                 [src]="nextGroup.stories?.[0]?.thumbnail || nextGroup.stories?.[0]?.photoUrl || 'assets/app/media/default-avatar.webp'"
                 [alt]="nextGroup.user?.username || 'próximo story'" />
 
             <div class="memorie-page__side-user">
-                <img class="memorie-page__side-avatar"
+                <img loading="lazy" decoding="async" class="memorie-page__side-avatar"
                     [src]="nextGroup.user?.profilePictureUrl || 'assets/app/media/default-avatar.webp'"
                     [alt]="nextGroup.user?.username || 'avatar'" />
                 <div class="memorie-page__side-meta">

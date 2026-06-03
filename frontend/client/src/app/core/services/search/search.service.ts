@@ -1,24 +1,17 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { debounceTime, map, switchMap } from 'rxjs/operators';
-import { Observable, Subject } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 import { API_CONFIG } from '../../config/api.config';
 import { SearchResponse } from '../../models/search/search.model';
 
 @Injectable({ providedIn: 'root' })
 export class SearchService {
 
-    private readonly search$ = new Subject<string>();
-
     constructor(private readonly http: HttpClient) { }
 
     search(query: string): Observable<SearchResponse> {
-        this.search$.next(query);
-
-        return this.search$.pipe(
-            debounceTime(300),
-            switchMap(q => this.searchOnce(q))
-        );
+        return this.searchOnce(query);
     }
 
     searchOnce(query: string): Observable<SearchResponse> {

@@ -270,6 +270,14 @@ export class MessagesStoreService {
         return this.onlineUsers$.value;
     }
 
+    isUserOnline(userId: string): boolean {
+        if (!userId) {
+            return false;
+        }
+
+        return this.onlineUsers$.value.has(userId);
+    }
+
     setUsers(users: any[]) {
         const map = new Map<string, any>();
 

@@ -11,14 +11,16 @@ import { ConversationItemComponent } from "../../../../shared/components/convers
 import { MatButton } from "@angular/material/button";
 import { TranslateModule } from "@ngx-translate/core";
 import { BasicInputComponent } from "../../../../shared/components/basic-input-component/basic-input.component";
-import { MatTabGroup, MatTab } from "@angular/material/tabs";
+import { MatTabGroup, MatTab, MatTabLabel } from "@angular/material/tabs";
 import { MemoriesComponent } from "../../../../layout/header/memories-component/memories.component";
+import { Router } from "@angular/router";
+import { MatMenuContent } from "@angular/material/menu";
 
 @Component({
     selector: "app-messages-sidebar",
     templateUrl: "./messages-sidebar.component.html",
     styleUrls: ["./messages-sidebar.component.scss"],
-    imports: [MatIcon, CommonModule, ConversationItemComponent, MatButton, TranslateModule, BasicInputComponent, MatTabGroup, MatTab, MemoriesComponent]
+    imports: [MatIcon, CommonModule, ConversationItemComponent, MatButton, TranslateModule, BasicInputComponent, MatTabGroup, MatTab, MatTabLabel, MemoriesComponent, MatMenuContent]
 })
 @Injectable({
     providedIn: 'root'
@@ -32,7 +34,8 @@ export class MessagesSidebarComponent {
     constructor(
         private readonly userService: UserService,
         private readonly dialog: MatDialog,
-        private readonly store: MessagesStoreService
+        private readonly store: MessagesStoreService,
+        private readonly router: Router,
     ) {
         this.userService.user$.subscribe((user: any) => {
             this.current_user = user;
@@ -151,5 +154,15 @@ export class MessagesSidebarComponent {
     }
     hasUnread(convo: any): boolean {
         return this.getUnreadCount(convo) > 0;
+    }
+
+    handleMobileTabChange(index: number): void {
+        if (index === 0) {
+            this.openActivity();
+        }
+    }
+
+    openActivity() {
+        this.router.navigate(['/activity/inbox']);
     }
 }

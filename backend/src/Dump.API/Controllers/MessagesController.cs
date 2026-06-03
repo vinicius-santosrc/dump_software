@@ -29,9 +29,13 @@ public class MessagesController : ControllerBase
     }
 
     [HttpGet("{conversationId}")]
-    public async Task<IActionResult> GetMessages(string conversationId)
+    public async Task<IActionResult> GetMessages(
+        string conversationId,
+        [FromQuery] DateTime? before = null,
+        [FromQuery] int limit = 25
+    )
     {
-        var messages = await _service.GetMessages(conversationId);
+        var messages = await _service.GetMessages(conversationId, before, limit);
         return Ok(messages);
     }
 

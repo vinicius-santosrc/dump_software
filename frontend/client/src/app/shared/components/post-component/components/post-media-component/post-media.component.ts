@@ -34,6 +34,8 @@ export class PostMediaComponent implements AfterViewInit, OnDestroy, OnChanges {
 
     private tapTimeout: any;
     private mediaObserver?: IntersectionObserver;
+    private lazyMediaLoadTimer?: any;
+    private readonly lazyFullMediaDelayMs = 2500;
     private viewInitialized: boolean = false;
     showLike = false;
     showDislike = false;
@@ -49,7 +51,7 @@ export class PostMediaComponent implements AfterViewInit, OnDestroy, OnChanges {
     ngOnChanges(changes: SimpleChanges) {
         if (changes['media']) {
             this.resolvedMedia = [...(this.media ?? [])];
-            this.isLoading = !this.hasLazyVideo();
+            this.isLoading = this.hasLazyMedia();
             this.hasLoadedFullMedia = false;
             this.isLoadingFullMedia = false;
             this.currentIndex = 0;
@@ -63,22 +65,22 @@ export class PostMediaComponent implements AfterViewInit, OnDestroy, OnChanges {
     ngAfterViewInit() {
         this.viewInitialized = true;
         this.resolvedMedia = [...(this.media ?? [])];
-        this.isLoading = !this.hasLazyVideo();
+        this.isLoading = this.hasLazyMedia();
         this.scheduleLazyMediaLoad();
     }
 
     private scheduleLazyMediaLoad() {
         queueMicrotask(() => {
             this.observeMediaVisibility();
-
-            if (this.hasLazyVideo()) {
-                this.loadFullMedia();
-            }
         });
     }
 
     ngOnDestroy() {
         this.mediaObserver?.disconnect();
+        if (this.lazyMediaLoadTimer) {
+            clearTimeout(this.lazyMediaLoadTimer);
+            this.lazyMediaLoadTimer = undefined;
+        }
         if (this.tapTimeout) {
             clearTimeout(this.tapTimeout);
         }
@@ -87,31 +89,55 @@ export class PostMediaComponent implements AfterViewInit, OnDestroy, OnChanges {
     private observeMediaVisibility() {
         this.mediaObserver?.disconnect();
 
-        if (!this.hasLazyVideo()) return;
+        if (!this.hasLazyMedia()) return;
 
         this.mediaObserver = new IntersectionObserver(
             ([entry]) => {
-                if (entry.isIntersecting) {
-                    this.loadFullMedia();
-                    this.mediaObserver?.disconnect();
+                if (!entry.isIntersecting || entry.intersectionRatio < 0.6) {
+                    return;
                 }
+
+                this.scheduleFullMediaLoadAfterIdle();
+                this.mediaObserver?.disconnect();
             },
             {
                 root: null,
-                threshold: 0.35,
-                rootMargin: '350px 0px'
+                threshold: 0.6,
+                rootMargin: '0px 0px'
             }
         );
 
         this.mediaObserver.observe(this.hostElement.nativeElement);
     }
 
-    private hasLazyVideo(): boolean {
-        return this.resolvedMedia.some(item => item.type === 'video' && !item.url && !!item.thumbnail);
+    private scheduleFullMediaLoadAfterIdle(): void {
+        if (this.hasLoadedFullMedia || this.isLoadingFullMedia || this.lazyMediaLoadTimer) {
+            return;
+        }
+
+        const load = () => {
+            this.lazyMediaLoadTimer = undefined;
+            this.loadFullMedia();
+        };
+
+        const requestIdle = (globalThis as any).requestIdleCallback;
+
+        if (typeof requestIdle === 'function') {
+            this.lazyMediaLoadTimer = requestIdle(load, { timeout: this.lazyFullMediaDelayMs });
+            return;
+        }
+
+        this.lazyMediaLoadTimer = setTimeout(load, this.lazyFullMediaDelayMs);
+    }
+
+    private hasLazyMedia(): boolean {
+        return this.resolvedMedia.some(item => !item.url);
     }
 
     private loadFullMedia() {
-        if (!this.postId || this.hasLoadedFullMedia || this.isLoadingFullMedia) return;
+        if (!this.postId || this.hasLoadedFullMedia || this.isLoadingFullMedia) {
+            return;
+        }
 
         this.isLoadingFullMedia = true;
 
@@ -122,12 +148,13 @@ export class PostMediaComponent implements AfterViewInit, OnDestroy, OnChanges {
                 if (Array.isArray(fullMedia) && fullMedia.length > 0) {
                     this.resolvedMedia = fullMedia;
                     this.hasLoadedFullMedia = true;
-                    this.isLoading = false;
                 }
 
+                this.isLoading = false;
                 this.isLoadingFullMedia = false;
             },
             error: () => {
+                this.isLoading = false;
                 this.isLoadingFullMedia = false;
             }
         });

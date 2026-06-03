@@ -14,7 +14,13 @@ import {
     ExploreTopic
 } from "../../core/models/feed/explore.model";
 import { ExploreFacadeService } from "../../core/services/explore/explore-facade.service";
+import { SearchService } from "../../core/services/search/search.service";
+import { RecentSearchService } from "../../core/services/search/recent-search.service";
+import { SearchResponse } from "../../core/models/search/search.model";
 import { BasicInputComponent } from "../../shared/components/basic-input-component/basic-input.component";
+import { LoaderComponent } from "../../shared/components/loader-component/loader.component";
+import { GenericCardUserComponent } from "../../shared/components/generic-card-user/generic-card-user.component";
+import { PostMediaComponent } from "../../shared/components/post-component/components/post-media-component/post-media.component";
 import { ExploreSectionComponent } from "./explore-section/explore-section.component";
 import { ExploreInsightsComponent } from "./explore-insights/explore-insights.component";
 import { ExploreLiveRailComponent } from "./explore-live-rail/explore-live-rail.component";
@@ -24,6 +30,7 @@ import { ExploreSectionModalComponent } from "./explore-section-modal/explore-se
 import { ExploreReelsLoopComponent } from "./explore-reels-loop/explore-reels-loop.component";
 import { GenericTextComponent } from "../../shared/components/generic-text/generic-text.component";
 import { TranslateModule } from "@ngx-translate/core";
+import { debounceTime, distinctUntilChanged, Subject, switchMap, tap, finalize } from "rxjs";
 
 @Component({
     selector: "app-explore-page",
@@ -37,6 +44,9 @@ import { TranslateModule } from "@ngx-translate/core";
         MatIconModule,
         MatDialogModule,
         BasicInputComponent,
+        LoaderComponent,
+        GenericCardUserComponent,
+        PostMediaComponent,
         ExploreTopicRailComponent,
         ExploreLiveRailComponent,
         ExploreInsightsComponent,
@@ -48,6 +58,11 @@ import { TranslateModule } from "@ngx-translate/core";
 })
 export class ExplorePageComponent implements OnInit {
     searchTerm = "";
+    searchResults: SearchResponse = {} as SearchResponse;
+    searchLoading = false;
+    recentSearches: any[] = [];
+    private readonly searchInput$ = new Subject<string>();
+
     selectedTopicId = "trending";
     loadingTopics = true;
     loadingSections = true;
@@ -59,17 +74,81 @@ export class ExplorePageComponent implements OnInit {
     trendingStickers: ExploreSticker[] = [];
     communitySignals: ExploreCommunitySignal[] = [];
 
+    get hasSearchResults(): boolean {
+        return Boolean(
+            this.searchTerm &&
+            !this.searchLoading &&
+            ((this.searchResults?.users?.length ?? 0) > 0 || (this.searchResults?.posts?.length ?? 0) > 0)
+        );
+    }
+
     activeSection: ExploreSection | null = null;
     activeReelSection: ExploreSection | null = null;
     activeReelIndex = 0;
 
     constructor(
         private readonly dialog: MatDialog,
-        private readonly exploreFacade: ExploreFacadeService
+        private readonly exploreFacade: ExploreFacadeService,
+        private readonly searchService: SearchService,
+        private readonly recentSearchService: RecentSearchService
     ) { }
 
     ngOnInit(): void {
         this.loadExploreData();
+        this.loadRecentSearches();
+        this.bindSearch();
+    }
+
+    onSearchChange(query: string): void {
+        this.searchTerm = query?.trim() ?? "";
+
+        if (!this.searchTerm) {
+            this.searchLoading = false;
+            this.searchResults = {} as SearchResponse;
+            return;
+        }
+
+        this.searchInput$.next(this.searchTerm);
+    }
+
+    addRecentSearch(item: any): void {
+        this.recentSearchService.add(item);
+        this.loadRecentSearches();
+    }
+
+    removeRecentSearch(id: string): void {
+        this.recentSearchService.remove(id);
+        this.loadRecentSearches();
+    }
+
+    clearRecentSearches(): void {
+        this.recentSearchService.clear();
+        this.loadRecentSearches();
+    }
+
+    private loadRecentSearches(): void {
+        this.recentSearches = this.recentSearchService.getAll();
+    }
+
+    private bindSearch(): void {
+        this.searchInput$
+            .pipe(
+                debounceTime(250),
+                distinctUntilChanged(),
+                tap(() => this.searchLoading = true),
+                switchMap(query => this.searchService.search(query).pipe(
+                    finalize(() => this.searchLoading = false)
+                ))
+            )
+            .subscribe({
+                next: (res: any) => {
+                    this.searchResults = res ?? {} as SearchResponse;
+                },
+                error: error => {
+                    console.error("[EXPLORE_SEARCH] Erro ao buscar", error);
+                    this.searchResults = {} as SearchResponse;
+                }
+            });
     }
 
     get selectedTopic(): ExploreTopic | undefined {

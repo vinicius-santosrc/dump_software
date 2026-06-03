@@ -34,11 +34,11 @@
                     <div class="sidebar-button-content">
 
                         @if(item.iconUrl && item.iconUrl != '') {
-                        <img [src]="item.iconUrl" alt="" [class.selected-svg]="isSelected(item)" />
+                        <img loading="lazy" decoding="async" [src]="item.iconUrl" alt="" [class.selected-svg]="isSelected(item)" />
                         }
                         @else {
                         <span class="sidebar__icon-wrapper">
-                            <mat-icon class="sidebar-symbol-icon" fontSet="material-symbols-outlined">
+                            <mat-icon [class.selected]="isSelected(item)" class="sidebar-symbol-icon" fontSet="material-symbols-outlined">
                             {{ item.icon }}
                         </mat-icon>
 
@@ -50,7 +50,7 @@
                         </span>
                         }
 
-                        <span class="sidebar__label">
+                        <span [class.selected]="isSelected(item)" class="sidebar__label">
                             {{ item.label | translate }}
                         </span>
                     </div>
@@ -67,17 +67,17 @@
                         @if(option.icon) {
 
                         @if(option.iconUrl && option.iconUrl != '') {
-                        <img [src]="option.iconUrl" alt="" />
+                        <img loading="lazy" decoding="async" [src]="option.iconUrl" alt="" />
                         }
                         @else {
-                        <mat-icon [fontSet]="'material-symbols-rounded'">
+                        <mat-icon [class.selected]="isSelected(item)" [fontSet]="'material-symbols-rounded'">
                             {{ option.icon }}
                         </mat-icon>
                         }
 
                         }
 
-                        <span class="sidebar__label">
+                        <span [class.selected]="isSelected(item)" class="sidebar__label">
                             {{ option.label | translate }}
                         </span>
                     </button>
@@ -97,11 +97,11 @@
                     <div class="sidebar-button-content">
 
                         @if(item.iconUrl && item.iconUrl != '') {
-                        <img [src]="item.iconUrl" alt="" [class.selected-svg]="isSelected(item)" />
+                        <img loading="lazy" decoding="async" [src]="item.iconUrl" alt="" [class.selected-svg]="isSelected(item)" />
                         }
                         @else {
                         <span class="sidebar__icon-wrapper">
-                            <mat-icon class="sidebar-symbol-icon" fontSet="material-symbols-outlined">
+                            <mat-icon [class.selected]="isSelected(item)" class="sidebar-symbol-icon" fontSet="material-symbols-outlined">
                             {{ item.icon }}
                         </mat-icon>
 
@@ -113,7 +113,7 @@
                         </span>
                         }
 
-                        <span class="sidebar__label">
+                        <span [class.selected]="isSelected(item)" class="sidebar__label">
                             {{ item.label | translate }}
                         </span>
                     </div>
@@ -142,11 +142,11 @@
     <button class="mobile-item" [matMenuTriggerFor]="mobileMenu" aria-label="Abrir menu">
 
         @if(item.iconUrl && item.iconUrl != '') {
-        <img [src]="item.iconUrl" alt="" class="iconImage" [class.selected-svg]="isSelected(item)" />
+        <img loading="lazy" decoding="async" [src]="item.iconUrl" alt="" class="iconImage" [class.selected-svg]="isSelected(item)" />
         }
         @else {
         <span class="sidebar__icon-wrapper">
-            <mat-icon class="sidebar-symbol-icon" fontSet="material-symbols-outlined">
+            <mat-icon [class.selected]="isSelected(item)" class="sidebar-symbol-icon" fontSet="material-symbols-outlined">
                 {{ item.icon }}
             </mat-icon>
 
@@ -167,10 +167,10 @@
 
             @if(option.icon) {
             @if(option.iconUrl && option.iconUrl != '') {
-            <img [src]="option.iconUrl" alt="" />
+            <img loading="lazy" decoding="async" [src]="option.iconUrl" alt="" />
             }
             @else {
-            <mat-icon [fontSet]="'material-symbols-rounded'">
+            <mat-icon [class.selected]="isSelected(item)" [fontSet]="'material-symbols-rounded'">
                 {{ option.icon }}
             </mat-icon>
             }
@@ -191,11 +191,11 @@
     <button class="mobile-item" (click)="navigate(item); selected = item.icon">
 
         @if(item.iconUrl && item.iconUrl != '') {
-        <img [src]="item.iconUrl" alt="" class="iconImage" [class.selected-svg]="isSelected(item)" />
+        <img loading="lazy" decoding="async" [src]="item.iconUrl" alt="" class="iconImage" [class.selected-svg]="isSelected(item)" />
         }
         @else {
         <span class="sidebar__icon-wrapper">
-            <mat-icon class="sidebar-symbol-icon" fontSet="material-symbols-outlined">
+            <mat-icon [class.selected]="isSelected(item)" class="sidebar-symbol-icon" fontSet="material-symbols-outlined">
                 {{ item.icon }}
             </mat-icon>
 

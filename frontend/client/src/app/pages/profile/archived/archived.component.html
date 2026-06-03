@@ -18,7 +18,7 @@
                 @for (post of archivedPosts; track post.id) {
                 <div class="post-card" (click)="navigateToPost(post)" >
                     @if(post.media[0].type === "image") {
-                    <img [src]="post.media[0]?.url" />
+                    <img loading="lazy" decoding="async" [src]="post.media[0]?.url" />
                     } @else {
                     <video [src]="post.media[0]?.url"></video>
                     }

@@ -24,6 +24,10 @@ export const locale = {
                 CONTINUE: 'Continuar'
             }
         },
+        INBOX: {
+            ACTIVITY: "Atividade",
+            MESSAGES: "Conversas",
+        },
         HEADER: {
             ACTIONS: {
                 SIDEBAR: {
@@ -275,10 +279,12 @@ export const locale = {
                 }
             },
             EDIT_PROFILE: {
-                HEADER: "Edição de perfil",
-                SUBTITLE: "Conclua as etapas a seguir para atualizar seu perfil.",
+                HEADER: "Configurações",
+                SUBTITLE: "Conclua as etapas a seguir para atualizar suas configurações.",
                 TABS: {
-                    PROFILE: "Perfil"
+                    PROFILE: "Perfil",
+                    NOTIFICATIONS: "Notificações",
+                    SETTINGS: "Configurações"
                 },
                 FORM: {
                     NAME: "Nome",

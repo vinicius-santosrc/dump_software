@@ -90,6 +90,27 @@ public class PostsRepository : IPostsRepository
         ));
     }
 
+    private static BsonDocument ProfileGridMediaStage()
+    {
+        return new BsonDocument("$set", new BsonDocument("media",
+            new BsonDocument("$map", new BsonDocument
+            {
+                { "input", "$media" },
+                { "as", "m" },
+                { "in", new BsonDocument
+                    {
+                        { "url", string.Empty },
+                        { "thumbnail", "$$m.thumbnail" },
+                        { "width", "$$m.width" },
+                        { "height", "$$m.height" },
+                        { "type", "$$m.type" },
+                        { "duration", new BsonDocument("$ifNull", new BsonArray { "$$m.duration", 0 }) }
+                    }
+                }
+            })
+        ));
+    }
+
     public async Task CreateAsync(Post post)
     {
         await _posts.InsertOneAsync(post);
@@ -122,7 +143,7 @@ public class PostsRepository : IPostsRepository
             .Match(filter)
             .Sort(Builders<Post>.Sort.Descending(p => p.CreatedAt))
             .Limit(limit)
-            .AppendStage<Post>(LightweightVideoMediaStage())
+            .AppendStage<Post>(ProfileGridMediaStage())
             .ToListAsync();
 
         return posts.ToArray();
@@ -167,7 +188,7 @@ public class PostsRepository : IPostsRepository
             .Match(filter)
             .Sort(Builders<Post>.Sort.Descending(p => p.CreatedAt))
             .Limit(limit)
-            .AppendStage<Post>(LightweightVideoMediaStage())
+            .AppendStage<Post>(ProfileGridMediaStage())
             .ToListAsync();
 
         return posts.ToArray();

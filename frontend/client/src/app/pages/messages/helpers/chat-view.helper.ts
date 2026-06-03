@@ -42,7 +42,7 @@ export class ChatViewHelper {
                 (u: User) => u.id !== currentUserId
             );
 
-            return other?.email || '';
+            return other?.username;
         }
 
         return `${conversation.participants.length} members`;

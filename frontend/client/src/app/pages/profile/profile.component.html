@@ -59,7 +59,7 @@
     <div class="stories" *ngIf="user?.stories?.length">
         <div class="story" *ngFor="let story of user.stories">
             <div class="story-border">
-                <img [src]="story.url" />
+                <img loading="lazy" decoding="async" [src]="story.url" />
             </div>
         </div>
     </div>
@@ -85,10 +85,10 @@
             @for (post of filteredPosts; track post.id) {
             <div class="post-card" (click)="navigateToPost(post)">
                 @if(post.media[0].type === "image") {
-                <img [src]="post.media[0]?.url || post.media[0]?.thumbnail" />
+                <img loading="lazy" decoding="async" [src]="post.media[0]?.url || post.media[0]?.thumbnail" />
                 } @else {
                 <div class="video-thumbnail">
-                    <img [src]="post.media[0]?.thumbnail" alt="video thumbnail" />
+                    <img loading="lazy" decoding="async" [src]="post.media[0]?.thumbnail" alt="video thumbnail" />
                     <mat-icon class="video-thumbnail-icon">play_arrow</mat-icon>
                 </div>
                 }

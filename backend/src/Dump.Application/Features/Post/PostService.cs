@@ -108,13 +108,31 @@ public class PostService
         }).ToList();
     }
 
+    private static List<PostMedia> CreateProfileGridMedia(List<PostMedia>? media)
+    {
+        if (media == null || media.Count == 0)
+            return new List<PostMedia>();
+
+        return media.Select(item => new PostMedia
+        {
+            Url = string.Empty,
+            Thumbnail = item.Thumbnail,
+            Width = item.Width,
+            Height = item.Height,
+            Type = item.Type,
+            Duration = item.Duration
+        }).ToList();
+    }
+
     private async Task<Dump.Domain.Entities.PostResponse> MapToResponse(
         Dump.Domain.Entities.Post post,
         bool lightweightMedia = false,
-        bool includeComments = true
+        bool includeComments = true,
+        bool profileGridMedia = false,
+        Dump.Domain.Entities.User? userOverride = null
     )
     {
-        var user = await _userRepository.GetByIdAsync(post.User);
+        var user = userOverride ?? await _userRepository.GetByIdAsync(post.User);
         var comments = includeComments
             ? await this.MapComments(await _commentsRepository.GetByPostIdAsync(post.Id))
             : Array.Empty<Comment>();
@@ -126,7 +144,7 @@ public class PostService
         {
             Id = post.Id,
             Caption = post.Caption,
-            Media = lightweightMedia ? CreateLightweightMedia(post.Media) : post.Media,
+            Media = profileGridMedia ? CreateProfileGridMedia(post.Media) : lightweightMedia ? CreateLightweightMedia(post.Media) : post.Media,
             Location = post.Location,
             Hashtags = post.Hashtags,
             Mentions = post.Mentions,
@@ -204,12 +222,23 @@ public class PostService
     {
         limit = Math.Clamp(limit, 1, 24);
 
-        var posts = await _postRepository.GetByUserProfile(id, cursor, limit);
+        var userTask = _userRepository.GetByIdAsync(id);
+        var postsTask = _postRepository.GetByUserProfile(id, cursor, limit);
+
+        await Task.WhenAll(userTask, postsTask);
+
+        var user = await userTask;
+        var posts = await postsTask;
+
+        if (user == null)
+            throw new Exception("User not found");
 
         var responses = await Task.WhenAll(posts.Select(post => MapToResponse(
             post,
-            lightweightMedia: true,
-            includeComments: false
+            lightweightMedia: false,
+            includeComments: false,
+            profileGridMedia: true,
+            userOverride: user
         )));
 
         return responses

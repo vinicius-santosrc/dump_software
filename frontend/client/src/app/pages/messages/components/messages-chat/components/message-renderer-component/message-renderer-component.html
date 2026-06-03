@@ -1,93 +1,76 @@
 <div class="message-renderer" [class.message-renderer--mine]="isMine">
     <div class="message-actions" [class.message-actions--mine]="isMine">
-        <button type="button" class="message-action" [attr.aria-label]="'MESSAGES_INBOX.CHAT.ACTIONS.REACT' | translate">
+        <button type="button" class="message-action"
+            [attr.aria-label]="'MESSAGES_INBOX.CHAT.ACTIONS.REACT' | translate">
             <mat-icon>add_reaction</mat-icon>
         </button>
 
-        <button type="button" class="message-action" [attr.aria-label]="'MESSAGES_INBOX.CHAT.ACTIONS.REPLY' | translate">
+        <button type="button" class="message-action"
+            [attr.aria-label]="'MESSAGES_INBOX.CHAT.ACTIONS.REPLY' | translate">
             <mat-icon>reply</mat-icon>
         </button>
 
-        <button type="button" class="message-action" [attr.aria-label]="'MESSAGES_INBOX.CHAT.ACTIONS.MORE_OPTIONS' | translate">
+        <button type="button" class="message-action"
+            [attr.aria-label]="'MESSAGES_INBOX.CHAT.ACTIONS.MORE_OPTIONS' | translate">
             <mat-icon>more_horiz</mat-icon>
         </button>
     </div>
-@if (type === 'text') {
-    <div
-        class="message__bubble message__bubble--text"
-        [class.message__bubble--mine]="isMine"
+    @if (type === 'text') {
+    <div class="message__bubble message__bubble--text" [class.message__bubble--mine]="isMine"
         [class.message__bubble--deleted]="contentUnavailable">
 
         @if (contentUnavailable) {
-            <span class="message-deleted">
-                {{ 'MESSAGES_INBOX.CHAT.MESSAGE.DELETED' | translate }}
-            </span>
+        <span class="message-deleted">
+            {{ 'MESSAGES_INBOX.CHAT.MESSAGE.DELETED' | translate }}
+        </span>
         }
         @else {
-            <app-generic-text
-                [text]="messageText"
-                [textColor]="isMine ? 'white' : undefined"
-                [expandable]="true"
-                [maxCharacters]="220"
-                [clickableMentions]="true"
-                [clickableHashtags]="true"
-                [clickableLinks]="true" />
-            <span class="message-time" [class.message-time--mine]="isMine">
-                {{ messageTime }}
-            </span>
+        <app-generic-text [text]="messageText" [textColor]="isMine ? 'white' : 'none'" [expandable]="true"
+            [maxCharacters]="220" [clickableMentions]="true" [clickableHashtags]="true" [clickableLinks]="true" />
+        <span class="message-time" [class.message-time--mine]="isMine">
+            {{ messageTime }}
+        </span>
         }
     </div>
-}
+    }
 
-@if (type === 'image') {
-    <div
-        class="message__bubble message__bubble--media"
-        [class.message__bubble--mine]="isMine">
+    @if (type === 'image') {
+    <div class="message__bubble message__bubble--media" [class.message__bubble--mine]="isMine">
 
-        <button
-            type="button"
-            class="message-media-card"
+        <button type="button" class="message-media-card"
             [attr.aria-label]="'MESSAGES_INBOX.CHAT.MEDIA.OPEN_IMAGE' | translate">
-            <app-post-media
-                class="message-media-card__image"
-                [media]="imageMedia" />
+            <app-post-media class="message-media-card__image" [media]="imageMedia" />
         </button>
         <span class="message-time message-time--floating" [class.message-time--mine]="isMine">
             {{ messageTime }}
         </span>
     </div>
-}
+    }
 
-@if (type === 'audio') {
-<div class="message__bubble message__bubble--audio" [class.message__bubble--mine]="isMine">
-    <app-message-audio-player [src]="audioUrl" [isMine]="isMine" [senderAvatar]="message?.sender?.profilePictureUrl"
-        [showAvatar]="true">
-    </app-message-audio-player>
-    <span class="message-time" [class.message-time--mine]="isMine">
-        {{ messageTime }}
-    </span>
-</div>
-}
+    @if (type === 'audio') {
+    <div class="message__bubble message__bubble--audio" [class.message__bubble--mine]="isMine">
+        <app-message-audio-player [src]="audioUrl" [isMine]="isMine" [senderAvatar]="message?.sender?.profilePictureUrl"
+            [showAvatar]="true">
+        </app-message-audio-player>
+        <span class="message-time" [class.message-time--mine]="isMine">
+            {{ messageTime }}
+        </span>
+    </div>
+    }
 
-@if (type === 'sticker') {
-    <div
-        class="message__bubble message__bubble--sticker"
-        [class.message__bubble--mine]="isMine">
+    @if (type === 'sticker') {
+    <div class="message__bubble message__bubble--sticker" [class.message__bubble--mine]="isMine">
 
-        <img
-            class="message-sticker"
-            [src]="stickerUrl"
+        <img loading="lazy" decoding="async" class="message-sticker" [src]="stickerUrl"
             [alt]="'MESSAGES_INBOX.CHAT.MEDIA.STICKER_ALT' | translate" />
         <span class="message-time message-time--floating" [class.message-time--mine]="isMine">
             {{ messageTime }}
         </span>
     </div>
-}
+    }
 
-@if (type === 'post') {
-    <div
-        class="message__bubble message__bubble--post"
-        [class.message__bubble--mine]="isMine">
+    @if (type === 'post') {
+    <div class="message__bubble message__bubble--post" [class.message__bubble--mine]="isMine">
 
         <div class="post-preview">
             <p class="post-label">
@@ -95,78 +78,64 @@
             </p>
 
             @if (contentUnavailable) {
-                <div class="message-unavailable">
-                    {{ 'MESSAGES_INBOX.CHAT.POST.UNAVAILABLE' | translate }}
-                </div>
+            <div class="message-unavailable">
+                {{ 'MESSAGES_INBOX.CHAT.POST.UNAVAILABLE' | translate }}
+            </div>
             }
             @else {
-                <button
-                    type="button"
-                    class="post-card"
-                    (click)="goToPost(message?.post)">
+            <button type="button" class="post-card" (click)="goToPost(message?.post)">
 
-                    <app-post-media
-                        class="media-post"
-                        [media]="message?.post?.media || []" />
+                <app-post-media class="media-post" [media]="message?.post?.media || []" />
 
-                    <div class="post-info">
-                        <strong>{{ message?.post?.user?.fullName }}</strong>
-                        <p>{{ message?.post?.caption }}</p>
-                    </div>
-                </button>
+                <div class="post-info">
+                    <strong>{{ message?.post?.user?.fullName }}</strong>
+                    <p>{{ message?.post?.caption }}</p>
+                </div>
+            </button>
             }
         </div>
         <span class="message-time" [class.message-time--mine]="isMine">
             {{ messageTime }}
         </span>
     </div>
-}
+    }
 
-@if (type === 'story') {
-    <div
-        class="message__bubble message__bubble--post"
-        [class.message__bubble--mine]="isMine">
+    @if (type === 'story') {
+    <div class="message__bubble message__bubble--post" [class.message__bubble--mine]="isMine">
 
         <div class="post-preview">
             <p class="post-label">{{ 'MESSAGES_INBOX.CHAT.STORY.LABEL' | translate }}</p>
 
             @if (contentUnavailable) {
-                <div class="message-unavailable">
-                    {{ 'MESSAGES_INBOX.CHAT.STORY.UNAVAILABLE' | translate }}
-                </div>
+            <div class="message-unavailable">
+                {{ 'MESSAGES_INBOX.CHAT.STORY.UNAVAILABLE' | translate }}
+            </div>
             }
             @else {
-                <button
-                    type="button"
-                    class="post-card post-card--story"
-                    (click)="goToStory(message?.story)">
+            <button type="button" class="post-card post-card--story" (click)="goToStory(message?.story)">
 
-                    @if (message?.story?.photoUrl || message?.story?.thumbnail) {
-                        <img
-                            class="story-preview-image"
-                            [src]="message?.story?.thumbnail || message?.story?.photoUrl"
-                            [alt]="'MESSAGES_INBOX.CHAT.STORY.ALT' | translate" />
-                    }
+                @if (message?.story?.photoUrl || message?.story?.thumbnail) {
+                <img loading="lazy" decoding="async" class="story-preview-image" [src]="message?.story?.thumbnail || message?.story?.photoUrl"
+                    [alt]="'MESSAGES_INBOX.CHAT.STORY.ALT' | translate" />
+                }
 
-                    <div class="post-info">
-                        <strong>{{ message?.story?.user?.username }}</strong>
-                        <p>{{ 'MESSAGES_INBOX.CHAT.BUTTON.SEE_STORY' | translate }}</p>
-                    </div>
-                </button>
+                <div class="post-info">
+                    <strong>{{ message?.story?.user?.username }}</strong>
+                    <p>{{ 'MESSAGES_INBOX.CHAT.BUTTON.SEE_STORY' | translate }}</p>
+                </div>
+            </button>
             }
         </div>
         <span class="message-time" [class.message-time--mine]="isMine">
             {{ messageTime }}
         </span>
     </div>
-}
+    }
 
     @if (statusText) {
-        <div
-            class="message-status"
-            [class.message-status--sending]="isSending"
-            [class.message-status--failed]="hasSendFailed">
-            {{ statusText }}
-        </div>
+    <div class="message-status" [class.message-status--sending]="isSending"
+        [class.message-status--failed]="hasSendFailed">
+        {{ statusText }}
+    </div>
     }
 </div>

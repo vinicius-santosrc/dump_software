@@ -6,7 +6,9 @@ public interface IMessagesRepository
 
     Task UpdateConversationLastMessageAsync(Message message);
 
-    Task<List<Message>> GetByConversationIdAsync(string conversationId, int page = 1, int pageSize = 20);
+    Task<List<Message>> GetByConversationIdAsync(string conversationId,
+        DateTime? before = null,
+        int limit = 25);
     Task<Conversation> GetByConversationId(string conversationId);
     Task CreateConversationAsync(Conversation conversation);
     Task<List<Conversation>> GetConversationsByUserIdAsync(string userId);

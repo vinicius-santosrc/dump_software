@@ -37,13 +37,33 @@ public class MessagesRepository : IMessagesRepository
         );
     }
 
-    public async Task<List<Message>> GetByConversationIdAsync(string conversationId, int page = 1, int pageSize = 20)
+    public async Task<List<Message>> GetByConversationIdAsync(
+        string conversationId,
+        DateTime? before = null,
+        int limit = 25
+    )
     {
-        return await _messages
-            .Find(m => m.ConversationId == conversationId)
-            // .Skip((page - 1) * pageSize)
-            // .Limit(pageSize)
+        limit = Math.Clamp(limit, 1, 50);
+
+        var filter = Builders<Message>.Filter.Eq(message => message.ConversationId, conversationId);
+
+        if (before.HasValue)
+        {
+            filter &= Builders<Message>.Filter.Lt(
+                message => message.CreatedAt,
+                before.Value.ToUniversalTime()
+            );
+        }
+
+        var messages = await _messages
+            .Find(filter)
+            .SortByDescending(message => message.CreatedAt)
+            .Limit(limit)
             .ToListAsync();
+
+        return messages
+            .OrderBy(message => message.CreatedAt)
+            .ToList();
     }
 
     public async Task<Conversation> GetByConversationId(string conversationId)

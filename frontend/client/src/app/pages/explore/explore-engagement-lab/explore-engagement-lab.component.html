@@ -31,7 +31,7 @@
         <div class="explore-social-signals">
             @for (signal of communitySignals; track signal.id) {
             <button type="button" class="explore-social-signal">
-                <img [src]="signal.avatarUrl" [alt]="signal.user" />
+                <img loading="lazy" decoding="async" [src]="signal.avatarUrl" [alt]="signal.user" />
 
                 <span>
                     <strong>{{ signal.user }}</strong>

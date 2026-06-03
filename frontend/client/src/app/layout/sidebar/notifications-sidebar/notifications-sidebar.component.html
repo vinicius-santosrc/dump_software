@@ -7,7 +7,7 @@
             <button (click)="handleClose()"><mat-icon>close</mat-icon></button>
         </div>
 
-        <app-basic-input (valueChange)="onSearchChange($event)"  />
+        <app-basic-input (valueChange)="onSearchChange($event)" />
 
         <div class="results">
 
@@ -17,12 +17,13 @@
 
             @for(n of notifications; track n.id) {
             <div class="notification-item">
-                <app-avatar-item [user]="n?.fromUser" [width]="'52px'" [height]="'52px'" [src]="n?.fromUser?.profilePictureUrl" />
-            
+                <app-avatar-item [user]="n?.fromUser" [width]="'52px'" [height]="'52px'"
+                    [src]="n?.fromUser?.profilePictureUrl" />
+
                 <div>
                     <span>
                         <b>{{n.fromUser.username }}</b>
-            
+
                         @if(n.type === 'like') {
                         {{ 'SIDEBAR.NOTIFICATIONS_SIDEBAR.ACTIONS.LIKE' | translate }}
                         }
@@ -30,10 +31,10 @@
                         {{ 'SIDEBAR.NOTIFICATIONS_SIDEBAR.ACTIONS.COMMENT' | translate }}
                         }
                     </span>
-            
+
                     <small>{{ formatDateToNow(n.createdAt) }}</small>
                 </div>
-            
+
                 @if(!n.isRead) {
                 <div class="dot"></div>
                 }
@@ -41,6 +42,62 @@
             }
 
 
-    </div>
+        </div>
 
+    </div>
+</div>
+
+<div class="activity-mobile">
+    <mat-tab-group class="tabs-inbox" mat-stretch-tabs="true" mat-align-tabs="center"
+        (selectedTabChange)="handleMobileTabChange($event.index)">
+        <mat-tab>
+            <ng-template mat-tab-label>
+                <span class="tab-label">{{ 'INBOX.ACTIVITY' | translate }}</span>
+            </ng-template>
+            <div class="search-sidebar" (click)="$event.stopPropagation()">
+                <app-basic-input (valueChange)="onSearchChange($event)" />
+                <div class="results">
+                    @if(loading) {
+                    <app-loader />
+                    }
+
+                    @for(n of notifications; track n.id) {
+                    <div class="notification-item">
+                        <app-avatar-item [user]="n?.fromUser" [width]="'52px'" [height]="'52px'"
+                            [src]="n?.fromUser?.profilePictureUrl" />
+
+                        <div>
+                            <span>
+                                <b>{{n.fromUser.username }}</b>
+
+                                @if(n.type === 'like') {
+                                {{ 'SIDEBAR.NOTIFICATIONS_SIDEBAR.ACTIONS.LIKE' | translate }}
+                                }
+                                @if(n.type === 'comment') {
+                                {{ 'SIDEBAR.NOTIFICATIONS_SIDEBAR.ACTIONS.COMMENT' | translate }}
+                                }
+                            </span>
+
+                            <small>{{ formatDateToNow(n.createdAt) }}</small>
+                        </div>
+
+                        @if(!n.isRead) {
+                        <div class="dot"></div>
+                        }
+                    </div>
+                    }
+
+
+                </div>
+
+            </div>
+
+        </mat-tab>
+
+        <mat-tab>
+            <ng-template mat-tab-label>
+                <span class="tab-label">{{ 'INBOX.MESSAGES' | translate }}</span>
+            </ng-template>
+        </mat-tab>
+    </mat-tab-group>
 </div>

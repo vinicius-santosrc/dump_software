@@ -27,7 +27,7 @@
                 @for (sticker of recentStickers; track sticker.id) {
                 <button type="button" class="sticker-picker__item" [attr.aria-label]="'MESSAGES_INBOX.CHAT.STICKERS.SELECT' | translate: { name: sticker.name }" (click)="selectSticker(sticker)">
 
-                    <img [src]="sticker.url" [alt]="sticker.name" />
+                    <img loading="lazy" decoding="async" [src]="sticker.url" [alt]="sticker.name" />
 
                     <button type="button" class="sticker-picker__favorite"
                         [class.sticker-picker__favorite--active]="isFavorite(sticker)"
@@ -56,7 +56,7 @@
                 @for (sticker of favoriteStickers; track sticker.id) {
                 <button type="button" class="sticker-picker__item" [attr.aria-label]="'MESSAGES_INBOX.CHAT.STICKERS.SELECT' | translate: { name: sticker.name }" (click)="selectSticker(sticker)">
 
-                    <img [src]="sticker.url" [alt]="sticker.name" />
+                    <img loading="lazy" decoding="async" [src]="sticker.url" [alt]="sticker.name" />
 
                     <button type="button" class="sticker-picker__favorite sticker-picker__favorite--active"
                         [attr.aria-label]="'MESSAGES_INBOX.CHAT.STICKERS.REMOVE_FAVORITE' | translate: { name: sticker.name }"
@@ -89,7 +89,7 @@
                 @for (sticker of pack.stickers; track sticker.id) {
                 <button type="button" class="sticker-picker__item" [attr.aria-label]="'MESSAGES_INBOX.CHAT.STICKERS.SELECT' | translate: { name: sticker.name }" (click)="selectSticker(sticker)">
 
-                    <img [src]="sticker.url" [alt]="sticker.name" />
+                    <img loading="lazy" decoding="async" [src]="sticker.url" [alt]="sticker.name" />
 
                     <button type="button" class="sticker-picker__favorite"
                         [class.sticker-picker__favorite--active]="isFavorite(sticker)"

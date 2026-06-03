@@ -1,43 +1,58 @@
-<aside class="messages__sidebar">
-    <div class="messages__header">
-        <div class="messages__header-top">
-            @if(!isMobile) {
-            <h2>{{ 'MESSAGES_INBOX.SIDEBAR.CONVERSATIONS' | translate }}</h2>
-            }
-            @else {
-                <button (click)="goBack()"><mat-icon [fontSet]="'material-symbols-rounded'">arrow_back</mat-icon></button>
-                <h2>{{ 'MESSAGES_INBOX.SIDEBAR.CONVERSATIONS' | translate }}</h2>
-            }
-            <div class="messages__actions">
-                <button (click)="clickCreateConversation()">
-                    <mat-icon [fontSet]="'material-symbols-rounded'">new_window</mat-icon>
-                </button>
-            </div>
-        </div>
-
-        <div class="messages__search">
-            <!-- <input type="text" placeholder="{{ 'MESSAGES_INBOX.SIDEBAR.SEARCH' | translate }}" /> -->
-            <app-basic-input iconName="search" label="{{ 'MESSAGES_INBOX.SIDEBAR.SEARCH' | translate }}" />
-        </div>
-
-    </div>
-    <div class="messages__tabs">
-        <app-memories-component [showMyMemorie]="false" [user]="current_user" />
-        <mat-tab-group class="tab" class="feed-inside" mat-stretch-tabs="false" mat-align-tabs="center">
-            <mat-tab [label]="'MESSAGES_INBOX.SIDEBAR.TABS.PRINCIPAL' | translate">
-                <div class="messages__list">
-                    @for (convo of ((conversations$ | async) ?? []); track convo.id) {
-                    <app-conversation-item [convo]="convo" [currentUser]="current_user" [typingMap]="typing$ | async"
-                        variant="default" (clicked)="onSelect(convo)"></app-conversation-item>
+@if(isMobile) {
+<mat-tab-group selectedIndex="1" class="tabs-inbox" mat-stretch-tabs="true" mat-align-tabs="center"
+    (selectedTabChange)="handleMobileTabChange($event.index)">
+    <mat-tab>
+        <ng-template mat-tab-label>
+            <span class="tab-label">{{ 'INBOX.ACTIVITY' | translate }}</span>
+        </ng-template>
+    </mat-tab>
+    <mat-tab>
+        <ng-template mat-tab-label>
+            <span class="tab-label">{{ 'INBOX.MESSAGES' | translate }}</span>
+        </ng-template>
+        <aside class="messages__sidebar">
+            <div class="messages__header">
+                <div class="messages__header-top">
+                    @if(!isMobile) {
+                    <h2>{{ 'MESSAGES_INBOX.SIDEBAR.CONVERSATIONS' | translate }}</h2>
                     }
+                    @else {
+                    <!-- <button (click)="goBack()"><mat-icon [fontSet]="'material-symbols-rounded'">arrow_back</mat-icon></button> -->
+                    <h2>{{ 'MESSAGES_INBOX.SIDEBAR.CONVERSATIONS' | translate }}</h2>
+                    }
+                    <div class="messages__actions">
+                        <button (click)="clickCreateConversation()">
+                            <mat-icon [fontSet]="'material-symbols-rounded'">new_window</mat-icon>
+                        </button>
+                    </div>
                 </div>
-            </mat-tab>
-            <mat-tab [label]="'MESSAGES_INBOX.SIDEBAR.TABS.GENERAL' | translate">
-                <div class="messages__list"></div>
-            </mat-tab>
-            <mat-tab [label]="'MESSAGES_INBOX.SIDEBAR.TABS.REQUESTS' | translate">
-                <div class="messages__list"></div>
-            </mat-tab>
-        </mat-tab-group>
-    </div>
-</aside>
+        
+                <div class="messages__search">
+                    <!-- <input type="text" placeholder="{{ 'MESSAGES_INBOX.SIDEBAR.SEARCH' | translate }}" /> -->
+                    <app-basic-input iconName="search" label="{{ 'MESSAGES_INBOX.SIDEBAR.SEARCH' | translate }}" />
+                </div>
+        
+            </div>
+            <div class="messages__tabs">
+                <app-memories-component [showMyMemorie]="false" [user]="current_user" />
+                <mat-tab-group class="tab" class="feed-inside" mat-stretch-tabs="false" mat-align-tabs="center">
+                    <mat-tab [label]="'MESSAGES_INBOX.SIDEBAR.TABS.PRINCIPAL' | translate">
+                        <div class="messages__list">
+                            @for (convo of ((conversations$ | async) ?? []); track convo.id) {
+                            <app-conversation-item [convo]="convo" [currentUser]="current_user" [typingMap]="typing$ | async"
+                                variant="default" (clicked)="onSelect(convo)"></app-conversation-item>
+                            }
+                        </div>
+                    </mat-tab>
+                    <mat-tab [label]="'MESSAGES_INBOX.SIDEBAR.TABS.GENERAL' | translate">
+                        <div class="messages__list"></div>
+                    </mat-tab>
+                    <mat-tab [label]="'MESSAGES_INBOX.SIDEBAR.TABS.REQUESTS' | translate">
+                        <div class="messages__list"></div>
+                    </mat-tab>
+                </mat-tab-group>
+            </div>
+        </aside>
+    </mat-tab>
+</mat-tab-group>
+}

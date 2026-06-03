@@ -9,7 +9,7 @@
         </div>
 
         <div class="explore-live-card__profile">
-            <img [src]="live.avatarUrl" [alt]="live.username" />
+            <img loading="lazy" decoding="async" [src]="live.avatarUrl" [alt]="live.username" />
 
             <span>{{ live.username }}</span>
 

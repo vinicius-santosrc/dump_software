@@ -12,7 +12,8 @@ builder.Services.AddCors(options =>
         {
           policy.WithOrigins(
               "https://dump-software.vercel.app",
-              "http://localhost:4200"
+              "http://localhost:4200",
+              "http://localhost:3000"
               )
                   .AllowAnyHeader()
                   .AllowAnyMethod()

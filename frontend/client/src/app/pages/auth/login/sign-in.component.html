@@ -1,14 +1,14 @@
 <section class="sign-in-section">
     <div class="sign-in-left-side">
         <div class="sign-in-left-side-image-container">
-            <img [src]="sideImage" alt="Sign In Image" class="sign-in-left-side-image">
+            <img loading="lazy" decoding="async" [src]="sideImage" alt="Sign In Image" class="sign-in-left-side-image">
         </div>
     </div>
     <div class="sign-in-right-side">
         <div></div>
         <div class="sign-in-right-side-container">
             <div class="sign-in-right-side-logo">
-                <img [src]="logo" alt="Logo" />
+                <img loading="lazy" decoding="async" [src]="logo" alt="Logo" />
             </div>
             <div class="sign-in-right-side-message">
                 <span>{{ 'AUTH.HIGHLIGHT_MESSAGE' | translate }} <span class="hightlight-message">{{

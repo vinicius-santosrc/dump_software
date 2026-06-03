@@ -1,14 +1,6 @@
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
-import { SignInComponent } from "./auth/login/sign-in.component";
-import { HomePage } from "./home/home.component";
 import { authGuard, guestGuard } from "../core/guards/auth.guard";
-import { ProfileComponent } from "./profile/profile.component";
-import { PostPageComponent } from "./posts/postpage.component";
-import { MessagesComponent } from "./messages/messages.component";
-import { MemoriePageComponent } from "./memorie/memoriepage.component";
-import { DumpPageComponent } from "./dump/dump-page.component";
-import { ExplorePageComponent } from "./explore/explore-page.component";
 
 export const routes: Routes = [
     {
@@ -16,7 +8,7 @@ export const routes: Routes = [
         children: [
             {
                 path: "",
-                component: HomePage,
+                loadComponent: () => import('./home/home.component').then(m => m.HomePage),
                 canActivate: [authGuard],
                 pathMatch: "full",
             },
@@ -25,39 +17,51 @@ export const routes: Routes = [
                 children: [
                     {
                         path: ":postId",
-                        component: PostPageComponent,
+                        loadComponent: () => import('./posts/postpage.component').then(m => m.PostPageComponent),
                     }
                 ]
             },
             {
                 path: "messages",
-                component: MessagesComponent,
+                loadComponent: () => import('./messages/messages.component').then(m => m.MessagesComponent),
                 canActivate: [authGuard],
                 children: [
                     {
                         path: 'inbox',
                         canActivate: [authGuard],
-                        component: MessagesComponent,
+                        loadComponent: () => import('./messages/messages.component').then(m => m.MessagesComponent),
+                    }
+                ]
+            },
+            {
+                path: "activity",
+                loadComponent: () => import('../layout/sidebar/notifications-sidebar/notifications-sidebar.component').then(m => m.NotificationsSidebarComponent),
+                canActivate: [authGuard],
+                children: [
+                    {
+                        path: 'inbox',
+                        canActivate: [authGuard],
+                        loadComponent: () => import('../layout/sidebar/notifications-sidebar/notifications-sidebar.component').then(m => m.NotificationsSidebarComponent),
                     }
                 ]
             },
             {
                 path: 'dumps',
-                component: DumpPageComponent,
+                loadComponent: () => import('./dump/dump-page.component').then(m => m.DumpPageComponent),
                 canActivate: [authGuard]
             },
             {
                 path: 'dumps/:postId',
-                component: DumpPageComponent,
+                loadComponent: () => import('./dump/dump-page.component').then(m => m.DumpPageComponent),
                 canActivate: [authGuard]
             },
             {
                 path: "explore",
-                component: ExplorePageComponent
+                loadComponent: () => import('./explore/explore-page.component').then(m => m.ExplorePageComponent)
             },
             {
                 path: ":username",
-                component: ProfileComponent
+                loadComponent: () => import('./profile/profile.component').then(m => m.ProfileComponent)
             },
             {
                 path: "accounts",
@@ -65,28 +69,28 @@ export const routes: Routes = [
                 children: [
                     {
                         path: "signin",
-                        component: SignInComponent,
+                        loadComponent: () => import('./auth/login/sign-in.component').then(m => m.SignInComponent),
                         pathMatch: "full",
                     },
                     {
                         path: "signup",
-                        component: SignInComponent,
+                        loadComponent: () => import('./auth/login/sign-in.component').then(m => m.SignInComponent),
                         pathMatch: "full",
                     },
                     {
                         path: "forgotpassword",
-                        component: SignInComponent,
+                        loadComponent: () => import('./auth/login/sign-in.component').then(m => m.SignInComponent),
                         pathMatch: "full",
                     }
                 ]
             },
             {
                 path: "memories/:username/:memorieId",
-                component: MemoriePageComponent
+                loadComponent: () => import('./memorie/memoriepage.component').then(m => m.MemoriePageComponent)
             },
             {
                 path: "memories/:username",
-                component: MemoriePageComponent
+                loadComponent: () => import('./memorie/memoriepage.component').then(m => m.MemoriePageComponent)
             }
         ]
     }

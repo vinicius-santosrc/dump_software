@@ -6,7 +6,7 @@
         <div class="incoming-call-modal__pulse"></div>
 
         <div class="incoming-call-modal__avatar-container">
-            <img class="incoming-call-modal__avatar"
+            <img loading="lazy" decoding="async" class="incoming-call-modal__avatar"
                 [src]="incomingCall?.caller?.profilePictureUrl || 'assets/app/media/default-avatar.webp'"
                 [alt]="'CALL.INCOMING.AVATAR_ALT' | translate" />
         </div>

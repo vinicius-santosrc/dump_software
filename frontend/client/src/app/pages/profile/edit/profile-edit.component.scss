@@ -141,6 +141,10 @@
   }
 }
 
+::ng-deep .tab-label {
+  color: var(--color-text) !important;
+}
+
 /* SMALL DEVICES (IPHONE SE ETC) */
 @media (max-width: 400px) {
   .profile-edit__header {

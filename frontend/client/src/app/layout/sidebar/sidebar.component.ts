@@ -121,7 +121,7 @@ export class SidebarComponent {
     }
 
     getNavigationUnreadCount(item: NavigationLink): number {
-        if (item.id !== 'send') {
+        if (item.id !== 'send' && item.id !== 'inbox') {
             return 0;
         }
 
@@ -282,8 +282,10 @@ export class SidebarComponent {
             case 'search':
                 this.handleSearchClick();
                 break;
-
             case 'notifications':
+                this.handleNotificationsClick();
+                break;
+            case 'inbox':
                 this.handleNotificationsClick();
                 break;
         }

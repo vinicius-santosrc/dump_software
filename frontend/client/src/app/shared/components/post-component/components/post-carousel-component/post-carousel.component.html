@@ -1,32 +1,24 @@
 <div class="carousel-wrapper">
 
-    <div 
-        class="carousel" 
-        [style.transform]="'translateX(-' + currentIndex * 100 + '%)'"
-        (touchstart)="onTouchStart($event)"
-        (touchmove)="onTouchMove($event)"
-        (touchend)="onTouchEnd()"
-    >
+    <div class="carousel" [style.transform]="'translateX(-' + currentIndex * 100 + '%)'"
+        (touchstart)="onTouchStart($event)" (touchmove)="onTouchMove($event)" (touchend)="onTouchEnd()">
         @for(item of media; track $index) {
 
         <div class="slide">
 
             <!-- IMAGE -->
             @if((!isPreview && item.type === 'image') || (isPreview && item.type?.startsWith('image'))) {
-                <img 
-                    [src]="isPreview ? getPreview?.(item) : item.url"
-                    alt="Post"
-                    [style.aspectRatio]="!isPreview && item.width && item.height ? (item.width + ' / ' + item.height) : '1 / 1'"
-                />
+            <img loading="lazy" decoding="async" [src]="isPreview ? getPreview?.(item) : item.url" alt="Post"
+                [style.aspectRatio]="!isPreview && item.width && item.height ? (item.width + ' / ' + item.height) : '1 / 1'" />
             }
 
             <!-- VIDEO -->
             @if((!isPreview && item.type === 'video') || (isPreview && item.type?.startsWith('video'))) {
-                @if(isPreview) {
-                    <video [src]="getPreview?.(item)" controls></video>
-                } @else {
-                    <app-video-dump [src]="item.url" />
-                }
+            @if(isPreview) {
+            <video [src]="getPreview?.(item)" controls></video>
+            } @else {
+            <app-video-dump [src]="item.url" />
+            }
             }
 
         </div>

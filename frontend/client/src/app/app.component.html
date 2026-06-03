@@ -2,7 +2,7 @@
 <!-- splash screen -->
 <div #splashScreen class="m-splash-screen">
   <div class="splash-container">
-    <img [src]="splashScreenImage" alt="Splash" class="splash-logo" />
+    <img [src]="splashScreenImage" [attr.width]="170" [attr.height]="170" alt="Splash" loading="lazy" decoding="async" class="splash-logo" />
   </div>
 </div>
 @if(!shouldHideLayout) {

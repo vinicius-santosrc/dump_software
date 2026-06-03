@@ -1,17 +1,19 @@
 <div class="theme-menu">
+    @if(backButton) {
     <div class="theme-menu__header">
         <button class="theme-menu__back" mat-icon-button (click)="goBack()">
             <mat-icon>arrow_back_ios_new</mat-icon>
         </button>
-
+        
         <span class="theme-menu__title">
             {{'SIDEBAR.THEME_CHANGE.CHANGE_THEME' | translate}}
         </span>
-
+        
         <mat-icon class="theme-menu__icon">
             dark_mode
         </mat-icon>
     </div>
+}
 
     <div class="theme-menu__divider"></div>
 

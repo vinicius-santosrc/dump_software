@@ -34,6 +34,15 @@ export class ChatRealtimeService {
         await this.chatService.startConnection(userId);
 
         this.registerHandlers();
+        await this.syncOnlineUsers();
+    }
+
+    private async syncOnlineUsers() {
+        const onlineUsers = await this.chatService.getOnlineUsers();
+
+        onlineUsers.forEach(userId => {
+            this.store.setUserOnline(userId);
+        });
     }
 
     private registerHandlers() {
