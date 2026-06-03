@@ -71,6 +71,10 @@
         justify-content: right;
         position: fixed;
     }
+
+    &__body {
+        overflow-y: auto;
+    }
 }
 
 /* ================= MOBILE RESPONSIVENESS ================= */

@@ -1,7 +1,13 @@
 <aside class="messages__sidebar">
     <div class="messages__header">
         <div class="messages__header-top">
+            @if(!isMobile) {
             <h2>{{ 'MESSAGES_INBOX.SIDEBAR.CONVERSATIONS' | translate }}</h2>
+            }
+            @else {
+                <button (click)="goBack()"><mat-icon [fontSet]="'material-symbols-rounded'">arrow_back</mat-icon></button>
+                <h2>{{ 'MESSAGES_INBOX.SIDEBAR.CONVERSATIONS' | translate }}</h2>
+            }
             <div class="messages__actions">
                 <button (click)="clickCreateConversation()">
                     <mat-icon [fontSet]="'material-symbols-rounded'">new_window</mat-icon>
@@ -16,14 +22,13 @@
 
     </div>
     <div class="messages__tabs">
-        <app-memories-component [showMyMemorie]="false" [user]="current_user"  />
+        <app-memories-component [showMyMemorie]="false" [user]="current_user" />
         <mat-tab-group class="tab" class="feed-inside" mat-stretch-tabs="false" mat-align-tabs="center">
             <mat-tab [label]="'MESSAGES_INBOX.SIDEBAR.TABS.PRINCIPAL' | translate">
                 <div class="messages__list">
                     @for (convo of ((conversations$ | async) ?? []); track convo.id) {
-                    <app-conversation-item [convo]="convo" [currentUser]="current_user"
-                        [typingMap]="typing$ | async" variant="default"
-                        (clicked)="onSelect(convo)"></app-conversation-item>
+                    <app-conversation-item [convo]="convo" [currentUser]="current_user" [typingMap]="typing$ | async"
+                        variant="default" (clicked)="onSelect(convo)"></app-conversation-item>
                     }
                 </div>
             </mat-tab>

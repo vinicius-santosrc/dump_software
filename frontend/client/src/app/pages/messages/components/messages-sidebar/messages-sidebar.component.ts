@@ -45,6 +45,14 @@ export class MessagesSidebarComponent {
         this.onSelectUser.emit(user);
     }
 
+    get isMobile(): boolean {
+        return window.innerWidth <= 768;
+    }
+
+    goBack() {
+        globalThis.history.back();
+    }
+
     getUserById(convo: ConversationMessages, id: string): User | undefined {
         return convo.participants.find((user: User) => user.id === id);
     }
