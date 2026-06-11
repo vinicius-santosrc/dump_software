@@ -81,7 +81,8 @@
         @if (loadingSections) {
         <section class="explore-page__loading-grid" aria-label="Carregando explorar">
             @for (item of [1,2,3,4,5,6,7,8]; track item) {
-            <div class="explore-post-card explore-post-card--skeleton"></div>
+            <!-- <div class="explore-post-card explore-post-card--skeleton"></div> -->
+            <app-skeleton type="generic" />
             }
         </section>
         }

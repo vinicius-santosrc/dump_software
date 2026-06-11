@@ -1,54 +1,33 @@
 <div #basicInput class="basic-input-component">
   <div class="input-wrapper" [class.focused]="focused || value" [class.error]="showError">
-    @if(type === 'textarea') {
-    <textarea class="basic-input-field textarea" [value]="value" (focus)="focused = true"
+    <textarea *ngIf="type === 'textarea'" class="basic-input-field textarea" [value]="value" (focus)="focused = true"
       [style.resize]="(resizableX && resizableY) ? 'both' : (resizableX ? 'horizontal' : (resizableY ? 'vertical' : 'none'))"
       (blur)="focused = false; onBlur()" (input)="onInput($event)"></textarea>
-    }
-    @else {
-    <input class="basic-input-field" [type]="currentType" [value]="value" (focus)="focused = true"
+    <input *ngIf="type !== 'textarea'" class="basic-input-field" [type]="currentType" [value]="value" (focus)="focused = true"
       (blur)="focused = false; onBlur()" (input)="onInput($event)" />
-    }
 
-    @if (label) {
-    <label class="basic-input-label">
-      @if (iconName) {
-      <mat-icon [style.width]="(focused || value) ? '10px' : '18px'"
+    <label *ngIf="label" class="basic-input-label">
+      <mat-icon *ngIf="iconName" [style.width]="(focused || value) ? '10px' : '18px'"
         [style.height]="(focused || value) ? '10px' : '18px'" [style.fontSize]="(focused || value) ? '10px' : '18px'"
         [fontSet]="'material-symbols-outlined'">{{ iconName }}</mat-icon>
-      }
 
       {{ label | translate }}
 
-      @if (required) {
-      <span class="required">*</span>
-      }
+      <span *ngIf="required" class="required">*</span>
     </label>
-    }
 
-    @if (type === 'password') {
-    <button type="button" class="password-toggle" (click)="togglePassword()">
+    <button *ngIf="type === 'password'" type="button" class="password-toggle" (click)="togglePassword()">
       <mat-icon [fontSet]="'material-symbols-outlined'">visibility</mat-icon>
     </button>
-    }
-  </div>@if (showError) {
-  <div class="error-container">
+  </div>
+  <div *ngIf="showError" class="error-container">
     <div class="error-message">
-      @if (hasMaxLengthError) {
-      <p>* {{ 'VALIDATIONS.MAX_LENGTH' | translate: { maxLength: maxLength } }}</p>
-      }
-      @if (hasMinLengthError) {
-      <p>* {{ 'VALIDATIONS.MIN_LENGTH' | translate: { minLength: minLength } }}</p>
-      }
-      @if (hasRequiredError) {
-      <p>* {{ 'VALIDATIONS.REQUIRED' | translate }}</p>
-      }
+      <p *ngIf="hasMaxLengthError">* {{ 'VALIDATIONS.MAX_LENGTH' | translate: { maxLength: maxLength } }}</p>
+      <p *ngIf="hasMinLengthError">* {{ 'VALIDATIONS.MIN_LENGTH' | translate: { minLength: minLength } }}</p>
+      <p *ngIf="hasRequiredError">* {{ 'VALIDATIONS.REQUIRED' | translate }}</p>
     </div>
   </div>
-  }
-  @else {
-  <div class="error-message">
+  <div *ngIf="!showError" class="error-message">
     <!-- <p>&nbsp;</p> -->
   </div>
-  }
 </div>

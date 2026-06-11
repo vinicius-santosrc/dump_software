@@ -53,3 +53,42 @@
     z-index: 1;
     background: #05a35a;
 }
+
+.user-card-multiple-wrapper {
+    position: relative;
+    width: 52px;
+    height: 52px;
+    border-radius: 00%;
+    overflow: visible;
+    margin: auto;
+    cursor: pointer;
+
+    .user-card-multiple__avatar-image {
+        position: relative;
+        width: 100% !important;
+        height: 100% !important;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    .user-card-multiple__avatar-wrapper {
+        position: absolute;
+        width: 30px !important;
+        height: 30px !important;
+        margin: 0;
+        overflow: hidden;
+        border-radius: 50%;
+        background: var(--background, #fff);
+    }
+
+    .user-card-multiple__avatar-wrapper:nth-child(1) {
+        top: 0;
+        left: 0;
+    }
+
+    .user-card-multiple__avatar-wrapper:nth-child(2) {
+        right: 0;
+        bottom: 0;
+        z-index: 2;
+    }
+}

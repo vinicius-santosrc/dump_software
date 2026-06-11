@@ -8,6 +8,7 @@ using Dump.Domain.Entities;
 using Dump.Application.DTOs;
 using Dump.Application.Interfaces;
 using Dump.Application.Exceptions;
+using System.Net.Http.Json;
 
 namespace Dump.Application.Features.Auth;
 
@@ -16,15 +17,21 @@ public class AuthService
     private readonly IUserRepository _userRepository;
     private readonly IRefreshTokenRepository _refreshTokenRepository;
     private readonly ILogger<AuthService> _logger;
+    private readonly IConfiguration _configuration;
+    private readonly HttpClient _httpClient;
 
     public AuthService(
         IUserRepository userRepository,
         IRefreshTokenRepository refreshTokenRepository,
-        ILogger<AuthService> logger)
+        ILogger<AuthService> logger,
+        IConfiguration configuration,
+        HttpClient httpClient)
     {
         _userRepository = userRepository;
         _refreshTokenRepository = refreshTokenRepository;
         _logger = logger;
+        _configuration = configuration;
+        _httpClient = httpClient;
     }
 
     public async Task<AuthRegisterResponse> Register(RegisterDto dto)
@@ -125,6 +132,119 @@ public class AuthService
             Email = user.Email,
             Id = user.Id
         };
+    }
+
+    public async Task ForgotPassword(string input)
+    {
+        if (string.IsNullOrWhiteSpace(input))
+            return;
+
+        var normalizedInput = input.Trim().ToLower();
+        Dump.Domain.Entities.User? user;
+
+        if (normalizedInput.Contains("@"))
+        {
+            user = await _userRepository.GetByEmailAsync(normalizedInput);
+        }
+        else if (normalizedInput.All(char.IsDigit))
+        {
+            user = await _userRepository.GetByPhoneNumberAsync(normalizedInput);
+        }
+        else
+        {
+            user = await _userRepository.GetByUsernameAsync(normalizedInput);
+        }
+
+        if (user == null)
+        {
+            _logger.LogInformation("Forgot password requested for non existing account: {Input}", normalizedInput);
+            return;
+        }
+
+        var resetToken = Convert.ToBase64String(Guid.NewGuid().ToByteArray())
+            .Replace("+", "")
+            .Replace("/", "")
+            .Replace("=", "");
+
+        var frontendUrl = Environment.GetEnvironmentVariable("APP_FRONTEND_URL")
+            ?? _configuration["App:FrontendUrl"]
+            ?? "http://localhost:4200";
+
+        var resetUrl = $"{frontendUrl}/accounts/reset-password?token={resetToken}";
+
+        await SendPasswordResetEmail(user.Email, user.FullName, resetUrl);
+    }
+
+    private async Task SendPasswordResetEmail(string? email, string? fullName, string resetUrl)
+    {
+        if (string.IsNullOrWhiteSpace(email))
+        {
+            _logger.LogWarning("Forgot password requested for account without email");
+            return;
+        }
+
+        var apiKey = Environment.GetEnvironmentVariable("BREVO_API_KEY")
+            ?? _configuration["Brevo:ApiKey"];
+
+        if (string.IsNullOrWhiteSpace(apiKey))
+        {
+            _logger.LogWarning("BREVO_API_KEY is not configured");
+            return;
+        }
+
+        var fromEmail = Environment.GetEnvironmentVariable("EMAIL_FROM")
+            ?? _configuration["Brevo:FromEmail"]
+            ?? "noreply@dump.com";
+
+        var fromName = Environment.GetEnvironmentVariable("EMAIL_FROM_NAME")
+            ?? _configuration["Brevo:FromName"]
+            ?? "Dump";
+
+        var name = string.IsNullOrWhiteSpace(fullName) ? "" : fullName;
+
+        var payload = new
+        {
+            sender = new
+            {
+                name = fromName,
+                email = fromEmail
+            },
+            to = new[]
+            {
+                new
+                {
+                    email,
+                    name
+                }
+            },
+            subject = "Recupere sua senha do Dump",
+            htmlContent = $@"
+                <div style='font-family: Arial, sans-serif; background: #f5f5f5; padding: 32px;'>
+                    <div style='max-width: 520px; margin: 0 auto; background: #ffffff; border-radius: 16px; padding: 32px;'>
+                        <h2 style='margin: 0 0 16px; color: #111111;'>Recuperação de senha</h2>
+                        <p style='font-size: 15px; color: #333333;'>Recebemos uma solicitação para redefinir a senha da sua conta no Dump.</p>
+                        <p style='font-size: 15px; color: #333333;'>Clique no botão abaixo para criar uma nova senha.</p>
+                        <a href='{resetUrl}' style='display: inline-block; margin: 20px 0; padding: 12px 20px; background: #1881E2; color: #ffffff; text-decoration: none; border-radius: 10px; font-weight: bold;'>Redefinir senha</a>
+                        <p style='font-size: 13px; color: #666666;'>Se você não solicitou isso, pode ignorar este email com segurança.</p>
+                        <p style='font-size: 12px; color: #999999; margin-top: 24px;'>Por segurança, este link deve expirar em alguns minutos.</p>
+                    </div>
+                </div>"
+        };
+
+        using var request = new HttpRequestMessage(HttpMethod.Post, "https://api.brevo.com/v3/smtp/email");
+        request.Headers.Add("api-key", apiKey);
+        request.Content = JsonContent.Create(payload);
+
+        var response = await _httpClient.SendAsync(request);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            var error = await response.Content.ReadAsStringAsync();
+            _logger.LogError("Error sending password reset email with Brevo. Status: {StatusCode}. Response: {Response}", response.StatusCode, error);
+            return;
+        }
+
+        _logger.LogInformation("Password reset email sent to user email {Email}", email);
     }
 
     public async Task<AuthResponse> RefreshToken(string refreshToken)

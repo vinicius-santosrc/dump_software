@@ -1,14 +1,52 @@
+@if((user?.id || src) && !multipleUsers?.length) {
 <div class="user-card__avatar-wrapper user-card__avatar-wrapper--rounded user-card__avatar-wrapper--with-border"
     [style.width]="width" [style.height]="height" (click)="onClickCard()" [ngClass]="{
                 'user-card__avatar-wrapper--verified': user?.verified,
                 'user-card__avatar-wrapper--default': !user?.profilePictureUrl,
                 'user-card__avatar-wrapper--hasMemorie': seenMemorie
             }">
-    <img loading="lazy" decoding="async" class="user-card__avatar-image" [src]="src && src != '' ? src : (user?.thumbnail || user?.profilePictureUrl || '/assets/app/media/default-avatar.webp')"
+    <img loading="lazy" decoding="async" class="user-card__avatar-image"
+        [src]="src && src != '' ? src : (user?.thumbnail || user?.profilePictureUrl || '/assets/app/media/default-avatar.webp')"
         [alt]="user?.fullName" loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false"
         [style.width]="'100%'" [style.height]="'100%'" (error)="onImageError()" />
 
     @if(showOnlineIndicator) {
-        <span class="user-card__avatar-status user-card__avatar-status--online"></span>
+    <span class="user-card__avatar-status user-card__avatar-status--online"></span>
     }
 </div>
+}
+
+@if(multipleUsers?.length > 1) {
+<div class="user-card-multiple-wrapper">
+    <div class="user-card-multiple__avatar-wrapper user-card-multiple__avatar-wrapper--rounded user-card-multiple__avatar-wrapper--with-border"
+        [style.width]="width" [style.height]="height" (click)="onClickCard()" [ngClass]="{
+                    'user-card-multiple__avatar-wrapper--verified': multipleUsers[0]?.verified,
+                    'user-card-multiple__avatar-wrapper--default': !multipleUsers[0]?.profilePictureUrl,
+                    'user-card-multiple__avatar-wrapper--hasMemorie': seenMemorie
+                }">
+        <img loading="lazy" decoding="async" class="user-card-multiple__avatar-image"
+            [src]="src && src != '' ? src : (multipleUsers[0]?.thumbnail || multipleUsers[0]?.profilePictureUrl || '/assets/app/media/default-avatar.webp')"
+            [alt]="multipleUsers[0]?.fullName" loading="lazy" decoding="async" referrerpolicy="no-referrer"
+            draggable="false" [style.width]="'100%'" [style.height]="'100%'" (error)="onImageError()" />
+
+        @if(showOnlineIndicator) {
+        <span class="user-card-multiple__avatar-status user-card-multiple__avatar-status--online"></span>
+        }
+    </div>
+    <div class="user-card-multiple__avatar-wrapper user-card-multiple__avatar-wrapper--rounded user-card-multiple__avatar-wrapper--with-border"
+        [style.width]="width" [style.height]="height" (click)="onClickCard()" [ngClass]="{
+                    'user-card-multiple__avatar-wrapper--verified': multipleUsers[1]?.verified,
+                    'user-card-multiple__avatar-wrapper--default': !multipleUsers[1]?.profilePictureUrl,
+                    'user-card-multiple__avatar-wrapper--hasMemorie': seenMemorie
+                }">
+        <img loading="lazy" decoding="async" class="user-card-multiple__avatar-image"
+            [src]="src && src != '' ? src : (multipleUsers[1]?.thumbnail || multipleUsers[1]?.profilePictureUrl || '/assets/app/media/default-avatar.webp')"
+            [alt]="multipleUsers[1]?.fullName" loading="lazy" decoding="async" referrerpolicy="no-referrer"
+            draggable="false" [style.width]="'100%'" [style.height]="'100%'" (error)="onImageError()" />
+
+        @if(showOnlineIndicator) {
+        <span class="user-card-multiple__avatar-status user-card-multiple__avatar-status--online"></span>
+        }
+    </div>
+</div>
+}

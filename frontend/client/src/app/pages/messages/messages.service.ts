@@ -171,9 +171,14 @@ export class MessagesService {
         }
 
         const current = this.messagesCache.get(conversationId) ?? [];
-        const next = this.normalizeMessages([...current, message]);
+        const messageKey = this.getMessageKey(message);
+        const existingIndex = current.findIndex(currentMessage => this.getMessageKey(currentMessage) === messageKey);
 
-        this.messagesCache.set(conversationId, next);
+        const nextMessages = existingIndex >= 0
+            ? current.map((currentMessage, index) => index === existingIndex ? { ...currentMessage, ...message } : currentMessage)
+            : [...current, message];
+
+        this.messagesCache.set(conversationId, this.normalizeMessages(nextMessages));
     }
 
     getMessagesCacheSnapshot(conversationId: string): any[] {
@@ -220,14 +225,20 @@ export class MessagesService {
     }
 
     private getMessageKey(message: any): string {
-        const id = message?.id ?? message?._id;
+        const id = message?.id ?? message?._id ?? message?.messageId ?? message?.message_id;
 
         if (id) {
             return `id:${id}`;
         }
 
-        const conversationId = message?.conversationId ?? '';
-        const senderId = message?.senderId ?? message?.sender?.id ?? '';
+        const tempId = message?.tempId ?? message?.clientId ?? message?.clientMessageId;
+
+        if (tempId) {
+            return `temp:${tempId}`;
+        }
+
+        const conversationId = message?.conversationId ?? message?.conversation?.id ?? message?.conversation?._id ?? '';
+        const senderId = message?.senderId ?? message?.sender?.id ?? message?.sender?._id ?? '';
         const type = message?.type ?? 'text';
         const text = message?.text ?? '';
         const createdAt = new Date(message?.createdAt ?? 0).getTime();

@@ -6,6 +6,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.AspNetCore.Authorization;
+using System.Text.Json.Serialization;
 
 namespace Dump.API.Controllers;
 
@@ -41,6 +42,18 @@ public class AuthController : ControllerBase
         });
 
         return Ok(user);
+    }
+
+    [HttpPost("forgot-password")]
+    public async Task<IActionResult> ForgotPassword(ForgotPasswordDto dto)
+    {
+        await _authService.ForgotPassword(dto.UserOrCellphoneOrEmail);
+
+        return Ok(new
+        {
+            success = true,
+            message = "Se a conta existir, enviaremos as instruções de recuperação."
+        });
     }
 
     [HttpPost("refresh")]

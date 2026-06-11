@@ -29,7 +29,7 @@ public class StickerController : ControllerBase
     [HttpPost("custom")]
     [RequestSizeLimit(1_000_000)]
     public async Task<ActionResult<StickerResponse>> CreateCustomSticker(
-        [FromForm] IFormFile file,
+        IFormFile file,
         [FromForm] string? name,
         CancellationToken cancellationToken
     )

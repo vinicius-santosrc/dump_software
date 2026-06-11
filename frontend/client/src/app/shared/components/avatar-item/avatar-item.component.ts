@@ -14,6 +14,7 @@ export class AvatarItem {
     private readonly messagesStore = inject(MessagesStoreService);
 
     @Input() user?: any;
+    @Input() multipleUsers?: any;
     @Input() src?: string = "";
     @Input() width: string = '32px';
     @Input() height: string = '32px';

@@ -7,9 +7,7 @@
             </ng-container>
             }
             <div class="chat__image-user">
-                <img loading="lazy" decoding="async" [src]="getConversationAvatar()" />
-                <span class="online-dot" *ngIf="isUserOnline(conversation.participants[0])">
-                </span>
+                 <app-avatar-item [user]="getConversationUser()" [src]="getConversationAvatar()" [width]="'40px'" [height]="'40px'" />
             </div>
             <div>
                 <p>{{ getConversationName() }}</p>

@@ -13,7 +13,7 @@ namespace Dump.Application.Features.Search
         }
         public async Task<SearchResultDto> SearchAsync(string query)
         {
-        var users = await _searchRepository.SearchUsersAsync(query);
+            var users = await _searchRepository.SearchUsersAsync(query);
             var posts = await _searchRepository.SearchPostsAsync(query);
 
             return new SearchResultDto

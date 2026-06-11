@@ -22,6 +22,7 @@ import {
 } from "./components/message-composer-component/message-composer-component";
 import { MediaProcessingService } from "../../../../core/services/media/media-processing.service";
 import { LoaderComponent } from "../../../../shared/components/loader-component/loader.component";
+import { AvatarItem } from "../../../../shared/components/avatar-item/avatar-item.component";
 
 @Component({
     selector: "app-messages-chat",
@@ -38,7 +39,8 @@ import { LoaderComponent } from "../../../../shared/components/loader-component/
     BasicInputComponent,
     TranslateModule,
     MessageComposerComponent,
-    LoaderComponent
+    LoaderComponent,
+    AvatarItem
 ]
 })
 

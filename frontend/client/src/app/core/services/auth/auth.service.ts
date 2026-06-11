@@ -41,6 +41,16 @@ export class AuthService {
         );
     }
 
+    forgotPassword(identifier: string): Observable<any> {
+        return this.http.post(`${API_CONFIG.baseUrl}${this.API}/forgot-password`, {
+            user_or_cellphone_or_email: identifier
+        }).pipe(
+            catchError((error) => {
+                return throwError(() => ErrorUtils.parse(error));
+            })
+        );
+    }
+
     logout(): void {
         localStorage.clear();
         this.http.post(`${API_CONFIG.baseUrl}${this.API}/logout`, {}, { withCredentials: true }).subscribe(() => {

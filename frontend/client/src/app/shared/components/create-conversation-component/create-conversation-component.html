@@ -7,7 +7,7 @@
             </button>
         </div>
         <div class="new-conversation__search-input">
-            <app-basic-input iconName="search" (valueChange)="onSearchChange($event)" type="text" label="MESSAGES_INBOX.SIDEBAR.ADD_CONVERSATION.LABEL" (valueChange)="input = $event" />
+            <app-basic-input iconName="search" (valueChange)="onSearchInput($event)" type="text" label="MESSAGES_INBOX.SIDEBAR.ADD_CONVERSATION.LABEL" />
         </div>
         <div class="new-conversation__chats">
             @if(loading) {

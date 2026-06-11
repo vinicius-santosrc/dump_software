@@ -29,6 +29,9 @@
                     </app-basic-input>
                     }
                 </div>
+                @if(pageType === 'forgotpassword' && forgotPasswordSent) {
+                    <span class="forgot-password-feedback">{{ forgotPasswordMessage }}</span>
+                }
             </div>
             <div class="btn-container">
                 <app-generic-button

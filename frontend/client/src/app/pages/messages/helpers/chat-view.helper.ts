@@ -14,7 +14,7 @@ export class ChatViewHelper {
         }
 
         return conversation.participants
-            .map((u: User) => u.fullName)
+            .map((u: User) => u.id !== currentUserId ? u.fullName : "Você")
             .join(', ');
     }
 

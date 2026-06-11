@@ -31,6 +31,7 @@ import { ExploreReelsLoopComponent } from "./explore-reels-loop/explore-reels-lo
 import { GenericTextComponent } from "../../shared/components/generic-text/generic-text.component";
 import { TranslateModule } from "@ngx-translate/core";
 import { debounceTime, distinctUntilChanged, Subject, switchMap, tap, finalize } from "rxjs";
+import { SkeletonComponent } from "../../shared/components/skeleton/skeleton.component";
 
 @Component({
     selector: "app-explore-page",
@@ -38,23 +39,24 @@ import { debounceTime, distinctUntilChanged, Subject, switchMap, tap, finalize }
     styleUrl: "./explore-page.component.scss",
     standalone: true,
     imports: [
-        CommonModule,
-        FormsModule,
-        MatButtonModule,
-        MatIconModule,
-        MatDialogModule,
-        BasicInputComponent,
-        LoaderComponent,
-        GenericCardUserComponent,
-        PostMediaComponent,
-        ExploreTopicRailComponent,
-        ExploreLiveRailComponent,
-        ExploreInsightsComponent,
-        ExploreEngagementLabComponent,
-        ExploreSectionComponent,
-        GenericTextComponent,
-        TranslateModule
-    ]
+    CommonModule,
+    FormsModule,
+    MatButtonModule,
+    MatIconModule,
+    MatDialogModule,
+    BasicInputComponent,
+    LoaderComponent,
+    GenericCardUserComponent,
+    PostMediaComponent,
+    ExploreTopicRailComponent,
+    ExploreLiveRailComponent,
+    ExploreInsightsComponent,
+    ExploreEngagementLabComponent,
+    ExploreSectionComponent,
+    GenericTextComponent,
+    TranslateModule,
+    SkeletonComponent
+]
 })
 export class ExplorePageComponent implements OnInit {
     searchTerm = "";

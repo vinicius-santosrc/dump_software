@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from "@angular/core";
+import { Component, Inject, OnDestroy, OnInit } from "@angular/core";
 import { MAT_DIALOG_DATA, MatDialog } from "@angular/material/dialog";
 import { MatIcon } from "@angular/material/icon";
 import { BasicInputComponent } from "../basic-input-component/basic-input.component";
@@ -7,10 +7,11 @@ import { GenericCardUserComponent } from "../generic-card-user/generic-card-user
 import { UserService } from "../../../core/services/user/user.service";
 import { CreateConversationService } from "./create-conversation.service";
 import { GenericButtonComponent } from "../generic-button-component/generic-button.component";
-import { SearchResponse } from "../../../core/models/search/search.model";
+import { SearchResponse, SearchUser } from "../../../core/models/search/search.model";
 import { SearchService } from "../../../core/services/search/search.service";
 import { LoaderComponent } from "../loader-component/loader.component";
 import { TranslateModule } from "@ngx-translate/core";
+import { Subject, debounceTime, distinctUntilChanged, takeUntil } from "rxjs";
 
 @Component({
     selector: "app-create-conversation-component",
@@ -18,14 +19,16 @@ import { TranslateModule } from "@ngx-translate/core";
     styleUrl: "./create-conversation-component.scss",
     imports: [MatIcon, BasicInputComponent, GenericCardUserComponent, GenericButtonComponent, LoaderComponent, TranslateModule],
 })
-export class CreateConversationComponent implements OnInit {
+export class CreateConversationComponent implements OnInit, OnDestroy {
     @Inject(MAT_DIALOG_DATA) public data?: []
     input: any;
-    userList: User[] | undefined;
+    userList: SearchUser[] | undefined;
     selectedUserIds: string[] = [];
     current_user: any;
     results: SearchResponse = {} as SearchResponse;
     loading: boolean = false;
+    private readonly searchInput$ = new Subject<string>();
+    private readonly destroy$ = new Subject<void>();
     constructor(
         private readonly userService: UserService,
         private readonly dialog: MatDialog,
@@ -37,22 +40,50 @@ export class CreateConversationComponent implements OnInit {
         });
     }
 
-    onSearchChange(query: string) {
+    onSearchInput(value: string): void {
+        this.input = value;
+        const normalizedQuery = value?.trim() ?? '';
+        this.searchInput$.next(normalizedQuery);
+    }
+
+    private onSearchChange(query: string): void {
+        if (!query) {
+            this.getRelatedUsers();
+            return;
+        }
+
         this.loading = true;
 
-        this.searchService.search(query).subscribe((res: any) => {
-            this.userList = res.data.search.users;
-            this.loading = false;
+        this.searchService.search(query).subscribe({
+            next: (res: SearchResponse) => {
+                this.userList = res.users ?? [];
+                this.loading = false;
+            },
+            error: () => {
+                this.userList = [];
+                this.loading = false;
+            }
         });
     }
 
     ngOnInit(): void {
-        this.getRelatedUsers()
+        this.getRelatedUsers();
+
+        this.searchInput$
+            .pipe(
+                debounceTime(400),
+                distinctUntilChanged(),
+                takeUntil(this.destroy$)
+            )
+            .subscribe((query) => this.onSearchChange(query));
     }
 
     getRelatedUsers() {
+        this.loading = true;
+
         this.userService.getRelatedByCurrentUser().subscribe((users: User[] | any) => {
             this.userList = users;
+            this.loading = false;
         });
     }
 
@@ -92,6 +123,12 @@ export class CreateConversationComponent implements OnInit {
                 this.dialog.closeAll();
             }
         });
+    }
+
+    ngOnDestroy(): void {
+        this.destroy$.next();
+        this.destroy$.complete();
+        this.searchInput$.complete();
     }
 
 }

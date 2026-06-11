@@ -20,10 +20,16 @@ public class RegisterDto
 public class LoginDto
 {
     [JsonPropertyName("user_or_cellphone_or_email")]
-    public string UserOrCellphoneOrEmail { get; set; } = string.Empty; 
-    
+    public string UserOrCellphoneOrEmail { get; set; } = string.Empty;
+
     [JsonPropertyName("password")]
     public string Password { get; set; } = string.Empty;
+}
+
+public class ForgotPasswordDto
+{
+    [JsonPropertyName("user_or_cellphone_or_email")]
+    public string UserOrCellphoneOrEmail { get; set; } = string.Empty;
 }
 
 public class AuthRegisterResponse

@@ -20,6 +20,7 @@ img,
 video {
     max-width: 100%;
     max-height: 80vh;
+    min-height: 550px;
     width: auto;
     height: auto;
     object-fit: contain;
@@ -27,9 +28,8 @@ video {
 }
 
 img {
-    opacity: 0;
-    aspect-ratio: 1 / 1;
-    transition: opacity 0.3s ease;
+    // aspect-ratio: 1 / 1;
+    transition: pop 0.3s ease;
 }
 
 img.loaded {
@@ -67,6 +67,7 @@ img.loaded {
     video {
         max-width: 100%;
         max-height: 80vh;
+        min-height: 500px;
         width: auto;
         height: auto;
         object-fit: contain;
@@ -123,7 +124,7 @@ img.loaded {
 @keyframes pop {
     0% {
         transform: scale(0.5);
-        opacity: 0;
+        opacity: 0.6;
     }
 
     50% {
@@ -133,7 +134,7 @@ img.loaded {
 
     100% {
         transform: scale(1);
-        opacity: 0;
+        opacity: 0.6;
     }
 }
 

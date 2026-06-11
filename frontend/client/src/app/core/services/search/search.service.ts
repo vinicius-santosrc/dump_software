@@ -47,8 +47,10 @@ export class SearchService {
                 return {
                     users: (data.users ?? []).map((user: any) => ({
                         id: user.id,
+                        fullName: user.fullName,
                         username: user.username,
-                        avatarUrl: user.avatarUrl ?? user.thumbnail ?? user.profilePictureUrl ?? ''
+                        thumbnail: user.thumbnail,
+                        avatarUrl: user.thumbnail
                     })),
                     posts: (data.posts ?? []).map((post: any) => {
                         const firstMedia = Array.isArray(post.media) ? post.media[0] : post.media;

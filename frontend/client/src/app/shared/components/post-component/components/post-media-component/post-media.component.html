@@ -5,69 +5,51 @@
     @if(resolvedMedia[0].type === 'image') {
     <div class="media-container">
 
-        @if(isLoading) {
-        <div class="media-skeleton"></div>
-        }
+        <!-- @if(isLoading) {
+        <app-skeleton type="story" />
+        } -->
 
-        <img
-            loading="lazy"
-            [src]="resolvedMedia[0].url || resolvedMedia[0].thumbnail"
-            alt="Post"
-            [attr.width]="resolvedMedia[0]?.width || 400"
-            [attr.height]="resolvedMedia[0]?.height || 400"
-            (load)="resolvedMedia[0].url ? onMediaLoad() : null"
-            [class.loaded]="!isLoading"
-        />
+        <img loading="lazy" [src]="resolvedMedia[0].url || resolvedMedia[0].thumbnail" alt="Post"
+            [attr.width]="resolvedMedia[0]?.width || '100%'" [attr.height]="resolvedMedia[0]?.height || '100%'"
+            (load)="resolvedMedia[0].url ? onMediaLoad() : null" [class.loaded]="!isLoading" />
 
         @if(isLoadingFullMedia || isLoading) {
-        <div class="media-video-loader">
+        <!-- <div class="media-video-loader">
             <app-loader />
-        </div>
+        </div> -->
         }
 
     </div>
     }
 
     @if(resolvedMedia[0].type === 'video') {
-        @if(!resolvedMedia[0].url && resolvedMedia[0].thumbnail) {
-        <div class="media-container media-container--video-placeholder">
-            <img
-                loading="lazy"
-                [src]="resolvedMedia[0].thumbnail"
-                [attr.width]="resolvedMedia[0]?.width || 400"
-                [attr.height]="resolvedMedia[0]?.height || 400"
-                alt="Post"
-                [class.loaded]="true"
-            />
+    @if(!resolvedMedia[0].url && resolvedMedia[0].thumbnail) {
+    <div class="media-container media-container--video-placeholder">
+        <img loading="lazy" [src]="resolvedMedia[0].thumbnail" [attr.width]="resolvedMedia[0]?.width || '100%'"
+            [attr.height]="resolvedMedia[0]?.height || '100%'" alt="Post" [class.loaded]="true" />
 
-            @if(isLoadingFullMedia || isLoading) {
+        <!-- @if(isLoadingFullMedia || isLoading) {
             <div class="media-video-loader">
                 <app-loader />
             </div>
-            }
-        </div>
-        }
-        @else {
-        <app-video-dump
-            #videoPlayer
-            [src]="resolvedMedia[0].url"
-            [thumbnail]="resolvedMedia[0].thumbnail || ''"
-        />
-        }
+            } -->
+    </div>
+    }
+    @else {
+    <app-video-dump #videoPlayer [src]="resolvedMedia[0].url" [thumbnail]="resolvedMedia[0].thumbnail || ''" />
+    }
     }
 
     } @else if(resolvedMedia.length > 1) {
-        @if(isLoadingFullMedia || isLoading) {
-        <div class="media-container media-container--carousel-placeholder">
-            <div class="media-skeleton"></div>
-
-            <div class="media-video-loader">
-                <app-loader />
-            </div>
-        </div>
-        } @else {
-        <app-post-carousel [media]="resolvedMedia" />
-        }
+    @if(isLoadingFullMedia || isLoading) {
+    <div class="media-container media-container--carousel-placeholder">
+        <img loading="lazy" [src]="resolvedMedia[0].url || resolvedMedia[0].thumbnail" alt="Post"
+            [attr.width]="resolvedMedia[0]?.width || '100%'" [attr.height]="resolvedMedia[0]?.height || '100%'"
+            (load)="resolvedMedia[0].url ? onMediaLoad() : null" [class.loaded]="!isLoading" />
+    </div>
+    } @else {
+    <app-post-carousel [media]="resolvedMedia" />
+    }
     }
 
     <div class="like-burst" *ngIf="showLike">❤️</div>

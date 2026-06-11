@@ -2,7 +2,12 @@
   [ngClass]="[variant, selected ? 'selected' : '', getUnreadCount() > 0 ? 'unread' : '']" (click)="onClick()">
 
   <div class="avatar-wrapper">
+    @if(this.convo.participants.length === 2) {
     <app-avatar-item [user]="getConversationUser()" [src]="getConversationAvatar()" [width]="'52px'" [height]="'52px'" />
+    }
+    @else {
+      <app-avatar-item [multipleUsers]="getConversationUser()" [width]="'52px'" [height]="'52px'" />
+    }
 
     <div class="check" *ngIf="selected">
       ✓

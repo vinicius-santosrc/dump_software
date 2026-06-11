@@ -57,26 +57,42 @@ export class ChatService {
   onReceiveMessage(callback: any) {
     if (!this.hubConnection) return;
 
+    this.hubConnection.off("ReceiveMessage");
     this.hubConnection.on("ReceiveMessage", callback);
   }
 
   onMessageRead(callback: (msg: any) => void) {
+    if (!this.hubConnection) return;
+
+    this.hubConnection.off('MessageRead');
     this.hubConnection.on('MessageRead', callback);
   }
 
   onUserOnline(callback: (userId: string) => void) {
+    if (!this.hubConnection) return;
+
+    this.hubConnection.off('UserOnline');
     this.hubConnection.on('UserOnline', callback);
   }
 
   onUserOffline(callback: (userId: string) => void) {
+    if (!this.hubConnection) return;
+
+    this.hubConnection.off('UserOffline');
     this.hubConnection.on('UserOffline', callback);
   }
 
   onTyping(callback: (data: any) => void) {
+    if (!this.hubConnection) return;
+
+    this.hubConnection.off('Typing');
     this.hubConnection.on('Typing', callback);
   }
 
   onStopTyping(callback: (data: any) => void) {
+    if (!this.hubConnection) return;
+
+    this.hubConnection.off('StopTyping');
     this.hubConnection.on('StopTyping', callback);
   }
 

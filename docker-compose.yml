@@ -1,41 +1,14 @@
-version: "3.9"
-
 services:
-
-  database:
-    image: postgres:15
-    container_name: dump_db
-    restart: always
+  dump-api:
+    build:
+      context: ./backend
+      dockerfile: docker/Dockerfile
+    container_name: dump_api
+    ports:
+      - "5207:10000"
+    env_file:
+      - ./backend/.env
     environment:
-      POSTGRES_USER: dump
-      POSTGRES_PASSWORD: dump123
-      POSTGRES_DB: dump_social
-    ports:
-      - "5432:5432"
-    volumes:
-      - db_data:/var/lib/postgresql/data
-
-  backend:
-    build: ./backend
-    container_name: dump_backend
-    ports:
-      - "3000:3000"
-    depends_on:
-      - database
-    environment:
-      DATABASE_URL: postgres://dump:dump123@database:5432/dump_social
-    volumes:
-      - ./backend:/app
-
-  frontend:
-    build: ./frontend
-    container_name: dump_frontend
-    ports:
-      - "5173:5173"
-    volumes:
-      - ./frontend:/app
-    depends_on:
-      - backend
-
-volumes:
-  db_data:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://+:10000
+    restart: unless-stopped

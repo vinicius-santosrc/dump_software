@@ -72,6 +72,12 @@ export class ConversationItemComponent {
         otherUser
       );
     }
+    else {
+      const othersUser = this.convo.participants.filter(
+        (u: any) => u.id !== this.currentUser?.id
+      );
+      return othersUser;
+    }
 
     return {};
   }

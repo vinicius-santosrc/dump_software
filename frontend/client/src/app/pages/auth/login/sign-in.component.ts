@@ -37,6 +37,8 @@ export class SignInComponent implements OnInit {
 
     public sideImage: string = '';
     public loading: boolean = false;
+    public forgotPasswordSent: boolean = false;
+    public forgotPasswordMessage: string = '';
 
     inputs: any = {
         user_or_cellphone_or_email: '',
@@ -74,6 +76,8 @@ export class SignInComponent implements OnInit {
             : "assets/app/media/auth/signup-image.webp";
 
         this.fields = this.getFormFields();
+        this.forgotPasswordSent = false;
+        this.forgotPasswordMessage = '';
     }
 
     private getFormFields() {
@@ -212,7 +216,23 @@ export class SignInComponent implements OnInit {
             // Lógica para cadastro
         }
         else {
-            //Logica forgot password
+            this.loading = true;
+            this.forgotPasswordSent = false;
+            this.forgotPasswordMessage = '';
+
+            this.authService.forgotPassword(this.inputs.email_or_cellphone).subscribe({
+                next: () => {
+                    this.loading = false;
+                    this.forgotPasswordSent = true;
+                    this.forgotPasswordMessage = 'Enviamos as instruções de recuperação se a conta existir.';
+                },
+                error: (err) => {
+                    this.loading = false;
+                    this.forgotPasswordSent = true;
+                    this.forgotPasswordMessage = 'Enviamos as instruções de recuperação se a conta existir.';
+                    console.error('Erro', err);
+                }
+            });
         }
     }
 

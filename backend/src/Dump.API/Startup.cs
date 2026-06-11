@@ -94,7 +94,8 @@ namespace Dump.API
             services.AddScoped<Dump.Application.Features.Messages.MessageService>();
 
             // Auth service
-            services.AddScoped<AuthService>();
+            // services.AddScoped<AuthService>();
+            services.AddHttpClient<AuthService>();
 
             // Migrations
             services.AddScoped<IMigration, AddUserThumbnailGender>();

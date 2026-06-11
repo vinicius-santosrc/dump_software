@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, ElementRef, ViewChild, AfterViewInit, OnInit } from '@angular/core';
+import { Component, EventEmitter, Output, ElementRef, ViewChild, AfterViewInit, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { BasicInputComponent } from "../../../shared/components/basic-input-component/basic-input.component";
@@ -13,13 +13,15 @@ import { Router } from '@angular/router';
 import { MatButtonModule } from "@angular/material/button";
 import { TranslateModule } from '@ngx-translate/core';
 
+import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
+
 @Component({
     selector: 'app-search-sidebar',
     imports: [CommonModule, FormsModule, BasicInputComponent, MatIcon, LoaderComponent, GenericCardUserComponent, PostMediaComponent, MatButtonModule, TranslateModule],
     templateUrl: './search-sidebar.component.html',
     styleUrl: './search-sidebar.component.scss'
 })
-export class SearchSidebarComponent implements AfterViewInit, OnInit {
+export class SearchSidebarComponent implements AfterViewInit, OnInit, OnDestroy {
 
     @Output() close = new EventEmitter<void>();
 
@@ -30,14 +32,39 @@ export class SearchSidebarComponent implements AfterViewInit, OnInit {
     results: SearchResponse = {} as SearchResponse;
     loading = false;
 
+    recentSearches: any[] = [];
+
+    private readonly searchInput$ = new Subject<string>();
+    private readonly destroy$ = new Subject<void>();
+
     constructor(private readonly searchService: SearchService, private readonly recentSearchService: RecentSearchService, private readonly router: Router) { }
 
-    onSearchChange(query: string) {
+    onSearchInput(value: string): void {
+        this.query = value?.trim() ?? '';
+        this.searchInput$.next(this.query);
+    }
+
+    private onSearchChange(query: string): void {
+        if (!query) {
+            this.results = {} as SearchResponse;
+            this.loading = false;
+            return;
+        }
+
         this.loading = true;
 
-        this.searchService.search(query).subscribe((res: any) => {
-            this.results = res.data.search;
-            this.loading = false;
+        this.searchService.search(query).subscribe({
+            next: (res: SearchResponse) => {
+                this.results = {
+                    users: res.users ?? [],
+                    posts: res.posts ?? []
+                };
+                this.loading = false;
+            },
+            error: () => {
+                this.results = {} as SearchResponse;
+                this.loading = false;
+            }
         });
     }
 
@@ -56,11 +83,17 @@ export class SearchSidebarComponent implements AfterViewInit, OnInit {
             this.handleClose();
         }
     }
-
-    recentSearches: any = [];
-
-    ngOnInit() {
+    
+    ngOnInit(): void {
         this.load();
+
+        this.searchInput$
+            .pipe(
+                debounceTime(400),
+                distinctUntilChanged(),
+                takeUntil(this.destroy$)
+            )
+            .subscribe((query) => this.onSearchChange(query));
     }
 
     load() {
@@ -79,5 +112,11 @@ export class SearchSidebarComponent implements AfterViewInit, OnInit {
 
     add_recent(item: any) {
         this.recentSearchService.add(item);
+    }
+    
+    ngOnDestroy(): void {
+        this.destroy$.next();
+        this.destroy$.complete();
+        this.searchInput$.complete();
     }
 }

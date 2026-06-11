@@ -135,12 +135,6 @@ public class ChatHub : Hub
 
         await Clients.Group(dto.ConversationId)
             .SendAsync("ReceiveMessage", newMessage);
-
-        foreach (var userId in GetOnlineUserIds())
-        {
-            await Clients.Group($"user:{userId}")
-                .SendAsync("ReceiveMessage", newMessage);
-        }
     }
 
     public override async Task OnConnectedAsync()

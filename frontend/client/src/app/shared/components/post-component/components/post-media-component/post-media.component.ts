@@ -7,11 +7,12 @@ import { UserService } from '../../../../../core/services/user/user.service';
 
 import { Media } from '../../../../../core/models/feed/post.model';
 import { LoaderComponent } from "../../../loader-component/loader.component";
+import { SkeletonComponent } from "../../../skeleton/skeleton.component";
 
 @Component({
     selector: 'app-post-media',
     standalone: true,
-    imports: [CommonModule, VideoDumpComponent, PostCarouselComponent, LoaderComponent],
+    imports: [CommonModule, VideoDumpComponent, PostCarouselComponent, LoaderComponent, SkeletonComponent],
     templateUrl: './post-media.component.html',
     styleUrl: './post-media.component.scss'
 })
