@@ -22,7 +22,7 @@ const getMemoriesCreationMenu = (hasStory: boolean) => {
         },
     ];
 
-    if (!hasStory) {
+    if (hasStory) {
         menu.unshift({
             name: "Visualizar story atual",
             icon: "visibility",

@@ -2,7 +2,7 @@ import { environment } from "../../../environments/environments";
 import { environment_prod } from "../../../environments/environments.prod";
 
 export const API_CONFIG = {
-    baseUrl: environment_prod.apiUrl
+    baseUrl: environment.apiUrl
 };
 
 export const WHITE_LIST_ROUTES = [
