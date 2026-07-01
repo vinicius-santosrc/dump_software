@@ -9,6 +9,7 @@ backend/Dump.API/bin
 backend/Dump.API/obj
 backend/Dump.API/out
 backend/.DS_Store
+backend/storage
 
 frontend/client/.angular
 frontend/client/.vscode

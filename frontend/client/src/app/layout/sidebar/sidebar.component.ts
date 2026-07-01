@@ -34,18 +34,18 @@ import { MessagesService } from "../../pages/messages/messages.service";
     templateUrl: "./sidebar.component.html",
     styleUrl: "./sidebar.component.scss",
     imports: [
-    TranslateModule,
-    RouterModule,
-    MatIcon,
-    SearchSidebarComponent,
-    CommonModule,
-    MatDialogModule,
-    MatMenuModule,
-    NotificationsSidebarComponent,
-    MatSlideToggleModule,
-    MatButtonModule,
-    ThemeMenuComponent
-]
+        TranslateModule,
+        RouterModule,
+        MatIcon,
+        SearchSidebarComponent,
+        CommonModule,
+        MatDialogModule,
+        MatMenuModule,
+        NotificationsSidebarComponent,
+        MatSlideToggleModule,
+        MatButtonModule,
+        ThemeMenuComponent
+    ]
 })
 export class SidebarComponent {
     isSidebarOpen: boolean = localStorage.getItem("sidebar") === "true";

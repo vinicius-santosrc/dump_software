@@ -10,6 +10,9 @@ using Dump.Application.Features.Messages;
 using Dump.Infrastructure.Persistence.Mongo.Migrations;
 using Dump.Application.Features.TrendingTopic;
 using Dump.Application.Features.Messages.Compose;
+using Dump.Application.Media;
+using Dump.Application.Services;
+using Dump.Infrastructure.Repositories;
 
 namespace Dump.API
 {
@@ -62,6 +65,7 @@ namespace Dump.API
             services.AddScoped<ISearchRepository, SearchRepository>();
             services.AddScoped<INotificationRepository, NotificationRepository>();
             services.AddScoped<Dump.Application.Interfaces.IStickerRepository, StickerRepository>();
+            services.AddScoped<IMediaAssetRepository, MediaAssetRepository>();
 
             services.AddScoped<ITrendingRepository, TrendingTopicRepository>();
             //Search service
@@ -69,6 +73,10 @@ namespace Dump.API
 
             //Service service
             services.AddScoped<StickerService>();
+            services.AddScoped<IImageOptimizer, ImageOptimizer>();
+            services.AddScoped<IAudioOptimizer, AudioOptimizer>();
+            services.AddScoped<IVideoOptimizer, VideoOptimizer>();
+            services.AddScoped<IMediaStorageService, MediaStorageService>();
 
             //Notification Service
             services.AddScoped<NotificationService>();

@@ -11,4 +11,6 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_URLS: http://+:10000
+    volumes:
+      - ./backend/storage:/app/storage
     restart: unless-stopped

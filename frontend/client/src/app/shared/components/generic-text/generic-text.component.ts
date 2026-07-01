@@ -120,37 +120,15 @@ export class GenericTextComponent implements OnChanges {
         this.parseText();
     }
 
-    trackAnalytics(
-        type: string,
-        value: string
-    ): void {
-
-        console.log('[TEXT_ANALYTICS]', {
-            analyticsId: this.analyticsId,
-            type,
-            value,
-            timestamp: new Date()
-        });
-    }
-
     handleMentionClick(value: string): void {
-
-        this.trackAnalytics('mention', value);
-
         this.mentionClick.emit(value);
     }
 
     handleHashtagClick(value: string): void {
-
-        this.trackAnalytics('hashtag', value);
-
         this.hashtagClick.emit(value);
     }
 
     handleLinkClick(value: string): void {
-
-        this.trackAnalytics('link', value);
-
         this.linkClick.emit(value);
     }
 

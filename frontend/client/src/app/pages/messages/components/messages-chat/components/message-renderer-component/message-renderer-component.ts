@@ -62,7 +62,7 @@ export class MessageRendererComponent implements OnChanges {
     }
 
     get audioUrl(): string {
-        return this.message?.mediaUrl || this.message?.text || '';
+        return this.message?.mediaUrl || this.message?.audioUrl || this.message?.text || '';
     }
 
     get imageMedia(): Array<{ type: 'image'; url: string }> {
@@ -258,11 +258,26 @@ export class MessageRendererComponent implements OnChanges {
     private isAudioMessage(): boolean {
         const type = this.message?.type;
         const mediaType = this.message?.mediaType ?? '';
-        const source = this.message?.mediaUrl || this.message?.text || '';
+        const source = String(this.message?.mediaUrl || this.message?.audioUrl || this.message?.text || '').toLowerCase();
+
+        const isAudioFileUrl = source.startsWith('http://') || source.startsWith('https://') || source.startsWith('/');
+        const isAudioStorageUrl = source.includes('/cdn/v/media/') && source.includes('/audio/');
+        const isAudioExtension = source.endsWith('.m4a')
+            || source.endsWith('.mp3')
+            || source.endsWith('.aac')
+            || source.endsWith('.wav')
+            || source.endsWith('.webm')
+            || source.includes('.m4a?')
+            || source.includes('.mp3?')
+            || source.includes('.aac?')
+            || source.includes('.wav?')
+            || source.includes('.webm?');
 
         return type === 'audio'
             || mediaType.startsWith('audio/')
-            || source.startsWith('data:audio');
+            || source.startsWith('data:audio')
+            || isAudioStorageUrl
+            || (isAudioFileUrl && isAudioExtension);
     }
 
     private isStickerMessage(): boolean {

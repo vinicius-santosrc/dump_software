@@ -13,10 +13,10 @@ export class NotificationService {
 
     constructor(private readonly http: HttpClient, private readonly userService: UserService) { }
 
-getNotifications(): Observable<Notification[]> {
-    const userId = this.userService.getUser().id;
-    return this.http.get<Notification[]>(`${API_CONFIG.baseUrl}${this.API}?userId=${userId}`);
-}
+    getNotifications(): Observable<Notification[]> {
+        const userId = this.userService.getUser().id;
+        return this.http.get<Notification[]>(`${API_CONFIG.baseUrl}${this.API}?userId=${userId}`);
+    }
 
     markAsRead(notificationId: string): Observable<void> {
         return this.http.patch<void>(`${API_CONFIG.baseUrl}${this.API}/${notificationId}/read`, {});

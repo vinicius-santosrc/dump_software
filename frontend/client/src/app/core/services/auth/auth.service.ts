@@ -17,7 +17,7 @@ import { ErrorUtils } from "../../utils/error.utils";
 })
 export class AuthService {
     private readonly API = '/api/v1/auth';
-    
+
     constructor(private readonly http: HttpClient) { }
 
     login(data: LoginDTO): Observable<any> {

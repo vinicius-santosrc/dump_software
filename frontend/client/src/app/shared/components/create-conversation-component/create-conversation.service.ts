@@ -7,8 +7,8 @@ import { API_CONFIG } from "../../../core/config/api.config";
 })
 export class CreateConversationService {
     private readonly API = '/messages/conversation'
-    constructor(private readonly http: HttpClient) {}
-    
+    constructor(private readonly http: HttpClient) { }
+
     createConversation(participants: any) {
         return this.http.post(`${API_CONFIG.baseUrl}${this.API}`, { participants: participants });
     }

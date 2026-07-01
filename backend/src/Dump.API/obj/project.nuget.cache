@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "YxFi95zsFp0=",
+  "dgSpecHash": "pfR3Q4kMLCw=",
   "success": true,
   "projectFilePath": "/Users/vinicius/Documents/GitHub/dump_software/backend/src/Dump.API/Dump.API.csproj",
   "expectedPackageFiles": [
@@ -8,6 +8,7 @@
     "/Users/vinicius/.nuget/packages/chillicream.nitro.app/28.0.7/chillicream.nitro.app.28.0.7.nupkg.sha512",
     "/Users/vinicius/.nuget/packages/dnsclient/1.6.1/dnsclient.1.6.1.nupkg.sha512",
     "/Users/vinicius/.nuget/packages/dotnetenv/2.3.0/dotnetenv.2.3.0.nupkg.sha512",
+    "/Users/vinicius/.nuget/packages/ffmpegcore/5.4.0/ffmpegcore.5.4.0.nupkg.sha512",
     "/Users/vinicius/.nuget/packages/greendonut/15.1.14/greendonut.15.1.14.nupkg.sha512",
     "/Users/vinicius/.nuget/packages/greendonut.abstractions/15.1.14/greendonut.abstractions.15.1.14.nupkg.sha512",
     "/Users/vinicius/.nuget/packages/greendonut.data/15.1.14/greendonut.data.15.1.14.nupkg.sha512",
@@ -43,6 +44,7 @@
     "/Users/vinicius/.nuget/packages/hotchocolate.utilities/15.1.14/hotchocolate.utilities.15.1.14.nupkg.sha512",
     "/Users/vinicius/.nuget/packages/hotchocolate.utilities.dependencyinjection/15.1.14/hotchocolate.utilities.dependencyinjection.15.1.14.nupkg.sha512",
     "/Users/vinicius/.nuget/packages/hotchocolate.validation/15.1.14/hotchocolate.validation.15.1.14.nupkg.sha512",
+    "/Users/vinicius/.nuget/packages/instances/3.0.2/instances.3.0.2.nupkg.sha512",
     "/Users/vinicius/.nuget/packages/microsoft.aspnetcore.authentication.jwtbearer/8.0.0/microsoft.aspnetcore.authentication.jwtbearer.8.0.0.nupkg.sha512",
     "/Users/vinicius/.nuget/packages/microsoft.aspnetcore.openapi/9.0.4/microsoft.aspnetcore.openapi.9.0.4.nupkg.sha512",
     "/Users/vinicius/.nuget/packages/microsoft.extensions.apidescription.server/6.0.5/microsoft.extensions.apidescription.server.6.0.5.nupkg.sha512",
@@ -144,6 +146,7 @@
     "/Users/vinicius/.nuget/packages/system.security.principal.windows/5.0.0/system.security.principal.windows.5.0.0.nupkg.sha512",
     "/Users/vinicius/.nuget/packages/system.text.encoding/4.3.0/system.text.encoding.4.3.0.nupkg.sha512",
     "/Users/vinicius/.nuget/packages/system.text.encoding.extensions/4.3.0/system.text.encoding.extensions.4.3.0.nupkg.sha512",
+    "/Users/vinicius/.nuget/packages/system.text.json/9.0.10/system.text.json.9.0.10.nupkg.sha512",
     "/Users/vinicius/.nuget/packages/system.text.regularexpressions/4.3.0/system.text.regularexpressions.4.3.0.nupkg.sha512",
     "/Users/vinicius/.nuget/packages/system.threading/4.3.0/system.threading.4.3.0.nupkg.sha512",
     "/Users/vinicius/.nuget/packages/system.threading.tasks/4.3.0/system.threading.tasks.4.3.0.nupkg.sha512",
